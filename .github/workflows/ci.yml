@@ -1,71 +1,72 @@
-# Nom de la pipeline
+# Le NOM de ta pipeline (ce qui apparaît dans l'onglet Actions de GitHub)
 name: CI/CD pipeline (Git Flow)
 
-# Quand la pipeline se déclenche
+# QUAND la pipeline se déclenche
 on:
+  # Quand tu PUSH du code sur ces branches :
   push:
     branches:
-    - main
-    - develop
-    - 'feature/**'
-    - 'release/**'
-    - 'hotfix/**'
+      - main          # Si tu push sur main
+      - develop       # Si tu push sur develop
+      - 'feature/**'  # Si tu push sur n'importe quelle branche feature/xxx
+      - 'release/**'  # Si tu push sur release/xxx
+      - 'hotfix/**'   # Si tu push sur hotfix/xxx
+  
+  # Quand quelqu'un crée une PULL REQUEST vers ces branches :
   pull_request:
     branches:
-    - main    # PR vers main depuis release ou hotfix 
-    - develop # PR vers develope depuis feature
+      - main          # PR vers main (depuis release ou hotfix)
+      - develop       # PR vers develop (depuis feature)
 
-# Tâches à exécuter
+# LES TÂCHES à exécuter (jobs)
 jobs:
+  # Job appelé "test-and-build"
   test-and-build:
-    name: Tests & Build
-    runs-on: ubuntu-latest  
+    name: Tests & Build              # Nom affiché dans GitHub
+    runs-on: ubuntu-latest           # Sur quelle machine ça tourne (Ubuntu Linux)
 
-    # Etapes
+    # LES ÉTAPES (steps) exécutées une par une
     steps:
-
-    # Téléchargement du code depuis GitHub
-    - name: Checkout code
-      uses: actions/checkout@v4 # Actions GitHub pour récupérer le code
-
-    # Installer Node.js version 20
-    - name: Setup Node.js
-      uses: actions/setup-node@v4 # Actions GitHub pour installer Node.js
-      with:
-        node-version: '20'
-    
-    # Frontend
-
-    # Installation des dépendances du frontend
-    - name: Install Frontend
-      working-directory: ./frontend # Va dans le dossier frontend/
-      run: npm ci # Installation
-
-    # Vérification du code frontend avec ESLint
-    - name: Lint Frontend
-      working-directory: ./frontend
-      run: npm run lint # Vérifie les erreurs de syntaxe
-
-    # Compile le frontend
-    - name: Build Frontend
-      working-directory: ./frontend 
-      run: npm run build # Compile TypeScript -> JS)
-
-    # Backend
-
-    # Installation des dépendances du backend
-    - name: Install Backend
-      working-directory: ./backend
-      run: npm ci
-
-    # Vérifie le code backend avec ESLint
-    - name: Lint Backend
-      working-directory: ./backend
-      run: npm run lint
-
-    # Compile le backend
-    - name: Build Backend
-      working-directory: ./backend
-      run: npm run build
-
-    
+      # ÉTAPE 1 : Télécharge ton code depuis GitHub
+      - name: Checkout code
+        uses: actions/checkout@v4    # Action GitHub officielle pour récupérer le code
+      
+      # ÉTAPE 2 : Installe Node.js version 20
+      - name: Setup Node.js
+        uses: actions/setup-node@v4  # Action GitHub pour installer Node.js
+        with:
+          node-version: '20'         # Version de Node.js
+      
+      # ========== FRONTEND ==========
+      
+      # ÉTAPE 3 : Installe les dépendances du frontend
+      - name: Install Frontend
+        working-directory: ./frontend  # Va dans le dossier frontend/
+        run: npm ci                    # Commande : npm ci (install rapide et sûr)
+      
+      # ÉTAPE 4 : Vérifie le code frontend avec ESLint
+      - name: Lint Frontend
+        working-directory: ./frontend
+        run: npm run lint              # Commande : npm run lint (vérifie erreurs syntaxe)
+      
+      # ÉTAPE 5 : Compile le frontend
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: npm run build             # Commande : npm run build (compile TypeScript → JS)
+      
+      # ========== BACKEND ==========
+      
+      # ÉTAPE 6 : Installe les dépendances du backend
+      - name: Install Backend
+        working-directory: ./backend
+        run: npm ci
+      
+      # ÉTAPE 7 : Vérifie le code backend avec ESLint
+      - name: Lint Backend
+        working-directory: ./backend
+        run: npm run lint
+      
+      # ÉTAPE 8 : Compile le backend
+      - name: Build Backend
+        working-directory: ./backend
+        run: npm run build
