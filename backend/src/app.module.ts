@@ -10,7 +10,6 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { ConversationsModule } from './conversations/conversations.module';
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
-import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -20,7 +19,7 @@ import { CommonModule } from './common/common.module';
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
+      port: Number(process.env.DB_PORT ?? 3306),
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
@@ -28,14 +27,13 @@ import { CommonModule } from './common/common.module';
       synchronize: true, // dev only - not in production!
     }),
     UsersModule,
+    FilesModule,
+
     RestaurantsModule,
     SuppliersModule,
     ReviewsModule,
     ConversationsModule,
     AuthModule,
-    FilesModule,
-    CommonModule,
-    ConfigModule,
   ],
   controllers: [AppController],
   providers: [AppService],
