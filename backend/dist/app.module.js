@@ -12,6 +12,14 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
+const users_module_1 = require("./users/users.module");
+const restaurants_module_1 = require("./restaurants/restaurants.module");
+const suppliers_module_1 = require("./suppliers/suppliers.module");
+const reviews_module_1 = require("./reviews/reviews.module");
+const conversations_module_1 = require("./conversations/conversations.module");
+const auth_module_1 = require("./auth/auth.module");
+const files_module_1 = require("./files/files.module");
+const common_module_1 = require("./common/common.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -31,6 +39,15 @@ exports.AppModule = AppModule = __decorate([
                 autoLoadEntities: true,
                 synchronize: true,
             }),
+            users_module_1.UsersModule,
+            restaurants_module_1.RestaurantsModule,
+            suppliers_module_1.SuppliersModule,
+            reviews_module_1.ReviewsModule,
+            conversations_module_1.ConversationsModule,
+            auth_module_1.AuthModule,
+            files_module_1.FilesModule,
+            common_module_1.CommonModule,
+            config_1.ConfigModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
