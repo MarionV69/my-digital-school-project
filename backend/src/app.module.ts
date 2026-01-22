@@ -19,7 +19,7 @@ import { FilesModule } from './files/files.module';
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
+      port: Number(process.env.DB_PORT ?? 3306),
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
@@ -27,13 +27,13 @@ import { FilesModule } from './files/files.module';
       synchronize: true, // dev only - not in production!
     }),
     UsersModule,
+    FilesModule,
+
     RestaurantsModule,
     SuppliersModule,
     ReviewsModule,
     ConversationsModule,
     AuthModule,
-    FilesModule,
-    ConfigModule,
   ],
   controllers: [AppController],
   providers: [AppService],
