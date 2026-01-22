@@ -5,7 +5,7 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 @Injectable()
 export class ReviewsService {
   create(createReviewDto: CreateReviewDto) {
-    return 'This action adds a new review';
+    return `This action adds a new review ${JSON.stringify(createReviewDto)}`;
   }
 
   findAll() {
@@ -17,7 +17,7 @@ export class ReviewsService {
   }
 
   update(id: number, updateReviewDto: UpdateReviewDto) {
-    return `This action updates a #${id} review`;
+    return `This action updates a #${id} review ${JSON.stringify(updateReviewDto)}`;
   }
 
   remove(id: number) {

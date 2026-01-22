@@ -5,7 +5,7 @@ import { UpdateConversationDto } from './dto/update-conversation.dto';
 @Injectable()
 export class ConversationsService {
   create(createConversationDto: CreateConversationDto) {
-    return 'This action adds a new conversation';
+    return `This action adds a new conversation ${JSON.stringify(createConversationDto)}`;
   }
 
   findAll() {
@@ -17,7 +17,7 @@ export class ConversationsService {
   }
 
   update(id: number, updateConversationDto: UpdateConversationDto) {
-    return `This action updates a #${id} conversation`;
+    return `This action updates a #${id} conversation ${JSON.stringify(updateConversationDto)}`;
   }
 
   remove(id: number) {

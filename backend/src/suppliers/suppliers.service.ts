@@ -5,7 +5,7 @@ import { UpdateSupplierDto } from './dto/update-supplier.dto';
 @Injectable()
 export class SuppliersService {
   create(createSupplierDto: CreateSupplierDto) {
-    return 'This action adds a new supplier';
+    return `This action adds a new supplier ${JSON.stringify(createSupplierDto)}`;
   }
 
   findAll() {
@@ -17,7 +17,7 @@ export class SuppliersService {
   }
 
   update(id: number, updateSupplierDto: UpdateSupplierDto) {
-    return `This action updates a #${id} supplier`;
+    return `This action updates a #${id} supplier ${JSON.stringify(updateSupplierDto)}`;
   }
 
   remove(id: number) {
