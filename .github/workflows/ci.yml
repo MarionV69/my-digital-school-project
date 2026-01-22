@@ -38,7 +38,7 @@ jobs:
 
     # Installation des dépendances du frontend
     - name: Install Frontend
-      working directory: ./frontend # Va dans le dossier frontend/
+      working-directory: ./frontend # Va dans le dossier frontend/
       run: npm ci # Installation
 
     # Vérification du code frontend avec ESLint
