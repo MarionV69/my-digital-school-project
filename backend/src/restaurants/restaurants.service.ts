@@ -5,7 +5,7 @@ import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 @Injectable()
 export class RestaurantsService {
   create(createRestaurantDto: CreateRestaurantDto) {
-    return 'This action adds a new restaurant';
+    return `This action adds a new restaurant ${JSON.stringify(createRestaurantDto)}`;
   }
 
   findAll() {
@@ -17,7 +17,7 @@ export class RestaurantsService {
   }
 
   update(id: number, updateRestaurantDto: UpdateRestaurantDto) {
-    return `This action updates a #${id} restaurant`;
+    return `This action updates a #${id} restaurant ${JSON.stringify(updateRestaurantDto)}`;
   }
 
   remove(id: number) {
