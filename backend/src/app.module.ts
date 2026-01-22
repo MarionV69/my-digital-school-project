@@ -10,7 +10,6 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { ConversationsModule } from './conversations/conversations.module';
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
-import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -34,7 +33,6 @@ import { CommonModule } from './common/common.module';
     ConversationsModule,
     AuthModule,
     FilesModule,
-    CommonModule,
     ConfigModule,
   ],
   controllers: [AppController],
