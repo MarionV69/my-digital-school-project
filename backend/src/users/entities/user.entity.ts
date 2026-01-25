@@ -9,6 +9,7 @@ import {
 import { UserRole } from '../enums/user-role.enum';
 import { Restaurant } from '../../restaurants/entities/restaurant.entity';
 import { Supplier } from '../../suppliers/entities/supplier.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('user')
 @Index(['role'])
@@ -20,6 +21,7 @@ export class User {
   email: string;
 
   @Column({ name: 'password_hash', type: 'varchar', length: 255 })
+  @Exclude()
   passwordHash: string;
 
   @Column({ name: 'last_name', type: 'varchar', length: 100 })
