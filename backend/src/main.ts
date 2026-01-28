@@ -30,6 +30,7 @@ async function bootstrap() {
       .setTitle('B2B Platform API - Le bon fournisseur')
       .setDescription('API for connecting restaurants with suppliers')
       .setVersion('1.0')
+      .addBearerAuth()
       .addTag('auth', 'Authentication and user management')
       .addTag('users', 'User operations')
       .addTag('restaurants', 'Restaurant management and favorites')
