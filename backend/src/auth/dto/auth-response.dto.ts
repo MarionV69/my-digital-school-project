@@ -11,10 +11,12 @@ export class AuthResponseDto {
     example: {
       id: 1,
       role: UserRole.RESTAURANT,
+      isOnboardingCompleted: false,
     },
   })
   user: {
     id: number;
     role: UserRole;
+    isOnboardingCompleted: boolean;
   };
 }

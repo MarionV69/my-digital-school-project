@@ -45,6 +45,13 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { email } });
   }
 
+  async findByEmailWithRelations(email: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      where: { email },
+      relations: ['restaurant', 'supplier'],
+    });
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     await this.usersRepository.update(id, updateUserDto);
     return this.findOne(id);
