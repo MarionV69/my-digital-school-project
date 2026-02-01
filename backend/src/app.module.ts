@@ -10,6 +10,8 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { ConversationsModule } from './conversations/conversations.module';
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -28,7 +30,6 @@ import { FilesModule } from './files/files.module';
     }),
     UsersModule,
     FilesModule,
-
     RestaurantsModule,
     SuppliersModule,
     ReviewsModule,
@@ -36,6 +37,13 @@ import { FilesModule } from './files/files.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // Global JWT Auth Guard (applies to all routes unless @Public() is used)
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}
