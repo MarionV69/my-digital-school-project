@@ -19,9 +19,9 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiOperation } from '@nestjs/swagger';
-import { Request as ExpressRequest } from 'express';
-import { AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
+import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
 import { User } from './entities/user.entity';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -37,10 +37,8 @@ export class UsersController {
   })
   @ApiNotFoundResponse({ description: 'User not found' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  async getProfile(
-    @Request() req: ExpressRequest & { user: AuthenticatedUser },
-  ): Promise<User> {
-    return this.usersService.findOne(req.user.id);
+  async getProfile(@CurrentUser() user: AuthenticatedUser): Promise<User> {
+    return this.usersService.findOne(user.id);
   }
 
   @Patch('me')
@@ -52,10 +50,10 @@ export class UsersController {
   @ApiNotFoundResponse({ description: 'User not found' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async updateProfile(
-    @Request() req: ExpressRequest & { user: AuthenticatedUser },
+    @CurrentUser() user: AuthenticatedUser,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
-    return this.usersService.update(req.user.id, updateUserDto);
+    return this.usersService.update(user.id, updateUserDto);
   }
 
   @Delete('me')
@@ -64,9 +62,7 @@ export class UsersController {
   @ApiNoContentResponse({ description: 'User account deleted' })
   @ApiNotFoundResponse({ description: 'User not found' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  async deleteAccount(
-    @Request() req: ExpressRequest & { user: AuthenticatedUser },
-  ): Promise<void> {
-    return this.usersService.remove(req.user.id);
+  async deleteAccount(@CurrentUser() user: AuthenticatedUser): Promise<void> {
+    return this.usersService.remove(user.id);
   }
 }
