@@ -15,9 +15,10 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { CreateSupplierDocumentDto } from './dto/create-supplier-document.dto';
 import { SupplierDocumentsService } from './supplier-document.service';
 import { UserRole } from '../users/enums/user-role.enum';
-import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
 import { multerPublicOptions } from '../config/multer.config';
+import { DocumentCategory } from './enums/document-category.enum';
 
 @ApiTags('supplier-documents')
 @ApiBearerAuth()
@@ -29,6 +30,21 @@ export class SupplierDocumentsController {
 
   @Post()
   @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+        category: {
+          type: 'string',
+          enum: Object.values(DocumentCategory),
+        },
+      },
+    },
+  })
   @UseInterceptors(FileInterceptor('file', multerPublicOptions))
   async upload(
     @Param('id', ParseIntPipe) supplierId: number,
