@@ -19,8 +19,8 @@ export class SupplierDocumentsService {
   private readonly CATEGORY_LIMITS: Record<DocumentCategory, number> = {
     [DocumentCategory.LOGO]: 1,
     [DocumentCategory.COVER_PHOTO]: 1,
-    [DocumentCategory.CATALOG]: 3,
-    [DocumentCategory.GALLERY_PHOTO]: 10,
+    [DocumentCategory.CATALOG]: 1,
+    [DocumentCategory.GALLERY_PHOTO]: 6,
   };
 
   // Allowed mime types for each category
@@ -47,13 +47,27 @@ export class SupplierDocumentsService {
     await this.checkCategoryLimit(supplierId, category);
 
     const storedFile = await this.filesService.create(file);
+
     const supplierDocument = this.supplierDocumentsRepository.create({
       supplierId,
       fileId: storedFile.id,
       category,
     });
 
-    return this.supplierDocumentsRepository.save(supplierDocument);
+    const savedDocument =
+      await this.supplierDocumentsRepository.save(supplierDocument);
+
+    return {
+      id: savedDocument.id,
+      category: savedDocument.category,
+      file: {
+        id: storedFile.id,
+        originalFilename: storedFile.originalFilename,
+        mimeType: storedFile.mimeType,
+        size: storedFile.size,
+        url: this.filesService.getPublicFileUrl(storedFile.storedFilename),
+      },
+    };
   }
 
   // Validate file mime type based on category

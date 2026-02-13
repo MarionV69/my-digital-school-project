@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { PRIVATE_UPLOAD_PATH, PUBLIC_UPLOAD_PATH } from './storage.config';
 
 const generateFileName = (
   _req: Express.Request,
@@ -8,12 +9,8 @@ const generateFileName = (
   cb: (error: Error | null, filename: string) => void,
 ) => {
   const uniqueName = randomUUID() + extname(file.originalname);
-
   cb(null, uniqueName);
 };
-
-export const PUBLIC_UPLOAD_PATH = './uploads/public';
-export const PRIVATE_UPLOAD_PATH = './uploads/private';
 
 export const multerPublicOptions = {
   storage: diskStorage({

@@ -35,9 +35,12 @@ async function bootstrap() {
       .addTag('users', 'User operations')
       .addTag('restaurants', 'Restaurant management and favorites')
       .addTag('suppliers', 'Supplier management and search')
-      .addTag('reviews', 'Reviews and ratings')
+      .addTag(
+        'supplier-documents',
+        'Supplier document management (logo, cover photo, gallery photos, catalog PDF)',
+      )
       .addTag('conversations', 'Messaging system')
-      .addTag('files', 'File upload and management')
+      .addTag('reviews', 'Reviews and ratings')
       .build(),
   );
   SwaggerModule.setup('docs', app, document);
