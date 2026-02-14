@@ -16,7 +16,6 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiOperation } from '@nestjs/swagger';
 import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
@@ -36,7 +35,6 @@ export class UsersController {
     type: User,
   })
   @ApiNotFoundResponse({ description: 'User not found' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async getProfile(@CurrentUser() user: AuthenticatedUser): Promise<User> {
     return this.usersService.findOne(user.id);
   }
@@ -48,7 +46,6 @@ export class UsersController {
     type: User,
   })
   @ApiNotFoundResponse({ description: 'User not found' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async updateProfile(
     @CurrentUser() user: AuthenticatedUser,
     @Body() updateUserDto: UpdateUserDto,
@@ -61,7 +58,6 @@ export class UsersController {
   @ApiOperation({ summary: 'Delete current user account' })
   @ApiNoContentResponse({ description: 'User account deleted' })
   @ApiNotFoundResponse({ description: 'User not found' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async deleteAccount(@CurrentUser() user: AuthenticatedUser): Promise<void> {
     return this.usersService.remove(user.id);
   }

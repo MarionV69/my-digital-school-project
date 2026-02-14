@@ -17,8 +17,14 @@ export class StoredFile {
   @Column({ name: 'original_filename', type: 'varchar', length: 255 })
   originalFilename: string;
 
+  @Column({ name: 'stored_filename', type: 'varchar', length: 255 })
+  storedFilename: string;
+
   @Column({ name: 'mime_type', type: 'varchar', length: 50 })
   mimeType: string;
+
+  @Column({ type: 'int' })
+  size: number; // Size of the file in bytes
 
   @Column({ type: 'varchar', length: 512 })
   path: string;
