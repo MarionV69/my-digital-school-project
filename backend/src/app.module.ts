@@ -17,6 +17,9 @@ import {
   PUBLIC_STATIC_URL_PREFIX,
   PUBLIC_UPLOAD_PATH,
 } from './config/storage.config';
+import { EstablishmentsModule } from './establishments/establishments.module';
+import { DocumentsModule } from './documents/documents.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -44,6 +47,9 @@ import {
     ReviewsModule,
     ConversationsModule,
     AuthModule,
+    EstablishmentsModule,
+    DocumentsModule,
+    FavoritesModule,
   ],
   controllers: [AppController],
   providers: [

@@ -9,8 +9,7 @@ import {
   Unique,
 } from 'typeorm';
 import { ReviewStatus } from '../enums/review-status.enum';
-import { Restaurant } from '../../restaurants/entities/restaurant.entity';
-import { Supplier } from '../../suppliers/entities/supplier.entity';
+import { Establishment } from '../../establishments/entities/establishment.entity';
 
 @Entity('review')
 @Unique('uq_review_restaurant_supplier', [
@@ -42,15 +41,15 @@ export class Review {
   createdAt: Date;
 
   // Relations
-  @ManyToOne(() => Restaurant, (restaurant) => restaurant.reviews, {
+  @ManyToOne(() => Establishment, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'reviewer_restaurant_id' })
-  restaurant: Restaurant;
+  reviewerRestaurant: Establishment;
 
-  @ManyToOne(() => Supplier, (supplier) => supplier.reviews, {
+  @ManyToOne(() => Establishment, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'reviewed_supplier_id' })
-  supplier: Supplier;
+  reviewedSupplier: Establishment;
 }

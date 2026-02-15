@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from '../../users/enums/user-role.enum';
+import { EstablishmentType } from '../../establishments/enums/establishment-type.enum';
 
 export class AuthResponseDto {
   @ApiProperty({
@@ -10,13 +11,15 @@ export class AuthResponseDto {
   @ApiProperty({
     example: {
       id: 1,
-      role: UserRole.RESTAURANT,
-      isOnboardingCompleted: false,
+      role: UserRole.OWNER,
+      establishmentId: 3,
+      establishmentType: 'RESTAURANT',
     },
   })
   user: {
     id: number;
     role: UserRole;
-    isOnboardingCompleted: boolean;
+    establishmentId: number | null;
+    establishmentType: EstablishmentType | null;
   };
 }

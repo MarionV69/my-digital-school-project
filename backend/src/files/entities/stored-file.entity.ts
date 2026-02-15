@@ -1,5 +1,5 @@
+import { Document } from '../../documents/entities/document.entity';
 import { Message } from '../../conversations/entities/message.entity';
-import { SupplierDocument } from '../../suppliers/entities/supplier-document.entity';
 import {
   Column,
   CreateDateColumn,
@@ -33,8 +33,8 @@ export class StoredFile {
   uploadedAt: Date;
 
   // Relations
-  @OneToMany(() => SupplierDocument, (doc) => doc.file)
-  supplierDocuments: SupplierDocument[];
+  @OneToMany(() => Document, (doc) => doc.file)
+  documents: Document[];
 
   @ManyToMany(() => Message, (message) => message.files)
   messages: Message[];

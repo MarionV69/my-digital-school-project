@@ -20,7 +20,7 @@ export class CreateUserDto {
   @IsString()
   firstName: string;
 
-  @ApiProperty({ enum: UserRole, example: UserRole.RESTAURANT })
+  @ApiProperty({ enum: UserRole, example: UserRole.OWNER })
   @IsEnum(UserRole)
   role: UserRole;
 }

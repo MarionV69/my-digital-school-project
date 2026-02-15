@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { StoredFile } from './entities/stored-file.entity';
 import * as fs from 'fs/promises';
-import { PUBLIC_STATIC_URL_PREFIX } from 'src/config/storage.config';
+import { PUBLIC_STATIC_URL_PREFIX } from '../config/storage.config';
 import path from 'path';
 import { ConfigService } from '@nestjs/config';
 

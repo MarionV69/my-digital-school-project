@@ -3,14 +3,14 @@ import {
   CreateDateColumn,
   Entity,
   Index,
-  OneToOne,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserRole } from '../enums/user-role.enum';
-import { Restaurant } from '../../restaurants/entities/restaurant.entity';
-import { Supplier } from '../../suppliers/entities/supplier.entity';
 import { Exclude } from 'class-transformer';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { Establishment } from '../../establishments/entities/establishment.entity';
 
 @Entity('user')
 @Index(['role'])
@@ -18,6 +18,10 @@ export class User {
   @ApiProperty({ example: 1 })
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ApiProperty({ example: 3, nullable: true })
+  @Column({ name: 'establishment_id', type: 'int', nullable: true })
+  establishmentId: number | null;
 
   @ApiProperty({ example: 'john@example.com' })
   @Column({ type: 'varchar', length: 150, unique: true })
@@ -36,7 +40,7 @@ export class User {
   @Column({ name: 'first_name', type: 'varchar', length: 100 })
   firstName: string;
 
-  @ApiProperty({ example: UserRole.RESTAURANT, enum: UserRole })
+  @ApiProperty({ example: UserRole.OWNER, enum: UserRole })
   @Column({ type: 'enum', enum: UserRole })
   role: UserRole;
 
@@ -49,9 +53,11 @@ export class User {
   createdAt: Date;
 
   // Relations
-  @OneToOne(() => Restaurant, (restaurant) => restaurant.user)
-  restaurant?: Restaurant;
-
-  @OneToOne(() => Supplier, (supplier) => supplier.user)
-  supplier?: Supplier;
+  @ApiProperty({ type: () => Establishment, nullable: true })
+  @ManyToOne(() => Establishment, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'establishment_id' })
+  establishment: Establishment | null;
 }

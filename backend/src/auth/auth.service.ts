@@ -7,7 +7,7 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { AuthResponseDto } from './dto/auth-response.dto';
-import { UserRole } from '../users/enums/user-role.enum';
+import { Establishment } from '../establishments/entities/establishment.entity';
 
 @Injectable()
 export class AuthService {
@@ -21,12 +21,12 @@ export class AuthService {
     const user = await this.usersService.create(createUserDto);
     await this.usersService.updateLastLogin(user.id);
 
-    return this.buildAuthResponse(user, false);
+    return this.buildAuthResponse(user, null);
   }
 
   // Login user
   async login(loginDto: LoginDto): Promise<AuthResponseDto> {
-    const user = await this.usersService.findByEmailWithRelations(
+    const user = await this.usersService.findByEmailWithEstablishment(
       loginDto.email,
     );
 
@@ -44,20 +44,18 @@ export class AuthService {
 
     await this.usersService.updateLastLogin(user.id);
 
-    const isOnboardingCompleted =
-      (user.role === UserRole.RESTAURANT && !!user.restaurant) ||
-      (user.role === UserRole.SUPPLIER && !!user.supplier);
-
-    return this.buildAuthResponse(user, isOnboardingCompleted);
+    return this.buildAuthResponse(user, user.establishment);
   }
 
   private buildAuthResponse(
     user: User,
-    isOnboardingCompleted: boolean,
+    establishment: Establishment | null,
   ): AuthResponseDto {
     const payload: JwtPayload = {
       sub: user.id,
       role: user.role,
+      establishmentId: user.establishmentId,
+      establishmentType: establishment?.type ?? null,
     };
 
     return {
@@ -65,7 +63,8 @@ export class AuthService {
       user: {
         id: user.id,
         role: user.role,
-        isOnboardingCompleted,
+        establishmentId: user.establishmentId,
+        establishmentType: establishment?.type ?? null,
       },
     };
   }

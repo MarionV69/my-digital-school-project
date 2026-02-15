@@ -1,8 +1,8 @@
 import { IsEnum } from 'class-validator';
-import { DocumentCategory } from '../enums/document-category.enum';
+import { DocumentCategory } from '../enums/document.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateSupplierDocumentDto {
+export class CreateDocumentDto {
   @ApiProperty({ enum: DocumentCategory })
   @IsEnum(DocumentCategory)
   category: DocumentCategory;
