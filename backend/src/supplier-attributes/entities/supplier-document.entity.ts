@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { DocumentCategory } from '../enums/document-category.enum';
-import { Supplier } from './supplier.entity';
+import { Supplier } from './supplier-attributes.entity';
 import { StoredFile } from '../../files/entities/stored-file.entity';
 
 @Entity('supplier_document')

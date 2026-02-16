@@ -1,5 +1,5 @@
 import { Message } from '../../conversations/entities/message.entity';
-import { SupplierDocument } from '../../suppliers/entities/supplier-document.entity';
+import { SupplierDocument } from '../../supplier-attributes/entities/supplier-document.entity';
 import {
   Column,
   CreateDateColumn,

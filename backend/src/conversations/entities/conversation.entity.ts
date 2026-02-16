@@ -1,5 +1,5 @@
-import { Restaurant } from '../../restaurants/entities/restaurant.entity';
-import { Supplier } from '../../suppliers/entities/supplier.entity';
+import { Establishment } from '../../establishment/entities/establishment.entity';
+import { Supplier } from '../../supplier-attributes/entities/supplier-attributes.entity';
 import {
   Column,
   CreateDateColumn,
@@ -35,11 +35,11 @@ export class Conversation {
   lastMessageAt: Date | null;
 
   // Relations
-  @ManyToOne(() => Restaurant, (restaurant) => restaurant.conversations, {
+  @ManyToOne(() => Establishment, (establishment) => establishment.conversations, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'restaurant_id' })
-  restaurant: Restaurant;
+  restaurant: Establishment;
 
   @ManyToOne(() => Supplier, (supplier) => supplier.conversations, {
     onDelete: 'CASCADE',

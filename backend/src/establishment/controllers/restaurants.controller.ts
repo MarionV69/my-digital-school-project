@@ -1,3 +1,4 @@
+// Routes pour gérer les restaurants
 import {
   Controller,
   Get,
@@ -7,15 +8,16 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { RestaurantsService } from './restaurants.service';
-import { CreateRestaurantDto } from './dto/create-restaurant.dto';
-import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { RestaurantsService } from '../services/restaurants.service';
+import { CreateRestaurantDto } from '../dto/create-restaurant.dto';
+import { UpdateRestaurantDto } from '../dto/update-restaurant.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('restaurants')
+@ApiBearerAuth()
 @Controller('restaurants')
 export class RestaurantsController {
-  constructor(private readonly restaurantsService: RestaurantsService) {}
+  constructor(private restaurantsService: RestaurantsService) {}
 
   @Post()
   create(@Body() createRestaurantDto: CreateRestaurantDto) {

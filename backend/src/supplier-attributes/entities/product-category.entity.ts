@@ -5,23 +5,20 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Supplier } from './supplier.entity';
+import { Supplier } from './supplier-attributes.entity';
 
-@Entity('label')
-export class Label {
+@Entity('product_category')
+export class ProductCategory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'varchar', length: 100, unique: true })
   name: string;
-
-  @Column({ type: 'varchar', length: 255 })
-  description: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'datetime' })
   createdAt: Date;
 
   // Relations
-  @ManyToMany(() => Supplier, (supplier) => supplier.labels)
+  @ManyToMany(() => Supplier, (supplier) => supplier.productCategories)
   suppliers: Supplier[];
 }

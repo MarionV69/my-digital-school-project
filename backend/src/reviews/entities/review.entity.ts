@@ -9,8 +9,8 @@ import {
   Unique,
 } from 'typeorm';
 import { ReviewStatus } from '../enums/review-status.enum';
-import { Restaurant } from '../../restaurants/entities/restaurant.entity';
-import { Supplier } from '../../suppliers/entities/supplier.entity';
+import { Restaurant } from '../../establishment/entities/establishment.entity';
+import { Supplier } from '../../supplier-attributes/entities/supplier-attributes.entity';
 
 @Entity('review')
 @Unique('uq_review_restaurant_supplier', [
