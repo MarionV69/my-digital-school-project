@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import { RestaurantsModule } from './restaurants/restaurants.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ConversationsModule } from './conversations/conversations.module';
@@ -42,7 +41,6 @@ import { FavoritesModule } from './favorites/favorites.module';
     }),
     UsersModule,
     FilesModule,
-    RestaurantsModule,
     SuppliersModule,
     ReviewsModule,
     ConversationsModule,
