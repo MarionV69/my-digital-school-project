@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import { RestaurantsModule } from './restaurants/restaurants.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ConversationsModule } from './conversations/conversations.module';
@@ -17,6 +16,9 @@ import {
   PUBLIC_STATIC_URL_PREFIX,
   PUBLIC_UPLOAD_PATH,
 } from './config/storage.config';
+import { EstablishmentsModule } from './establishments/establishments.module';
+import { DocumentsModule } from './documents/documents.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -39,11 +41,13 @@ import {
     }),
     UsersModule,
     FilesModule,
-    RestaurantsModule,
     SuppliersModule,
     ReviewsModule,
     ConversationsModule,
     AuthModule,
+    EstablishmentsModule,
+    DocumentsModule,
+    FavoritesModule,
   ],
   controllers: [AppController],
   providers: [

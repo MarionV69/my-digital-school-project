@@ -5,7 +5,7 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Supplier } from './supplier.entity';
+import { SupplierAttributes } from './supplier-attributes.entity';
 
 @Entity('label')
 export class Label {
@@ -22,6 +22,6 @@ export class Label {
   createdAt: Date;
 
   // Relations
-  @ManyToMany(() => Supplier, (supplier) => supplier.labels)
-  suppliers: Supplier[];
+  @ManyToMany(() => SupplierAttributes, (supplier) => supplier.labels)
+  suppliers: SupplierAttributes[];
 }

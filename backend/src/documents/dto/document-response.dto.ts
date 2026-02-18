@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DocumentCategory } from '../enums/document-category.enum';
+import { DocumentCategory } from '../enums/document.enum';
 import { FileResponseDto } from '../../files/dto/FileResponse.dto';
 
-export class SupplierDocumentResponseDto {
+export class DocumentResponseDto {
   @ApiProperty({ example: 5 })
   id: number;
 

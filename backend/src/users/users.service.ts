@@ -34,7 +34,10 @@ export class UsersService {
   }
 
   async findOne(id: number): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id } });
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: ['establishment'],
+    });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
@@ -45,10 +48,10 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { email } });
   }
 
-  async findByEmailWithRelations(email: string): Promise<User | null> {
+  async findByEmailWithEstablishment(email: string): Promise<User | null> {
     return this.usersRepository.findOne({
       where: { email },
-      relations: ['restaurant', 'supplier'],
+      relations: ['establishment'],
     });
   }
 

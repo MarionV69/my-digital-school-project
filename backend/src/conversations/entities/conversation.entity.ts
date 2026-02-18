@@ -1,5 +1,3 @@
-import { Restaurant } from '../../restaurants/entities/restaurant.entity';
-import { Supplier } from '../../suppliers/entities/supplier.entity';
 import {
   Column,
   CreateDateColumn,
@@ -12,6 +10,7 @@ import {
   Unique,
 } from 'typeorm';
 import { Message } from './message.entity';
+import { Establishment } from '../../establishments/entities/establishment.entity';
 
 @Entity('conversation')
 @Unique('uq_conversation_restaurant_supplier', ['restaurantId', 'supplierId'])
@@ -35,17 +34,17 @@ export class Conversation {
   lastMessageAt: Date | null;
 
   // Relations
-  @ManyToOne(() => Restaurant, (restaurant) => restaurant.conversations, {
+  @ManyToOne(() => Establishment, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'restaurant_id' })
-  restaurant: Restaurant;
+  restaurant: Establishment;
 
-  @ManyToOne(() => Supplier, (supplier) => supplier.conversations, {
+  @ManyToOne(() => Establishment, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'supplier_id' })
-  supplier: Supplier;
+  supplier: Establishment;
 
   @OneToMany(() => Message, (message) => message.conversation)
   messages: Message[];
