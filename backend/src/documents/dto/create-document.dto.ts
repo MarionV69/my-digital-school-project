@@ -3,7 +3,7 @@ import { DocumentCategory } from '../enums/document.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateDocumentDto {
-  @ApiProperty({ enum: DocumentCategory })
+  @ApiProperty({ enum: DocumentCategory, example: DocumentCategory.CATALOG })
   @IsEnum(DocumentCategory)
   category: DocumentCategory;
 }
