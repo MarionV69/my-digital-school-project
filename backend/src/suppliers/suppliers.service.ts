@@ -1,5 +1,5 @@
-import { CreateSupplierDto } from './dto/create-supplier.dto';
-import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import { CreateSupplierDto } from './dto/create-supplier-attributes.dto';
+import { UpdateSupplierDto } from './dto/update-supplier-attributes.dto';
 import { Repository } from 'typeorm';
 import { SupplierAttributes } from './entities/supplier-attributes.entity';
 import { InjectRepository } from '@nestjs/typeorm';

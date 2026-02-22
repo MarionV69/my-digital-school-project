@@ -40,16 +40,20 @@ export class Review {
   @CreateDateColumn({ name: 'created_at', type: 'datetime' })
   createdAt: Date;
 
-  // Relations
-  @ManyToOne(() => Establishment, {
+  // -- Relations --
+
+  // Chaque avis est lié à un restaurant (reviewer)
+  @ManyToOne(() => Establishment, (establishment) => establishment.reviewsGiven, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'reviewer_restaurant_id' })
-  reviewerRestaurant: Establishment;
+  owner: Establishment;
 
-  @ManyToOne(() => Establishment, {
+  // Chaque avis est lié à un fournisseur (target)
+  @ManyToOne(() => Establishment, (establishment) => establishment.reviewsReceived, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'reviewed_supplier_id' })
-  reviewedSupplier: Establishment;
+  target: Establishment;
+
 }

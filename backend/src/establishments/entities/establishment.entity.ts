@@ -4,11 +4,17 @@ import {
   Entity,
   Index,
   OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { SupplierAttributes } from '../../suppliers/entities/supplier-attributes.entity';
 import { EstablishmentType } from '../enums/establishment-type.enum';
+import { Favorite } from 'src/favorites/entities/favorite.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Review } from 'src/reviews/entities/review.entity';
+import { Document } from 'src/documents/entities/document.entity';
+import { Conversation } from 'src/conversations/entities/conversation.entity';
 
 @Entity('establishment')
 @Index('idx_establishment_postal_code', ['postalCode'])
@@ -76,14 +82,42 @@ export class Establishment {
   @UpdateDateColumn({ name: 'updated_at', type: 'datetime' })
   updatedAt: Date;
 
-  // Relations
-  @OneToOne(
-    () => SupplierAttributes,
-    (supplierAttributes) => supplierAttributes.supplier,
-    {
-      cascade: true,
-      nullable: true,
-    },
-  )
+  // -- Relations --
+
+  // Un établissement  est lié à un ou plusieurs utilisateurs
+  @OneToMany( () => User, (user) => user.establishment)
+  user: User[];
+
+  // Un établissement (type: 'RESTAURANT') peut avoir plusieurs favoris
+  @OneToMany( () => Favorite, (favorite) => favorite.owner)
+  favoritesGiven: Favorite[];
+
+  // Un établissement (type: 'SUPPLIER') peut être favori de plusieurs restaurants
+  @OneToMany( () => Favorite, (favorite) => favorite.target)
+  favoritesReceived: Favorite[];
+
+  // Un établissement (type: 'RESTAURANT') peut laisser des avis sur plusieurs fournisseurs
+  @OneToMany( () => Review, (review) => review.owner)
+  reviewsGiven: Review[];
+
+  // Un établissement (type: 'SUPPLIER') peut recevoir des avis de plusieurs restaurants
+  @OneToMany( () => Review, (review) => review.target)
+  reviewsReceived: Review[];
+
+  // Un établissement peut déposer des documents
+  @OneToMany( () => Document, (document) => document.establishment)
+  documents: Document[];
+
+  // Un restaurant peut avoir plusieurs conversations
+  @OneToMany( () => Conversation, (conversation) => conversation.restaurant)
+  conversations: Conversation[];
+
+  // Un fournisseur peut avoir plusieurs conversations
+  @OneToMany( () => Conversation, (conversation) => conversation.supplier)
+  conversationsAsSupplier: Conversation[];
+
+  // Un établissement (type: 'SUPPLIER') a une fiche d'attributs
+  @OneToOne( () => SupplierAttributes, (SupplierAttributes) => SupplierAttributes.supplier, { cascade: true, nullable: true })
   supplierAttributes: SupplierAttributes | null;
+  
 }

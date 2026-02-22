@@ -9,37 +9,35 @@ import {
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
-import { UpdateFavoriteDto } from './dto/update-favorite.dto';
 
-@Controller('favorites')
+@Controller('establishments')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
-  @Post()
-  create(@Body() createFavoriteDto: CreateFavoriteDto) {
-    return this.favoritesService.create(createFavoriteDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.favoritesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.favoritesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
+  // Route pour créer un favori
+  @Post(':id/favorites')
+  create(
     @Param('id') id: string,
-    @Body() updateFavoriteDto: UpdateFavoriteDto,
-  ) {
-    return this.favoritesService.update(+id, updateFavoriteDto);
+    @Body() dto: CreateFavoriteDto) {
+      const ownerId = +id;
+      const targetId = dto.targetId;
+      return this.favoritesService.create(ownerId, targetId);
+    }
+
+  // Route pour récupérer tous les favoris d'un restaurant
+  @Get(':id/favorites')
+  getFavorites(
+    @Param('id') id: string) {
+    return this.favoritesService.getRestaurantFavorites(+id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.favoritesService.remove(+id);
+  // Route pour supprimer un favori
+  @Delete(':id/favorites/:favoriteId')
+  remove(
+    @Param('id') id: string,
+    @Param('favoriteId') favoriteId: string) {
+      const ownerId = +id;
+      const favId = +favoriteId;
+      return this.favoritesService.remove(ownerId, favId);
   }
 }

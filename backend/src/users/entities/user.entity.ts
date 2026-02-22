@@ -52,11 +52,13 @@ export class User {
   @CreateDateColumn({ name: 'created_at', type: 'datetime' })
   createdAt: Date;
 
-  // Relations
+  // -- Relations --
   @ApiProperty({ type: () => Establishment, nullable: true })
+
+  // Chaque utilisateur peut être lié à un établissement (restaurant ou fournisseur)
   @ManyToOne(() => Establishment, {
     nullable: true,
-    onDelete: 'SET NULL',
+    onDelete: 'SET NULL', 
   })
   @JoinColumn({ name: 'establishment_id' })
   establishment: Establishment | null;

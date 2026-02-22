@@ -52,10 +52,10 @@ export class SupplierAttributes {
   @Column({ name: 'is_visible', type: 'boolean', default: true })
   isVisible: boolean;
 
-  Relations;
-  @OneToOne(
-    () => Establishment,
-    (Establishment) => Establishment.supplierAttributes,
+  // -- Relations --
+
+  // Une fiche d'attributs est liée à un seul établissement de type 'SUPPLIER'
+  @OneToOne( () => Establishment, (Establishment) => Establishment.supplierAttributes,
     {
       onDelete: 'CASCADE',
     },

@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Message } from './message.entity';
 import { Establishment } from '../../establishments/entities/establishment.entity';
+import e from 'express';
 
 @Entity('conversation')
 @Unique('uq_conversation_restaurant_supplier', ['restaurantId', 'supplierId'])
@@ -33,14 +34,17 @@ export class Conversation {
   @Column({ name: 'last_message_at', type: 'datetime', nullable: true })
   lastMessageAt: Date | null;
 
-  // Relations
-  @ManyToOne(() => Establishment, {
+  // -- Relations --
+
+  // Chaque conversation est liée à un restaurant
+  @ManyToOne(() => Establishment, (establishment) => establishment.conversations, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'restaurant_id' })
   restaurant: Establishment;
 
-  @ManyToOne(() => Establishment, {
+  // Chaque conversation est liée à un fournisseur
+  @ManyToOne(() => Establishment, (establishment) => establishment.conversationsAsSupplier, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'supplier_id' })

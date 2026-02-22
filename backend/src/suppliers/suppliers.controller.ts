@@ -8,8 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { SuppliersService } from './suppliers.service';
-import { CreateSupplierDto } from './dto/create-supplier.dto';
-import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import { CreateSupplierDto } from './dto/create-supplier-attributes.dto';
+import { UpdateSupplierDto } from './dto/update-supplier-attributes.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('suppliers')

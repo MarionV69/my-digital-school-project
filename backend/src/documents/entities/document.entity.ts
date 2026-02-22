@@ -35,13 +35,16 @@ export class Document {
   @CreateDateColumn({ name: 'created_at', type: 'datetime' })
   createdAt: Date;
 
-  // Relations
-  @ManyToOne(() => Establishment, {
+  // -- Relations --
+
+  // Chaque document est lié à un établissement
+  @ManyToOne(() => Establishment, (establishment) => establishment.documents, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'establishment_id' })
   establishment: Establishment;
 
+  // Chaque document est lié à un fichier stocké
   @ManyToOne(() => StoredFile, (file) => file.documents, {
     onDelete: 'CASCADE',
   })
