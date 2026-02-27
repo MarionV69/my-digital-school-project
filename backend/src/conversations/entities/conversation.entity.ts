@@ -11,7 +11,6 @@ import {
 } from 'typeorm';
 import { Message } from './message.entity';
 import { Establishment } from '../../establishments/entities/establishment.entity';
-import e from 'express';
 
 @Entity('conversation')
 @Unique('uq_conversation_restaurant_supplier', ['restaurantId', 'supplierId'])

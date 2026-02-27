@@ -1,9 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { Repository } from 'typeorm';
 import { Favorite } from './entities/favorite.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injector } from '@nestjs/core/injector/injector';
 import { Establishment } from 'src/establishments/entities/establishment.entity';
 import { EstablishmentType } from 'src/establishments/enums/establishment-type.enum';
 
