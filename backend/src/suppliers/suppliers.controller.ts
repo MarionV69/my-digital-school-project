@@ -8,8 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { SuppliersService } from './suppliers.service';
-import { CreateSupplierDto } from './dto/create-supplier-attributes.dto';
-import { UpdateSupplierDto } from './dto/update-supplier-attributes.dto';
+import { CreateSupplierAttributesDto } from './dto/create-supplier-attributes.dto';
+import { UpdateSupplierAttributesDto } from './dto/update-supplier-attributes.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('suppliers')
@@ -19,7 +19,7 @@ export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
 
   @Post()
-  create(@Body() createSupplierDto: CreateSupplierDto) {
+  create(@Body() createSupplierDto: CreateSupplierAttributesDto) {
     return this.suppliersService.create(createSupplierDto);
   }
 
@@ -36,7 +36,7 @@ export class SuppliersController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateSupplierDto: UpdateSupplierDto,
+    @Body() updateSupplierDto: UpdateSupplierAttributesDto,
   ) {
     return this.suppliersService.update(+id, updateSupplierDto);
   }

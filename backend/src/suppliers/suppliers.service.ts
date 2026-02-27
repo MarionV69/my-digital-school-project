@@ -1,5 +1,5 @@
-import { CreateSupplierDto } from './dto/create-supplier-attributes.dto';
-import { UpdateSupplierDto } from './dto/update-supplier-attributes.dto';
+import { CreateSupplierAttributesDto } from './dto/create-supplier-attributes.dto';
+import { UpdateSupplierAttributesDto } from './dto/update-supplier-attributes.dto';
 import { Repository } from 'typeorm';
 import { SupplierAttributes } from './entities/supplier-attributes.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,7 +11,7 @@ export class SuppliersService {
     @InjectRepository(SupplierAttributes)
     private supplierRepository: Repository<SupplierAttributes>,
   ) {}
-  create(createSupplierDto: CreateSupplierDto) {
+  create(createSupplierDto: CreateSupplierAttributesDto) {
     return `This action adds a new supplier ${JSON.stringify(createSupplierDto)}`;
   }
 
@@ -23,7 +23,7 @@ export class SuppliersService {
     return `This action returns a #${id} supplier`;
   }
 
-  update(id: number, updateSupplierDto: UpdateSupplierDto) {
+  update(id: number, updateSupplierDto: UpdateSupplierAttributesDto) {
     return `This action updates a #${id} supplier ${JSON.stringify(updateSupplierDto)}`;
   }
 

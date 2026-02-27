@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator/types/decorator/common/IsNotEmpty";
-import { IsInt } from "class-validator/types/decorator/typechecker/IsInt";
+import { IsNotEmpty, IsInt } from "class-validator";
 
 export class CreateFavoriteDto {
 
