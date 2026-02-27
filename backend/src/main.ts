@@ -36,8 +36,8 @@ async function bootstrap() {
       .addTag('restaurants', 'Restaurant management and favorites')
       .addTag('suppliers', 'Supplier management and search')
       .addTag(
-        'supplier-documents',
-        'Supplier document management (logo, cover photo, gallery photos, catalog PDF)',
+        'documents',
+        'Establishment document management (logo, cover photo, gallery photos, catalog PDF)',
       )
       .addTag('conversations', 'Messaging system')
       .addTag('reviews', 'Reviews and ratings')

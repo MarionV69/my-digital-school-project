@@ -7,7 +7,6 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { AuthResponseDto } from './dto/auth-response.dto';
-import { Establishment } from '../establishments/entities/establishment.entity';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +20,7 @@ export class AuthService {
     const user = await this.usersService.create(createUserDto);
     await this.usersService.updateLastLogin(user.id);
 
-    return this.buildAuthResponse(user, null);
+    return this.buildAuthResponse(user);
   }
 
   // Login user
@@ -44,18 +43,13 @@ export class AuthService {
 
     await this.usersService.updateLastLogin(user.id);
 
-    return this.buildAuthResponse(user, user.establishment);
+    return this.buildAuthResponse(user);
   }
 
-  private buildAuthResponse(
-    user: User,
-    establishment: Establishment | null,
-  ): AuthResponseDto {
+  private buildAuthResponse(user: User): AuthResponseDto {
     const payload: JwtPayload = {
       sub: user.id,
       role: user.role,
-      establishmentId: user.establishmentId,
-      establishmentType: establishment?.type ?? null,
     };
 
     return {
@@ -64,7 +58,7 @@ export class AuthService {
         id: user.id,
         role: user.role,
         establishmentId: user.establishmentId,
-        establishmentType: establishment?.type ?? null,
+        establishmentType: user.establishment?.type ?? null,
       },
     };
   }

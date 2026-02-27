@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { DocumentsController } from './documents.controller';
 import { FilesModule } from '../files/files.module';
-import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { Document } from './entities/document.entity';
 
 @Module({
