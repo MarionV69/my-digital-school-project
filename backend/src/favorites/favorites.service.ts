@@ -12,27 +12,25 @@ export class FavoritesService {
     private favoriteRepo: Repository<Favorite>,
 
     @InjectRepository(Establishment)
-    private establishmentRepo: Repository<Establishment>
+    private establishmentRepo: Repository<Establishment>,
   ) {}
 
   // Méthode pour créer un favori
   async create(restaurantId: number, supplierId: number): Promise<Favorite> {
     // Vérifier que le restaurant existe et est bien de type RESTAURANT
-    const restaurant = await this.establishmentRepo.findOne({ 
-      where: {id: restaurantId,
-      type: EstablishmentType.RESTAURANT
-      }
+    const restaurant = await this.establishmentRepo.findOne({
+      where: { id: restaurantId, type: EstablishmentType.RESTAURANT },
     });
 
     if (!restaurant) {
-      throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
+      throw new NotFoundException(
+        `Restaurant with ID ${restaurantId} not found`,
+      );
     }
 
     // Vérifier que le fournisseur existe et est bien de type SUPPLIER
-    const supplier = await this.establishmentRepo.findOne({ 
-      where: {id: supplierId,
-      type: EstablishmentType.SUPPLIER
-      }
+    const supplier = await this.establishmentRepo.findOne({
+      where: { id: supplierId, type: EstablishmentType.SUPPLIER },
     });
 
     if (!supplier) {
@@ -43,17 +41,19 @@ export class FavoritesService {
     const existingFavorite = await this.favoriteRepo.findOne({
       where: {
         ownerId: restaurantId,
-        targetId: supplierId
-      }
+        targetId: supplierId,
+      },
     });
     if (existingFavorite) {
-      throw new NotFoundException(`Favorite already exists between restaurant ID ${restaurantId} and supplier ID ${supplierId}`);
+      throw new NotFoundException(
+        `Favorite already exists between restaurant ID ${restaurantId} and supplier ID ${supplierId}`,
+      );
     }
 
     // Créer et sauvegarder le favori
     const favorite = this.favoriteRepo.create({
       ownerId: restaurantId,
-      targetId: supplierId
+      targetId: supplierId,
     });
 
     return await this.favoriteRepo.save(favorite);
@@ -74,15 +74,16 @@ export class FavoritesService {
     const favorite = await this.favoriteRepo.findOne({
       where: {
         id: favoriteId,
-        ownerId: restaurantId
-      }
+        ownerId: restaurantId,
+      },
     });
 
     if (!favorite) {
-      throw new NotFoundException(`Favorite ${favoriteId} not found for restaurant ID ${restaurantId}`);
+      throw new NotFoundException(
+        `Favorite ${favoriteId} not found for restaurant ID ${restaurantId}`,
+      );
     }
 
     await this.favoriteRepo.remove(favorite);
   }
-
 }

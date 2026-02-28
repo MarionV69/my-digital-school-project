@@ -36,16 +36,24 @@ export class Conversation {
   // -- Relations --
 
   // Chaque conversation est liée à un restaurant
-  @ManyToOne(() => Establishment, (establishment) => establishment.conversations, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(
+    () => Establishment,
+    (establishment) => establishment.conversations,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn({ name: 'restaurant_id' })
   restaurant: Establishment;
 
   // Chaque conversation est liée à un fournisseur
-  @ManyToOne(() => Establishment, (establishment) => establishment.conversationsAsSupplier, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(
+    () => Establishment,
+    (establishment) => establishment.conversationsAsSupplier,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn({ name: 'supplier_id' })
   supplier: Establishment;
 

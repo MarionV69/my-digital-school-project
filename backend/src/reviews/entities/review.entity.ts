@@ -43,17 +43,24 @@ export class Review {
   // -- Relations --
 
   // Chaque avis est lié à un restaurant (reviewer)
-  @ManyToOne(() => Establishment, (establishment) => establishment.reviewsGiven, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(
+    () => Establishment,
+    (establishment) => establishment.reviewsGiven,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn({ name: 'reviewer_restaurant_id' })
   owner: Establishment;
 
   // Chaque avis est lié à un fournisseur (target)
-  @ManyToOne(() => Establishment, (establishment) => establishment.reviewsReceived, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(
+    () => Establishment,
+    (establishment) => establishment.reviewsReceived,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn({ name: 'reviewed_supplier_id' })
   target: Establishment;
-
 }

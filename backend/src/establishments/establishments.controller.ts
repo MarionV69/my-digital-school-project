@@ -12,6 +12,7 @@ import { EstablishmentsService } from './establishments.service';
 import { CreateEstablishmentDto } from './dto/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dto/update-establishment.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
 
 @ApiTags('establishments')
 @Controller('establishments')
@@ -20,13 +21,16 @@ export class EstablishmentsController {
 
   // Routes pour créer un établissement
   @Post()
-  create(@Body() createEstablishmentDto: CreateEstablishmentDto, @Request() req) {
+  create(
+    @Body() createEstablishmentDto: CreateEstablishmentDto,
+    @Request() req: Request & { user: AuthenticatedUser },
+  ) {
     return this.establishmentsService.create(createEstablishmentDto, req.user);
   }
 
   // Route pour récupérer tous les établissements
   @Get()
-  findAll(@Request() req) {
+  findAll(@Request() req: Request & { user: AuthenticatedUser }) {
     return this.establishmentsService.findAll(req.user);
   }
 

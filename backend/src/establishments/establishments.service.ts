@@ -1,11 +1,15 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateEstablishmentDto } from './dto/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dto/update-establishment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Establishment } from './entities/establishment.entity';
 import { Repository } from 'typeorm';
 import { EstablishmentType } from './enums/establishment-type.enum';
-import { User } from '../users/entities/user.entity'
+import { User } from '../users/entities/user.entity';
 import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
 
 @Injectable()
@@ -18,26 +22,29 @@ export class EstablishmentsService {
     private userRepository: Repository<User>,
   ) {}
 
-
   // Méthode pour créer un établissement
-  async create(dto: CreateEstablishmentDto, currentUser: AuthenticatedUser): Promise<Establishment> {
-
+  async create(
+    dto: CreateEstablishmentDto,
+    currentUser: AuthenticatedUser,
+  ): Promise<Establishment> {
     // Vérification: Le user a t-il déjà un établissement
-    if(currentUser.establishmentId){
-      throw new BadRequestException('Vous avez déjà créé un établissement. Un utilisateur ne peut gérer qu\'un seul établissement.');
+    if (currentUser.establishmentId) {
+      throw new BadRequestException(
+        "Vous avez déjà créé un établissement. Un utilisateur ne peut gérer qu'un seul établissement.",
+      );
     }
     // Créer l'établissement
     const establishment = this.establishmentRepo.create(dto);
     const savedEstablishment = await this.establishmentRepo.save(establishment);
 
     console.log('currentUser:', currentUser);
-    console.log('savedEstablishment.id:', savedEstablishment.id)
+    console.log('savedEstablishment.id:', savedEstablishment.id);
 
     // Lier le user à cet établissement
-    if(currentUser && currentUser.id ) {
+    if (currentUser && currentUser.id) {
       console.log('Tentative de mise à jour du user ID:', currentUser.id);
       await this.userRepository.update(currentUser.id, {
-        establishmentId: savedEstablishment.id
+        establishmentId: savedEstablishment.id,
       });
 
       console.log('User mis à jour');
@@ -50,19 +57,20 @@ export class EstablishmentsService {
 
   // Méthode pour récupérer tous les établissements
   async findAll(currentUser: AuthenticatedUser): Promise<Establishment[]> {
-    // Si pas d'établissement 
-    if(!currentUser.establishmentType) {
+    // Si pas d'établissement
+    if (!currentUser.establishmentType) {
       return await this.establishmentRepo.find();
     }
 
     // Calculer le type d'établissement opposé
-    const oppositeType = currentUser.establishmentType === EstablishmentType.RESTAURANT
-    ? EstablishmentType.SUPPLIER
-    : EstablishmentType.RESTAURANT
+    const oppositeType =
+      currentUser.establishmentType === EstablishmentType.RESTAURANT
+        ? EstablishmentType.SUPPLIER
+        : EstablishmentType.RESTAURANT;
 
     // Filtrer par type
     return await this.establishmentRepo.find({
-      where: { type: oppositeType}
+      where: { type: oppositeType },
     });
   }
 
@@ -79,7 +87,10 @@ export class EstablishmentsService {
   }
 
   // Méthode pour mettre à jour un établissement
-  async update(id: number, dto: UpdateEstablishmentDto): Promise<Establishment> {
+  async update(
+    id: number,
+    dto: UpdateEstablishmentDto,
+  ): Promise<Establishment> {
     const establishment = await this.establishmentRepo.findOneBy({ id });
     if (!establishment) {
       throw new NotFoundException(`Establishment with ID ${id} not found`);

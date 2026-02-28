@@ -11,7 +11,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     configService: ConfigService,
     private readonly usersService: UsersService,
-
   ) {
     const secret = configService.get<string>('JWT_SECRET');
     if (!secret) {
@@ -27,7 +26,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: JwtPayload): Promise<AuthenticatedUser> {
     const user = await this.usersService.findOne(payload.sub, {
-      relations: ['establishment']
+      relations: ['establishment'],
     });
 
     return {

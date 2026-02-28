@@ -58,7 +58,7 @@ export class User {
   // Chaque utilisateur peut être lié à un établissement (restaurant ou fournisseur)
   @ManyToOne(() => Establishment, {
     nullable: true,
-    onDelete: 'SET NULL', 
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'establishment_id' })
   establishment: Establishment | null;

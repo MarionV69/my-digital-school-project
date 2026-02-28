@@ -55,7 +55,9 @@ export class SupplierAttributes {
   // -- Relations --
 
   // Une fiche d'attributs est liée à un seul établissement de type 'SUPPLIER'
-  @OneToOne( () => Establishment, (Establishment) => Establishment.supplierAttributes,
+  @OneToOne(
+    () => Establishment,
+    (Establishment) => Establishment.supplierAttributes,
     {
       onDelete: 'CASCADE',
     },

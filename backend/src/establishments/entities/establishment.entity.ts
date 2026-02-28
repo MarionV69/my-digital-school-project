@@ -85,39 +85,42 @@ export class Establishment {
   // -- Relations --
 
   // Un établissement  est lié à un ou plusieurs utilisateurs
-  @OneToMany( () => User, (user) => user.establishment)
+  @OneToMany(() => User, (user) => user.establishment)
   user: User[];
 
   // Un établissement (type: 'RESTAURANT') peut avoir plusieurs favoris
-  @OneToMany( () => Favorite, (favorite) => favorite.owner)
+  @OneToMany(() => Favorite, (favorite) => favorite.owner)
   favoritesGiven: Favorite[];
 
   // Un établissement (type: 'SUPPLIER') peut être favori de plusieurs restaurants
-  @OneToMany( () => Favorite, (favorite) => favorite.target)
+  @OneToMany(() => Favorite, (favorite) => favorite.target)
   favoritesReceived: Favorite[];
 
   // Un établissement (type: 'RESTAURANT') peut laisser des avis sur plusieurs fournisseurs
-  @OneToMany( () => Review, (review) => review.owner)
+  @OneToMany(() => Review, (review) => review.owner)
   reviewsGiven: Review[];
 
   // Un établissement (type: 'SUPPLIER') peut recevoir des avis de plusieurs restaurants
-  @OneToMany( () => Review, (review) => review.target)
+  @OneToMany(() => Review, (review) => review.target)
   reviewsReceived: Review[];
 
   // Un établissement peut déposer des documents
-  @OneToMany( () => Document, (document) => document.establishment)
+  @OneToMany(() => Document, (document) => document.establishment)
   documents: Document[];
 
   // Un restaurant peut avoir plusieurs conversations
-  @OneToMany( () => Conversation, (conversation) => conversation.restaurant)
+  @OneToMany(() => Conversation, (conversation) => conversation.restaurant)
   conversations: Conversation[];
 
   // Un fournisseur peut avoir plusieurs conversations
-  @OneToMany( () => Conversation, (conversation) => conversation.supplier)
+  @OneToMany(() => Conversation, (conversation) => conversation.supplier)
   conversationsAsSupplier: Conversation[];
 
   // Un établissement (type: 'SUPPLIER') a une fiche d'attributs
-  @OneToOne( () => SupplierAttributes, (SupplierAttributes) => SupplierAttributes.supplier, { cascade: true, nullable: true })
+  @OneToOne(
+    () => SupplierAttributes,
+    (SupplierAttributes) => SupplierAttributes.supplier,
+    { cascade: true, nullable: true },
+  )
   supplierAttributes: SupplierAttributes | null;
-  
 }
