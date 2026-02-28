@@ -33,12 +33,13 @@ async function bootstrap() {
       .addBearerAuth()
       .addTag('auth', 'Authentication and user management')
       .addTag('users', 'User operations')
-      .addTag('restaurants', 'Restaurant management and favorites')
+      .addTag('establishments', 'Establishment management')
       .addTag('suppliers', 'Supplier management and search')
       .addTag(
         'documents',
         'Establishment document management (logo, cover photo, gallery photos, catalog PDF)',
       )
+      .addTag('favorites', 'Restaurant favorites management')
       .addTag('conversations', 'Messaging system')
       .addTag('reviews', 'Reviews and ratings')
       .build(),

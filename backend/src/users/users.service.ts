@@ -10,7 +10,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
-import { FindOneOptions } from 'typeorm'
+import { FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -37,7 +37,7 @@ export class UsersService {
   async findOne(id: number, options?: FindOneOptions<User>): Promise<User> {
     const user = await this.usersRepository.findOne({
       ...(options || {}),
-      where: { id }
+      where: { id },
     });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
