@@ -51,7 +51,7 @@ export class CreateEstablishmentDto {
     @IsNotEmpty()
     @IsString()
     @MaxLength(255)
-    adress: string;
+    address: string;
     
     @ApiProperty({ example: 'Paris' })
     @IsNotEmpty()
