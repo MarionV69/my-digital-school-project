@@ -33,7 +33,7 @@ export class UsersService {
     return this.usersRepository.save(newUser);
   }
 
-  async findOne(id: number, options?: any): Promise<User> {
+  async findOne(id: number, _options?: any): Promise<User> {
     const user = await this.usersRepository.findOne({
       where: { id },
       relations: ['establishment'],

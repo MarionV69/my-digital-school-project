@@ -6,6 +6,7 @@ import { Establishment } from './entities/establishment.entity';
 import { Repository } from 'typeorm';
 import { EstablishmentType } from './enums/establishment-type.enum';
 import { User } from '../users/entities/user.entity'
+import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
 
 @Injectable()
 export class EstablishmentsService {
@@ -19,7 +20,7 @@ export class EstablishmentsService {
 
 
   // Méthode pour créer un établissement
-  async create(dto: CreateEstablishmentDto, currentUser: any): Promise<Establishment> {
+  async create(dto: CreateEstablishmentDto, currentUser: AuthenticatedUser): Promise<Establishment> {
 
     // Vérification: Le user a t-il déjà un établissement
     if(currentUser.establishmentId){
@@ -48,7 +49,7 @@ export class EstablishmentsService {
   }
 
   // Méthode pour récupérer tous les établissements
-  async findAll(currentUser: any): Promise<Establishment[]> {
+  async findAll(currentUser: AuthenticatedUser): Promise<Establishment[]> {
     // Si pas d'établissement 
     if(!currentUser.establishmentType) {
       return await this.establishmentRepo.find();
