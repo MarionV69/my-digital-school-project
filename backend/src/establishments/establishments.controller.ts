@@ -11,10 +11,11 @@ import {
 import { EstablishmentsService } from './establishments.service';
 import { CreateEstablishmentDto } from './dto/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dto/update-establishment.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
 
 @ApiTags('establishments')
+@ApiBearerAuth()
 @Controller('establishments')
 export class EstablishmentsController {
   constructor(private readonly establishmentsService: EstablishmentsService) {}

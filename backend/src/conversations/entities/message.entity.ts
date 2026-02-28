@@ -9,12 +9,12 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { SenderType } from '../enums/sender-type.enum';
 import { Conversation } from './conversation.entity';
 import { StoredFile } from '../../files/entities/stored-file.entity';
+import { EstablishmentType } from 'src/establishments/enums/establishment-type.enum';
 
 @Entity('message')
-@Index('idx_message_is_read', ['isRead'])
+@Index('idx_message_is_read_by_recipient', ['isReadByRecipient'])
 @Index('idx_message_sent_at', ['sentAt'])
 @Index(['conversationId'])
 export class Message {
@@ -24,8 +24,8 @@ export class Message {
   @Column({ name: 'conversation_id', type: 'int' })
   conversationId: number;
 
-  @Column({ name: 'sender_type', type: 'enum', enum: SenderType })
-  senderType: SenderType;
+  @Column({ name: 'sender_type', type: 'enum', enum: EstablishmentType })
+  senderType: EstablishmentType;
 
   @Column({ type: 'text' })
   content: string;
@@ -33,8 +33,8 @@ export class Message {
   @CreateDateColumn({ name: 'sent_at', type: 'datetime' })
   sentAt: Date;
 
-  @Column({ name: 'is_read', type: 'boolean', default: false })
-  isRead: boolean;
+  @Column({ name: 'is_read_by_recipient', type: 'boolean', default: false })
+  isReadByRecipient: boolean;
 
   // Relations
   @ManyToOne(() => Conversation, (conversation) => conversation.messages, {
