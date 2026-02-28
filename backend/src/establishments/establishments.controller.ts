@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
 } from '@nestjs/common';
 import { EstablishmentsService } from './establishments.service';
 import { CreateEstablishmentDto } from './dto/create-establishment.dto';
@@ -19,14 +20,14 @@ export class EstablishmentsController {
 
   // Routes pour créer un établissement
   @Post()
-  create(@Body() createEstablishmentDto: CreateEstablishmentDto) {
-    return this.establishmentsService.create(createEstablishmentDto);
+  create(@Body() createEstablishmentDto: CreateEstablishmentDto, @Request() req) {
+    return this.establishmentsService.create(createEstablishmentDto, req.user);
   }
 
   // Route pour récupérer tous les établissements
   @Get()
-  findAll() {
-    return this.establishmentsService.findAll();
+  findAll(@Request() req) {
+    return this.establishmentsService.findAll(req.user);
   }
 
   // Route pour récupérer un établissement par son ID
