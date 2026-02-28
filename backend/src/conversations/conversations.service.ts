@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { Establishment } from '../establishments/entities/establishment.entity';
 import { EstablishmentType } from 'src/establishments/enums/establishment-type.enum';
 import { ConversationResponseDto } from './dto/conversation-response.dto';
+import { UnreadCountResponseDto } from './dto/unread-count-response.dto';
 
 @Injectable()
 export class ConversationsService {
@@ -70,7 +71,10 @@ export class ConversationsService {
       (establishmentType === EstablishmentType.SUPPLIER &&
         conversation.supplierId === establishmentId);
 
-    if (!isParticipant) throw new ForbiddenException();
+    if (!isParticipant)
+      throw new ForbiddenException(
+        'You are not a participant of this conversation',
+      );
 
     const message = this.messagesRepository.create({
       conversationId,
@@ -153,7 +157,7 @@ export class ConversationsService {
       where: { id: conversationId },
     });
 
-    if (!conversation) throw new NotFoundException();
+    if (!conversation) throw new NotFoundException('Conversation not found');
 
     const isParticipant =
       (establishmentType === EstablishmentType.RESTAURANT &&
@@ -161,7 +165,10 @@ export class ConversationsService {
       (establishmentType === EstablishmentType.SUPPLIER &&
         conversation.supplierId === establishmentId);
 
-    if (!isParticipant) throw new ForbiddenException();
+    if (!isParticipant)
+      throw new ForbiddenException(
+        'You are not a participant of this conversation',
+      );
 
     await this.messagesRepository.update(
       {
@@ -184,7 +191,7 @@ export class ConversationsService {
   async getTotalUnreadCount(
     establishmentId: number,
     establishmentType: EstablishmentType,
-  ) {
+  ): Promise<UnreadCountResponseDto> {
     const isRestaurant = establishmentType === EstablishmentType.RESTAURANT;
     const queryBuilder = this.messagesRepository
       .createQueryBuilder('message')

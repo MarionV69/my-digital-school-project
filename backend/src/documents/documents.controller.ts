@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
@@ -11,6 +10,7 @@ import {
   ParseIntPipe,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
@@ -34,9 +34,11 @@ import { DocumentCategory } from '../documents/enums/document.enum';
 import { DocumentResponseDto } from '../documents/dto/document-response.dto';
 import { DocumentsService } from './documents.service';
 import { GroupedDocumentsResponseDto } from './dto/grouped-documents-response.dto';
+import { EstablishmentGuard } from 'src/common/guards/establishment.guard';
 
 @ApiTags('documents')
 @ApiBearerAuth()
+@UseGuards(EstablishmentGuard)
 @Controller('documents')
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
@@ -84,14 +86,8 @@ export class DocumentsController {
     file: Express.Multer.File,
     @Body() dto: CreateDocumentDto,
   ) {
-    if (user.establishmentId === null) {
-      throw new ForbiddenException(
-        'You must create an establishment before managing documents',
-      );
-    }
-
     return this.documentsService.upload(
-      user.establishmentId,
+      user.establishmentId!,
       user.establishmentType,
       file,
       dto.category,
@@ -109,13 +105,7 @@ export class DocumentsController {
   async findAll(
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<GroupedDocumentsResponseDto> {
-    if (user.establishmentId === null) {
-      throw new ForbiddenException(
-        'You must create an establishment before managing documents',
-      );
-    }
-
-    return this.documentsService.findAllByEstablishment(user.establishmentId);
+    return this.documentsService.findAllByEstablishment(user.establishmentId!);
   }
 
   @Delete(':id')
@@ -129,12 +119,6 @@ export class DocumentsController {
     @CurrentUser() user: AuthenticatedUser,
     @Param('id', ParseIntPipe) documentId: number,
   ) {
-    if (user.establishmentId === null) {
-      throw new ForbiddenException(
-        'You must create an establishment before managing documents',
-      );
-    }
-
-    return this.documentsService.delete(documentId, user.establishmentId);
+    return this.documentsService.delete(documentId, user.establishmentId!);
   }
 }

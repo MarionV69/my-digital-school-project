@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UnreadCountResponseDto {
-  @ApiProperty()
+  @ApiProperty({ example: 3 })
   count: number;
 }

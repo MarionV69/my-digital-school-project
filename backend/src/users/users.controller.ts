@@ -35,7 +35,7 @@ export class UsersController {
     type: User,
   })
   @ApiNotFoundResponse({ description: 'User not found' })
-  async getProfile(@CurrentUser() user: AuthenticatedUser): Promise<User> {
+  getProfile(@CurrentUser() user: AuthenticatedUser): Promise<User> {
     return this.usersService.findOne(user.id);
   }
 
@@ -46,7 +46,7 @@ export class UsersController {
     type: User,
   })
   @ApiNotFoundResponse({ description: 'User not found' })
-  async updateProfile(
+  updateProfile(
     @CurrentUser() user: AuthenticatedUser,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
@@ -58,7 +58,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Delete current user account' })
   @ApiNoContentResponse({ description: 'User account deleted' })
   @ApiNotFoundResponse({ description: 'User not found' })
-  async deleteAccount(@CurrentUser() user: AuthenticatedUser): Promise<void> {
+  deleteAccount(@CurrentUser() user: AuthenticatedUser): Promise<void> {
     return this.usersService.remove(user.id);
   }
 }

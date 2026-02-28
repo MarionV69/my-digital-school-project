@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Message } from './message.entity';
 import { Establishment } from '../../establishments/entities/establishment.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('conversation')
 @Unique('uq_conversation_restaurant_supplier', ['restaurantId', 'supplierId'])
@@ -18,18 +19,23 @@ import { Establishment } from '../../establishments/entities/establishment.entit
 @Index(['restaurantId'])
 @Index(['supplierId'])
 export class Conversation {
+  @ApiProperty({ example: 1 })
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ example: 3 })
   @Column({ name: 'restaurant_id', type: 'int' })
   restaurantId: number;
 
+  @ApiProperty({ example: 5 })
   @Column({ name: 'supplier_id', type: 'int' })
   supplierId: number;
 
+  @ApiProperty({ example: '2026-02-22T13:49:30.000Z' })
   @CreateDateColumn({ name: 'created_at', type: 'datetime' })
   createdAt: Date;
 
+  @ApiProperty({ example: '2026-02-26T20:15:25.000Z', nullable: true })
   @Column({ name: 'last_message_at', type: 'datetime', nullable: true })
   lastMessageAt: Date | null;
 
