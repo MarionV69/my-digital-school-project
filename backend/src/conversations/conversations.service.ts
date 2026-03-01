@@ -2,6 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  StreamableFile,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Conversation } from './entities/conversation.entity';
@@ -11,6 +12,10 @@ import { Establishment } from '../establishments/entities/establishment.entity';
 import { EstablishmentType } from 'src/establishments/enums/establishment-type.enum';
 import { ConversationResponseDto } from './dto/conversation-response.dto';
 import { UnreadCountResponseDto } from './dto/unread-count-response.dto';
+import { FilesService } from '../files/files.service';
+import { MessageAttachmentResponseDto } from './dto/message-attachments-response.dto';
+import { createReadStream } from 'node:fs';
+import { MessageResponseDto } from './dto/message-response.dto';
 
 @Injectable()
 export class ConversationsService {
@@ -20,6 +25,7 @@ export class ConversationsService {
     @InjectRepository(Message) private messagesRepository: Repository<Message>,
     @InjectRepository(Establishment)
     private establishmentsRepository: Repository<Establishment>,
+    private readonly filesService: FilesService,
   ) {}
 
   async createConversation(
@@ -58,23 +64,14 @@ export class ConversationsService {
     establishmentId: number,
     establishmentType: EstablishmentType,
     content: string,
-  ): Promise<Message> {
+  ): Promise<MessageResponseDto> {
     const conversation = await this.conversationsRepository.findOne({
       where: { id: conversationId },
     });
 
     if (!conversation) throw new NotFoundException('Conversation not found');
 
-    const isParticipant =
-      (establishmentType === EstablishmentType.RESTAURANT &&
-        conversation.restaurantId === establishmentId) ||
-      (establishmentType === EstablishmentType.SUPPLIER &&
-        conversation.supplierId === establishmentId);
-
-    if (!isParticipant)
-      throw new ForbiddenException(
-        'You are not a participant of this conversation',
-      );
+    this.checkIsParticipant(conversation, establishmentId, establishmentType);
 
     const message = this.messagesRepository.create({
       conversationId,
@@ -89,7 +86,15 @@ export class ConversationsService {
       lastMessageAt: new Date(),
     });
 
-    return message;
+    return {
+      id: message.id,
+      conversationId: message.conversationId,
+      senderType: message.senderType,
+      content: message.content,
+      sentAt: message.sentAt,
+      isReadByRecipient: message.isReadByRecipient,
+      attachments: [],
+    };
   }
 
   async getConversations(
@@ -152,23 +157,14 @@ export class ConversationsService {
     conversationId: number,
     establishmentId: number,
     establishmentType: EstablishmentType,
-  ): Promise<Message[]> {
+  ): Promise<MessageResponseDto[]> {
     const conversation = await this.conversationsRepository.findOne({
       where: { id: conversationId },
     });
 
     if (!conversation) throw new NotFoundException('Conversation not found');
 
-    const isParticipant =
-      (establishmentType === EstablishmentType.RESTAURANT &&
-        conversation.restaurantId === establishmentId) ||
-      (establishmentType === EstablishmentType.SUPPLIER &&
-        conversation.supplierId === establishmentId);
-
-    if (!isParticipant)
-      throw new ForbiddenException(
-        'You are not a participant of this conversation',
-      );
+    this.checkIsParticipant(conversation, establishmentId, establishmentType);
 
     await this.messagesRepository.update(
       {
@@ -182,10 +178,27 @@ export class ConversationsService {
       { isReadByRecipient: true },
     );
 
-    return this.messagesRepository.find({
+    const messages = await this.messagesRepository.find({
       where: { conversationId },
       order: { sentAt: 'ASC' },
+      relations: ['files'],
     });
+
+    return messages.map((message) => ({
+      id: message.id,
+      conversationId: message.conversationId,
+      senderType: message.senderType,
+      content: message.content,
+      sentAt: message.sentAt,
+      isReadByRecipient: message.isReadByRecipient,
+      attachments: message.files.map((file) => ({
+        id: file.id,
+        originalFilename: file.originalFilename,
+        mimeType: file.mimeType,
+        size: file.size,
+        endpoint: this.filesService.getPrivateFileEndpoint(message.id, file.id),
+      })),
+    }));
   }
 
   async getTotalUnreadCount(
@@ -207,5 +220,88 @@ export class ConversationsService {
 
     const count = await queryBuilder.getCount();
     return { count };
+  }
+
+  async sendAttachment(
+    messageId: number,
+    establishmentId: number,
+    establishmentType: EstablishmentType,
+    file: Express.Multer.File,
+  ): Promise<MessageAttachmentResponseDto> {
+    const message = await this.messagesRepository.findOne({
+      where: { id: messageId },
+      relations: ['conversation', 'files'],
+    });
+
+    if (!message) throw new NotFoundException('Message not found');
+
+    this.checkIsParticipant(
+      message.conversation,
+      establishmentId,
+      establishmentType,
+    );
+
+    const storedFile = await this.filesService.create(file);
+
+    message.files.push(storedFile);
+    await this.messagesRepository.save(message);
+
+    return {
+      id: storedFile.id,
+      originalFilename: storedFile.originalFilename,
+      mimeType: storedFile.mimeType,
+      size: storedFile.size,
+      endpoint: this.filesService.getPrivateFileEndpoint(
+        messageId,
+        storedFile.id,
+      ),
+    };
+  }
+
+  async streamAttachment(
+    messageId: number,
+    fileId: number,
+    establishmentId: number,
+    establishmentType: EstablishmentType,
+  ): Promise<StreamableFile> {
+    const message = await this.messagesRepository.findOne({
+      where: { id: messageId },
+      relations: ['conversation', 'files'],
+    });
+
+    if (!message) throw new NotFoundException('Message not found');
+
+    this.checkIsParticipant(
+      message.conversation,
+      establishmentId,
+      establishmentType,
+    );
+
+    const file = message.files.find((f) => f.id === fileId);
+    if (!file) throw new NotFoundException('Attachment not found');
+
+    const fileStream = createReadStream(file.path);
+
+    return new StreamableFile(fileStream, {
+      type: file.mimeType,
+      disposition: `inline; filename="${file.originalFilename}"`,
+    });
+  }
+
+  private checkIsParticipant(
+    conversation: Conversation,
+    establishmentId: number,
+    establishmentType: EstablishmentType,
+  ): void {
+    const isParticipant =
+      (establishmentType === EstablishmentType.RESTAURANT &&
+        conversation.restaurantId === establishmentId) ||
+      (establishmentType === EstablishmentType.SUPPLIER &&
+        conversation.supplierId === establishmentId);
+
+    if (!isParticipant)
+      throw new ForbiddenException(
+        'You are not a participant of this conversation',
+      );
   }
 }

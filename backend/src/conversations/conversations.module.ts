@@ -4,11 +4,16 @@ import { ConversationsController } from './conversations.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Conversation } from './entities/conversation.entity';
 import { Message } from './entities/message.entity';
-import { Establishment } from 'src/establishments/entities/establishment.entity';
+import { Establishment } from '../establishments/entities/establishment.entity';
+import { FilesModule } from '../files/files.module';
+import { MessageAttachmentsController } from './message-attachments.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Conversation, Message, Establishment])],
-  controllers: [ConversationsController],
+  imports: [
+    FilesModule,
+    TypeOrmModule.forFeature([Conversation, Message, Establishment]),
+  ],
+  controllers: [ConversationsController, MessageAttachmentsController],
   providers: [ConversationsService],
 })
 export class ConversationsModule {}

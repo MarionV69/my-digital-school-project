@@ -60,4 +60,8 @@ export class FilesService {
 
     return `${baseUrl}${PUBLIC_STATIC_URL_PREFIX}/${storedFilename}`;
   }
+
+  getPrivateFileEndpoint(messageId: number, fileId: number): string {
+    return `/messages/${messageId}/attachments/${fileId}`;
+  }
 }
