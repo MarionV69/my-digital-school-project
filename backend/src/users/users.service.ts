@@ -19,6 +19,7 @@ export class UsersService {
     private readonly configService: ConfigService,
   ) {}
 
+  // Hashes the password before saving the user, throws if email already exists
   async create(createUserDto: CreateUserDto): Promise<User> {
     const existingUser = await this.findByEmail(createUserDto.email);
     if (existingUser) {
@@ -49,6 +50,7 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { email } });
   }
 
+  // Used during JWT validation to load the user with their establishment
   async findByEmailWithEstablishment(email: string): Promise<User | null> {
     return this.usersRepository.findOne({
       where: { email },

@@ -15,6 +15,7 @@ export class FilesService {
     private readonly filesRepository: Repository<StoredFile>,
   ) {}
 
+  // Saves file metadata to DB using the path already written to disk by Multer
   async create(file: Express.Multer.File): Promise<StoredFile> {
     const relativePath = path.relative(process.cwd(), file.path);
 
@@ -39,17 +40,17 @@ export class FilesService {
     return file;
   }
 
+  // Deletes physical file from disk first, then removes DB record
+  // If disk deletion fails, logs error but still removes DB record
   async delete(id: number): Promise<void> {
     const file = await this.findOne(id);
 
-    // Delete physical file
     try {
       await fs.unlink(file.path);
     } catch (error) {
       console.error(`Error deleting file ${file.path}:`, error);
     }
 
-    // Remove from database
     await this.filesRepository.remove(file);
   }
 

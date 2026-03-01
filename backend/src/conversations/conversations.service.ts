@@ -28,6 +28,7 @@ export class ConversationsService {
     private readonly filesService: FilesService,
   ) {}
 
+  // Creates a new conversation or returns existing one if already exists
   async createConversation(
     establishmentId: number,
     establishmentType: EstablishmentType,
@@ -153,6 +154,7 @@ export class ConversationsService {
     });
   }
 
+  // Marks unread messages from the other participant as read and returns all messages with attachments
   async getConversationMessages(
     conversationId: number,
     establishmentId: number,
@@ -258,6 +260,7 @@ export class ConversationsService {
     };
   }
 
+  // Streams private file after verifying conversation participation
   async streamAttachment(
     messageId: number,
     fileId: number,
@@ -288,6 +291,7 @@ export class ConversationsService {
     });
   }
 
+  // Ensures the current establishment is a participant of the conversation
   private checkIsParticipant(
     conversation: Conversation,
     establishmentId: number,
