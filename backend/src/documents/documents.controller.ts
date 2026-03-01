@@ -21,10 +21,12 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
@@ -44,7 +46,8 @@ export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
 
   @Post()
-  @ApiOkResponse({ type: DocumentResponseDto })
+  @ApiOperation({ summary: 'Upload a document' })
+  @ApiCreatedResponse({ type: DocumentResponseDto })
   @ApiBadRequestResponse({
     description: 'Invalid file type or category limit reached',
   })
@@ -95,6 +98,7 @@ export class DocumentsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all documents grouped by category' })
   @ApiOkResponse({
     description: 'Documents grouped by category',
     type: GroupedDocumentsResponseDto,
@@ -109,6 +113,7 @@ export class DocumentsController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a document' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse({ description: 'Document deleted successfully' })
   @ApiNotFoundResponse({ description: 'Document not found' })

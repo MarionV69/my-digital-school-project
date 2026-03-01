@@ -43,7 +43,7 @@ export class DocumentsService {
     DocumentCategory.GALLERY_PHOTO,
   ];
 
-  // Upload a document(with category-specific rules)
+  // Upload a document after validating category-specific rules
   async upload(
     establishmentId: number,
     establishmentType: EstablishmentType | null,

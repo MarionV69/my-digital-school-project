@@ -18,14 +18,14 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import { type AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
 import { SendMessageDto } from './dto/send-message.dto';
-import { EstablishmentGuard } from 'src/common/guards/establishment.guard';
+import { EstablishmentGuard } from '../common/guards/establishment.guard';
 import { Conversation } from './entities/conversation.entity';
-import { Message } from './entities/message.entity';
 import { ConversationResponseDto } from './dto/conversation-response.dto';
 import { UnreadCountResponseDto } from './dto/unread-count-response.dto';
+import { MessageResponseDto } from './dto/message-response.dto';
 
 @ApiTags('conversations')
 @ApiBearerAuth()
@@ -54,7 +54,7 @@ export class ConversationsController {
 
   @Post(':id/messages')
   @ApiOperation({ summary: 'Send a message in a conversation' })
-  @ApiCreatedResponse({ type: Message })
+  @ApiCreatedResponse({ type: MessageResponseDto })
   @ApiForbiddenResponse({
     description: 'Not a participant of this conversation',
   })
@@ -63,7 +63,7 @@ export class ConversationsController {
     @Param('id', ParseIntPipe) conversationId: number,
     @Body() sendMessageDto: SendMessageDto,
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<Message> {
+  ): Promise<MessageResponseDto> {
     return this.conversationsService.sendMessage(
       conversationId,
       user.establishmentId!,
@@ -98,7 +98,7 @@ export class ConversationsController {
 
   @Get(':id/messages')
   @ApiOperation({ summary: 'Get messages of a conversation' })
-  @ApiOkResponse({ type: [Message] })
+  @ApiOkResponse({ type: [MessageResponseDto] })
   @ApiForbiddenResponse({
     description: 'Not a participant of this conversation',
   })
@@ -106,7 +106,7 @@ export class ConversationsController {
   getConversationMessages(
     @Param('id', ParseIntPipe) conversationId: number,
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<Message[]> {
+  ): Promise<MessageResponseDto[]> {
     return this.conversationsService.getConversationMessages(
       conversationId,
       user.establishmentId!,

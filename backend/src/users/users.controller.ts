@@ -4,7 +4,6 @@ import {
   Body,
   Patch,
   Delete,
-  Request,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -15,9 +14,9 @@ import {
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { ApiOperation } from '@nestjs/swagger';
 import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
 import { User } from './entities/user.entity';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
