@@ -97,7 +97,7 @@ export class Establishment {
   favoritesReceived: Favorite[];
 
   // Un établissement (type: 'RESTAURANT') peut laisser des avis sur plusieurs fournisseurs
-  @OneToMany(() => Review, (review) => review.owner)
+  @OneToMany(() => Review, (review) => review.reviewer)
   reviewsGiven: Review[];
 
   // Un établissement (type: 'SUPPLIER') peut recevoir des avis de plusieurs restaurants
