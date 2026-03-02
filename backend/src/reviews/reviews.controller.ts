@@ -31,6 +31,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
 import { ReviewResponseDto } from './dto/review-response.dto';
 import { ReplyReviewDto } from './dto/reply-review.dto';
+import { SupplierReviewsResponseDto } from './dto/supplier-reviews-response.dto';
 
 @ApiTags('reviews')
 @ApiBearerAuth()
@@ -60,11 +61,11 @@ export class ReviewsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all reviews for a supplier' })
-  @ApiOkResponse({ type: [ReviewResponseDto] })
+  @ApiOkResponse({ type: SupplierReviewsResponseDto })
   @ApiQuery({ name: 'supplierId', type: Number, required: true })
   getSupplierReviews(
     @Query('supplierId', ParseIntPipe) supplierId: number,
-  ): Promise<ReviewResponseDto[]> {
+  ): Promise<SupplierReviewsResponseDto> {
     return this.reviewsService.getSupplierReviews(supplierId);
   }
 

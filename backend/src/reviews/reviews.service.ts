@@ -12,6 +12,7 @@ import { Establishment } from '../establishments/entities/establishment.entity';
 import { EstablishmentType } from '../establishments/enums/establishment-type.enum';
 import { ReviewResponseDto } from './dto/review-response.dto';
 import { ReplyReviewDto } from './dto/reply-review.dto';
+import { SupplierReviewsResponseDto } from './dto/supplier-reviews-response.dto';
 
 @Injectable()
 export class ReviewsService {
@@ -66,14 +67,30 @@ export class ReviewsService {
     return this.toResponseDto(saved, restaurant!);
   }
 
-  async getSupplierReviews(supplierId: number): Promise<ReviewResponseDto[]> {
+  async getSupplierReviews(
+    supplierId: number,
+  ): Promise<SupplierReviewsResponseDto> {
     const reviews = await this.reviewsRepository.find({
       where: { reviewedSupplierId: supplierId },
       relations: ['reviewer'],
       order: { createdAt: 'DESC' },
     });
 
-    return reviews.map((review) => this.toResponseDto(review, review.reviewer));
+    const count = reviews.length;
+    const average =
+      count > 0
+        ? Math.round(
+            (reviews.reduce((sum, r) => sum + r.rating, 0) / count) * 10,
+          ) / 10
+        : 0;
+
+    return {
+      average,
+      count,
+      reviews: reviews.map((review) =>
+        this.toResponseDto(review, review.reviewer),
+      ),
+    };
   }
 
   // Only the reviewed supplier can reply, one reply per review
