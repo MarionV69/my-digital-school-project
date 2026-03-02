@@ -34,6 +34,12 @@ export class Review {
   @Column({ type: 'text' })
   comment: string;
 
+  @Column({ type: 'text', nullable: true })
+  reply: string | null;
+
+  @Column({ name: 'replied_at', type: 'datetime', nullable: true })
+  repliedAt: Date | null;
+
   @Column({ type: 'enum', enum: ReviewStatus, default: ReviewStatus.PUBLISHED })
   status: ReviewStatus;
 
@@ -51,7 +57,7 @@ export class Review {
     },
   )
   @JoinColumn({ name: 'reviewer_restaurant_id' })
-  owner: Establishment;
+  reviewer: Establishment;
 
   // Chaque avis est lié à un fournisseur (target)
   @ManyToOne(
