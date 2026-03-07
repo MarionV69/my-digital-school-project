@@ -19,6 +19,8 @@ export class AuthResponseDto {
   user: {
     id: number;
     role: UserRole;
+    firstName: string;
+    lastName: string;
     establishmentId: number | null;
     establishmentType: EstablishmentType | null;
   };
