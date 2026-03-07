@@ -32,6 +32,7 @@ import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.in
 import { ReviewResponseDto } from './dto/review-response.dto';
 import { ReplyReviewDto } from './dto/reply-review.dto';
 import { SupplierReviewsResponseDto } from './dto/supplier-reviews-response.dto';
+import { Public } from '../common/decorators/public.decorator';
 
 @ApiTags('reviews')
 @ApiBearerAuth()
@@ -63,6 +64,7 @@ export class ReviewsController {
   @ApiOperation({ summary: 'Get all reviews for a supplier' })
   @ApiOkResponse({ type: SupplierReviewsResponseDto })
   @ApiQuery({ name: 'supplierId', type: Number, required: true })
+  @Public()
   getSupplierReviews(
     @Query('supplierId', ParseIntPipe) supplierId: number,
   ): Promise<SupplierReviewsResponseDto> {

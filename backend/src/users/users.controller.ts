@@ -35,7 +35,7 @@ export class UsersController {
   })
   @ApiNotFoundResponse({ description: 'User not found' })
   getProfile(@CurrentUser() user: AuthenticatedUser): Promise<User> {
-    return this.usersService.findOne(user.id);
+    return this.usersService.findOne(user.id, { relations: ['establishment'] });
   }
 
   @Patch('me')
