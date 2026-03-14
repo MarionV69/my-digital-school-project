@@ -1,18 +1,11 @@
 import { createContext } from "react";
-
-export interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
-  role: "OWNER" | "EMPLOYEE" | "ADMIN";
-  establishmentId: number | null;
-  establishmentType: "RESTAURANT" | "SUPPLIER" | null;
-}
+import type { LoggedUser, RegisterDto } from "../types/auth.types";
 
 export type AuthContextType = {
-  user: User | null;
+  user: LoggedUser | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<User>;
+  login: (email: string, password: string) => Promise<LoggedUser>;
+  register: (dto: RegisterDto) => Promise<LoggedUser>;
   logout: () => void;
 };
 

@@ -18,8 +18,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
-import { User } from './entities/user.entity';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { ProfileWithEstablishmentTypeResponseDto } from './dto/profile-with-establishment-type-response.dto';
+import { ProfileResponseDto } from './dto/profile-response.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -31,24 +32,26 @@ export class UsersController {
   @ApiOperation({ summary: 'Get current user profile' })
   @ApiOkResponse({
     description: 'Current user profile retrieved',
-    type: User,
+    type: ProfileWithEstablishmentTypeResponseDto,
   })
   @ApiNotFoundResponse({ description: 'User not found' })
-  getProfile(@CurrentUser() user: AuthenticatedUser): Promise<User> {
-    return this.usersService.findOne(user.id, { relations: ['establishment'] });
+  getProfile(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<ProfileWithEstablishmentTypeResponseDto> {
+    return this.usersService.getProfile(user.id);
   }
 
   @Patch('me')
   @ApiOperation({ summary: 'Update current user profile' })
   @ApiOkResponse({
     description: 'User profile updated',
-    type: User,
+    type: ProfileResponseDto,
   })
   @ApiNotFoundResponse({ description: 'User not found' })
   updateProfile(
     @CurrentUser() user: AuthenticatedUser,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<User> {
+  ): Promise<ProfileResponseDto> {
     return this.usersService.update(user.id, updateUserDto);
   }
 
