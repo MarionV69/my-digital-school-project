@@ -11,6 +11,8 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
 import { FindOneOptions } from 'typeorm';
+import { ProfileWithEstablishmentTypeResponseDto } from './dto/profile-with-establishment-type-response.dto';
+import { ProfileResponseDto } from './dto/profile-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -33,6 +35,24 @@ export class UsersService {
     const newUser = this.usersRepository.create({ ...userData, passwordHash });
 
     return this.usersRepository.save(newUser);
+  }
+
+  async getProfile(
+    userId: number,
+  ): Promise<ProfileWithEstablishmentTypeResponseDto> {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['establishment'],
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    return {
+      ...user,
+      establishmentType: user.establishment?.type || null,
+    };
   }
 
   async findOne(id: number, options?: FindOneOptions<User>): Promise<User> {
@@ -58,7 +78,10 @@ export class UsersService {
     });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<ProfileResponseDto> {
     await this.usersRepository.update(id, updateUserDto);
     return this.findOne(id);
   }
