@@ -3,7 +3,6 @@ import { AuthContext } from "./AuthContext";
 import type { LoggedUser, RegisterDto } from "../types/auth.types";
 import { getProfile } from "../api/users";
 import { loginApi, registerApi } from "../api/auth";
-import { toast } from "react-hot-toast/headless";
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -89,7 +88,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const logout = () => {
     localStorage.removeItem("accessToken");
     setUser(null);
-    toast.success("Vous avez été déconnecté avec succès.");
   };
 
   return (
