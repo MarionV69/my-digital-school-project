@@ -5,7 +5,7 @@ export class ProfileResponseDto {
   @ApiProperty({ example: 1 })
   id: number;
 
-  @ApiProperty({ example: 'john@example.com' })
+  @ApiProperty({ example: 'john@restaurant.com' })
   email: string;
 
   @ApiProperty({ example: 'Doe' })

@@ -6,6 +6,7 @@ import axios from "axios";
 import { isEmailValid, isNotEmptyString } from "../../utils/validation";
 import Input from "../common/Input";
 import { EstablishmentType } from "../../types/establishments.types";
+import { Eye, EyeOff } from "lucide-react";
 
 type LoginFormErrors = {
   email?: string;
@@ -118,6 +119,7 @@ function LoginForm() {
           disabled={isLoading}
           required
           error={errors.email}
+          autoFocus={true}
         />
 
         <div className="relative">
@@ -132,12 +134,13 @@ function LoginForm() {
             required
             error={errors.password}
           />
-          <span
-            className="text-sm cursor-pointer absolute right-4 top-11 text-brand-light"
+          <button
+            type="button"
+            className="text-sm cursor-pointer absolute right-4 top-10.5"
             onClick={() => setShowPassword((prev) => !prev)}
           >
-            {showPassword ? "Masquer" : "Afficher"}
-          </span>
+            {showPassword ? <EyeOff /> : <Eye />}
+          </button>
         </div>
 
         <button type="submit" disabled={isLoading} className="btn my-4 mx-auto">
@@ -147,10 +150,7 @@ function LoginForm() {
 
       <p className="text-center">
         Pas encore de compte ?{" "}
-        <Link
-          to="/register"
-          className="underline text-brand-dark font-semibold"
-        >
+        <Link to="/register" className="underline font-semibold">
           S'inscrire
         </Link>
       </p>

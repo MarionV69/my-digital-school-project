@@ -6,7 +6,7 @@ function RestaurantRoute() {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Chargement...</div>;
   }
 
   if (!user) {

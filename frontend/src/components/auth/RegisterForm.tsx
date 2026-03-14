@@ -9,6 +9,7 @@ import {
   validatePassword,
 } from "../../utils/validation";
 import Input from "../common/Input";
+import { Eye, EyeOff } from "lucide-react";
 
 type RegisterFormErrors = {
   firstName?: string;
@@ -148,6 +149,7 @@ function RegisterForm() {
           disabled={isLoading}
           required
           error={errors.firstName}
+          autoFocus={true}
         />
         <Input
           label="Nom"
@@ -187,12 +189,13 @@ function RegisterForm() {
             Minimum 12 caractères dont 1 majuscule, 1 chiffre et 1 caractère
             spécial
           </small>
-          <span
-            className="text-sm cursor-pointer absolute right-4 top-11 text-brand-light"
+          <button
+            type="button"
+            className="text-sm cursor-pointer absolute right-4 top-10.5"
             onClick={() => setShowPassword((prev) => !prev)}
           >
-            {showPassword ? "Masquer" : "Afficher"}
-          </span>
+            {showPassword ? <EyeOff /> : <Eye />}
+          </button>
         </div>
         <div className="relative">
           <Input
@@ -206,12 +209,13 @@ function RegisterForm() {
             required
             error={errors.confirmPassword}
           />
-          <span
-            className="text-sm cursor-pointer absolute right-4 top-11 text-brand-light"
+          <button
+            type="button"
+            className="text-sm cursor-pointer absolute right-4 top-10.5"
             onClick={() => setShowConfirmPassword((prev) => !prev)}
           >
-            {showPassword ? "Masquer" : "Afficher"}
-          </span>
+            {showConfirmPassword ? <EyeOff /> : <Eye />}
+          </button>
         </div>
 
         <button type="submit" disabled={isLoading} className="btn my-4 mx-auto">
@@ -221,7 +225,7 @@ function RegisterForm() {
 
       <p className="text-center">
         Déjà un compte ?{" "}
-        <Link to="/login" className="underline text-brand-dark font-semibold">
+        <Link to="/login" className="underline font-semibold">
           Se connecter
         </Link>
       </p>

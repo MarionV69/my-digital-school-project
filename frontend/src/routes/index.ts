@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
   },
   // Protected routes (User must be authenticated)
   {
-    // Component: ProtectedRoute,   A DECOMMENTER LORSQUE LES ROUTES RESTAURANT ET SUPPLIER SERONT EN PLACE
+    // Component: ProtectedRoute, // A DECOMMENTER LORSQUE LES ROUTES RESTAURANT ET SUPPLIER SERONT EN PLACE
     children: [
       {
         path: "/onboarding/create-establishment",
@@ -42,7 +42,7 @@ export const router = createBrowserRouter([
       },
       // Restaurant routes (Establishment type must be RESTAURANT)
       {
-        // Component: RestaurantRoute,  A DECOMMENTER LORSQUE LES ROUTES RESTAURANTS SERONT EN PLACE
+        // Component: RestaurantRoute,  // A DECOMMENTER LORSQUE LES ROUTES RESTAURANTS SERONT EN PLACE
         children: [
           {
             path: "/restaurant/dashboard",
@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
       },
       // Supplier routes (Establishment type must be SUPPLIER)
       {
-        // Component: SupplierRoute,  A DECOMMENTER LORSQUE LES ROUTES SUPPLIERS SERONT EN PLACE
+        // Component: SupplierRoute,  // A DECOMMENTER LORSQUE LES ROUTES SUPPLIERS SERONT EN PLACE
         children: [
           {
             path: "/supplier/dashboard",
