@@ -64,17 +64,17 @@ function RegisterForm() {
 
     // First name and last name validation
     if (!isNotEmptyString(firstName)) {
-      newErrors.firstName = "Le prénom est requis";
+      newErrors.firstName = "Le prénom est requis.";
     }
     if (!isNotEmptyString(lastName)) {
-      newErrors.lastName = "Le nom est requis";
+      newErrors.lastName = "Le nom est requis.";
     }
 
     // Email validation
     if (!isNotEmptyString(email)) {
-      newErrors.email = "L'email est requis";
+      newErrors.email = "L'email est requis.";
     } else if (!isEmailValid(email)) {
-      newErrors.email = "Email invalide";
+      newErrors.email = "Email invalide.";
     }
 
     // Password validation
@@ -94,9 +94,10 @@ function RegisterForm() {
 
     // Confirm password validation
     if (!isNotEmptyString(confirmPassword)) {
-      newErrors.confirmPassword = "La confirmation du mot de passe est requise";
+      newErrors.confirmPassword =
+        "La confirmation du mot de passe est requise.";
     } else if (formData.password !== confirmPassword) {
-      newErrors.confirmPassword = "Les mots de passe ne correspondent pas";
+      newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
     }
 
     // If errors, stop here
@@ -121,9 +122,9 @@ function RegisterForm() {
       navigate("/onboarding/create-establishment");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setErrors({ email: "Cet email est déjà utilisé" });
+        setErrors({ email: "Cet email est déjà utilisé." });
       } else {
-        toast.error("Une erreur est survenue lors de l'inscription");
+        toast.error("Une erreur est survenue lors de l'inscription.");
       }
     } finally {
       setIsLoading(false);

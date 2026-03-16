@@ -54,9 +54,9 @@ function LoginForm() {
 
     // Email validation
     if (!isNotEmptyString(email)) {
-      newErrors.email = "L'email est requis";
+      newErrors.email = "L'email est requis.";
     } else if (!isEmailValid(email)) {
-      newErrors.email = "Email invalide";
+      newErrors.email = "Email invalide.";
     }
 
     // Password validation
@@ -90,7 +90,7 @@ function LoginForm() {
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
-        setErrors({ general: "Email ou mot de passe incorrect" });
+        setErrors({ general: "Email ou mot de passe incorrect." });
       } else {
         toast.error("Une erreur est survenue lors de la connexion.");
       }
