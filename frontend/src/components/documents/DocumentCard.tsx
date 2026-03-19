@@ -5,15 +5,12 @@ import type { DocumentItem } from "../../types/documents.types";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
-type DocumentPreviewAndDeleteProps = {
+type DocumentCardProps = {
   document: DocumentItem;
   onDeleteSuccess: () => void;
 };
 
-function DocumentPreviewAndDelete({
-  document,
-  onDeleteSuccess,
-}: DocumentPreviewAndDeleteProps) {
+function DocumentCard({ document, onDeleteSuccess }: DocumentCardProps) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleTrashClick = () => {
@@ -39,11 +36,11 @@ function DocumentPreviewAndDelete({
   // Image
   if (document.file.mimeType.startsWith("image/")) {
     return (
-      <div className="relative rounded-lg shadow-md shadow-brand-dark/60 overflow-hidden">
+      <div className="relative shadow-md shadow-brand-dark/60 rounded-lg">
         <img
           src={document.file.url}
           alt={document.file.originalFilename}
-          className="w-full h-auto sm:h-40 sm:w-auto object-cover"
+          className="w-full h-auto sm:h-40 sm:w-auto object-cover rounded-lg"
         />
         <div className="absolute top-2 right-2">
           {!showConfirm ? (
@@ -122,4 +119,4 @@ function DocumentPreviewAndDelete({
   );
 }
 
-export default DocumentPreviewAndDelete;
+export default DocumentCard;

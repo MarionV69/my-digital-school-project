@@ -4,7 +4,7 @@ import { type GroupedDocuments } from "../../types/documents.types";
 import { getDocuments } from "../../api/documents";
 import { useAuth } from "../../hooks/useAuth";
 import { EstablishmentType } from "../../types/establishments.types";
-import DocumentPreviewAndDelete from "./DocumentPreviewAndDelete";
+import DocumentCard from "./DocumentCard";
 import DocumentUploadButton from "./DocumentUploadButton";
 
 function DocumentsList() {
@@ -50,18 +50,18 @@ function DocumentsList() {
             <h3 className="text-2xl font-semibold mb-4">Logo</h3>
             {documents.LOGO[0] ? (
               <div className="space-y-3 flex flex-col items-center">
-                <DocumentPreviewAndDelete
+                <DocumentCard
                   document={documents.LOGO[0]}
                   onDeleteSuccess={fetchDocuments}
                 />
-                <p className="text-sm italic text-center max-w-xs">
+                <p className="text-sm italic text-center">
                   Supprimez le logo pour en télécharger un nouveau.
                 </p>
               </div>
             ) : (
               <DocumentUploadButton
                 category="LOGO"
-                accept="image/png, image/jpeg, image/webp"
+                allowedMimeTypes={["image/png", "image/jpeg", "image/webp"]}
                 label="Ajouter votre logo"
                 onUploadSuccess={fetchDocuments}
               />
@@ -73,18 +73,18 @@ function DocumentsList() {
             <h3 className="text-2xl font-semibold mb-4">Photo de couverture</h3>
             {documents.COVER_PHOTO[0] ? (
               <div className="space-y-3 flex flex-col items-center">
-                <DocumentPreviewAndDelete
+                <DocumentCard
                   document={documents.COVER_PHOTO[0]}
                   onDeleteSuccess={fetchDocuments}
                 />
-                <p className="text-sm italic text-center max-w-xs">
+                <p className="text-sm italic text-center">
                   Supprimez la photo pour en télécharger une nouvelle.
                 </p>
               </div>
             ) : (
               <DocumentUploadButton
                 category="COVER_PHOTO"
-                accept="image/*"
+                allowedMimeTypes={["image/png", "image/jpeg", "image/webp"]}
                 label="Ajouter votre photo de couverture"
                 onUploadSuccess={fetchDocuments}
               />
@@ -97,18 +97,18 @@ function DocumentsList() {
               <h3 className="text-2xl font-semibold mb-4">Catalogue</h3>
               {documents.CATALOG[0] ? (
                 <div className="space-y-3 flex flex-col items-center">
-                  <DocumentPreviewAndDelete
+                  <DocumentCard
                     document={documents.CATALOG[0]}
                     onDeleteSuccess={fetchDocuments}
                   />
-                  <p className="text-sm italic text-center max-w-xs">
+                  <p className="text-sm italic text-center">
                     Supprimez le catalogue pour en télécharger un nouveau.
                   </p>
                 </div>
               ) : (
                 <DocumentUploadButton
                   category="CATALOG"
-                  accept="application/pdf"
+                  allowedMimeTypes={["application/pdf"]}
                   label="Ajouter votre catalogue (PDF)"
                   onUploadSuccess={fetchDocuments}
                 />
@@ -127,7 +127,7 @@ function DocumentsList() {
             {documents.GALLERY_PHOTO.length > 0 && (
               <div className="flex flex-wrap gap-6 flex-col sm:flex-row mb-4 max-w-4xl">
                 {documents.GALLERY_PHOTO.map((doc) => (
-                  <DocumentPreviewAndDelete
+                  <DocumentCard
                     key={doc.id}
                     document={doc}
                     onDeleteSuccess={fetchDocuments}
@@ -139,7 +139,7 @@ function DocumentsList() {
             {documents.GALLERY_PHOTO.length < 6 ? (
               <DocumentUploadButton
                 category="GALLERY_PHOTO"
-                accept="image/*"
+                allowedMimeTypes={["image/png", "image/jpeg", "image/webp"]}
                 label="Ajouter une photo"
                 onUploadSuccess={fetchDocuments}
               />

@@ -18,6 +18,7 @@ export const uploadDocument = async (
     headers: {
       "Content-Type": "multipart/form-data",
     },
+    timeout: 30000, // 30 seconds timeout for uploads
   });
 
   return response.data;
