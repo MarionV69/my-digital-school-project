@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { SuppliersService } from './suppliers.service';
 import { CreateSupplierAttributesDto } from './dto/create-supplier-attributes.dto';
@@ -13,6 +14,7 @@ import { UpdateSupplierAttributesDto } from './dto/update-supplier-attributes.dt
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CategoryDto } from './dto/category.dto';
 import { LabelDto } from './dto/label.dto';
+import { FilterDto } from './dto/supplier-filter.dto';
 
 
 @ApiTags('suppliers')
@@ -27,8 +29,8 @@ export class SuppliersController {
   }
 
   @Get()
-  findAll() {
-    return this.suppliersService.findAll();
+  findAll(@Query() filters: FilterDto) {
+    return this.suppliersService.findAll(filters);
   }
 
   // GET /labels
