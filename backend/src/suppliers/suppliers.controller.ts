@@ -12,7 +12,7 @@ import {
 import { SuppliersService } from './suppliers.service';
 import { CreateSupplierAttributesDto } from './dto/create-supplier-attributes.dto';
 import { UpdateSupplierAttributesDto } from './dto/update-supplier-attributes.dto';
-import { ApiBearerAuth, ApiCreatedResponse, ApiExcludeEndpoint, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExcludeEndpoint, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CategoryDto } from './dto/category.dto';
 import { LabelDto } from './dto/label.dto';
 import { FilterDto } from './dto/supplier-filter.dto';
