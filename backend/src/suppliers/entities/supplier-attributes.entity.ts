@@ -22,13 +22,10 @@ export class SupplierAttributes {
   @PrimaryColumn({ name: 'supplier_id', type: 'int' })
   supplierId: number;
 
-  @Column({ name: 'supplier_type', type: 'enum', enum: SupplierType })
+  @Column({ name: 'supplier_type', type: 'enum', enum: SupplierType, default: SupplierType.PRODUCER })
   supplierType: SupplierType;
 
-  @Column({ type: 'text', nullable: true })
-  description: string | null;
-
-  @Column({ name: 'price_range', type: 'enum', enum: PriceRange })
+  @Column({ name: 'price_range', type: 'enum', enum: PriceRange, default: PriceRange.ECONOMIC })
   priceRange: PriceRange;
 
   @Column({ name: 'delivery_radius_km', type: 'int', nullable: true })
