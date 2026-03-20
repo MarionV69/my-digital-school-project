@@ -23,13 +23,13 @@ export class FilterDto {
     @ApiPropertyOptional({ example: ['Bio', 'AOP'] })
     @IsOptional()
     @IsArray()
-    @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+    @Transform(({ value }): string[] => (Array.isArray(value) ? value : [value]))
     labels?: string[];
 
     @ApiPropertyOptional({ example: ['Viandes', 'Poissons'] })
     @IsOptional()
     @IsArray()
-    @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+    @Transform(({ value }): string[] => (Array.isArray(value) ? value : [value]))
     productCategories?: string[];
 
 }
