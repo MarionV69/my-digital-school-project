@@ -65,6 +65,7 @@ export class SupplierAttributes {
   @JoinColumn({ name: 'supplier_id' })
   supplier: Establishment;
 
+  // Chaque établissement (de type 'SUPPLIER') peut avoir plusieurs labels 
   @ManyToMany(() => Label, (label) => label.suppliers)
   @JoinTable({
     name: 'supplier_label',
@@ -73,6 +74,7 @@ export class SupplierAttributes {
   })
   labels: Label[];
 
+  // Chaque établissement (de type 'SUPPLIER') peut avoir plusieurs catégories de produits
   @ManyToMany(() => ProductCategory, (category) => category.suppliers)
   @JoinTable({
     name: 'supplier_product_category',
