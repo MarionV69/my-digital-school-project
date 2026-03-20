@@ -12,5 +12,6 @@ import { SupplierAttributes } from './entities/supplier-attributes.entity';
   ],
   controllers: [SuppliersController],
   providers: [SuppliersService],
+  exports: [SuppliersService]
 })
 export class SuppliersModule {}

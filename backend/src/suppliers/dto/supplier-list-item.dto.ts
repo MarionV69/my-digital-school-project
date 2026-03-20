@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { PriceRange } from "../enums/price-range.enum";
 
 
-export class ListItemDto {
+export class SupplierListItemDto {
 
     @ApiProperty({ example: 1 })
     id: number;

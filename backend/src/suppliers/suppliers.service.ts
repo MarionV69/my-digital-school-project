@@ -3,13 +3,14 @@ import { UpdateSupplierAttributesDto } from './dto/update-supplier-attributes.dt
 import { Repository } from 'typeorm';
 import { SupplierAttributes } from './entities/supplier-attributes.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProductCategory } from './entities/product-category.entity';
 import { Label } from './entities/label.entity';
 import { LabelDto } from './dto/label.dto';
 import { CategoryDto } from './dto/category.dto';
 import { FilterDto } from './dto/supplier-filter.dto';
-import { ListItemDto } from './dto/supplier-list-item.dto';
+import { SupplierListItemDto} from './dto/supplier-list-item.dto';
+import { SupplierDetailDto } from './dto/supplier-details.dto';
 
 @Injectable()
 export class SuppliersService {
@@ -28,12 +29,17 @@ export class SuppliersService {
 
   ) {}
 
-  create(createSupplierDto: CreateSupplierAttributesDto) {
-    return `This action adds a new supplier ${JSON.stringify(createSupplierDto)}`;
+  // Créer les supplierAttributes directement après la création d'un Establishement de type 'SUPPLIER'
+  async create(createSupplierDto: CreateSupplierAttributesDto): Promise<void> {
+    const supplier = this.supplierRepository.create({
+      supplierId: createSupplierDto.supplierId
+    })
+    
+    await this.supplierRepository.save(supplier)
   }
 
   // Récupérer tous les fournisseurs (avec ou sans filtres)
-  async findAll(filters: FilterDto): Promise<ListItemDto[]> {
+  async findAll(filters: FilterDto): Promise<SupplierListItemDto[]> {
 
     const query = this.supplierRepository
       .createQueryBuilder('supplier')
@@ -43,11 +49,11 @@ export class SuppliersService {
 
     // Filtres conditionnels
     if (filters.city) {
-      query.andWhere('supplier.city = :city', {city: filters.city});
+      query.andWhere('establishment.city = :city', {city: filters.city});
     }
 
     if (filters.search) {
-      query.andWhere('supplier.name LIKE :search', { search: `%${filters.search}%` });
+      query.andWhere('establishment.name LIKE :search', { search: `%${filters.search}%` });
     }
 
     if (filters.priceRange) {
@@ -75,16 +81,61 @@ export class SuppliersService {
     }))
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} supplier`;
+  // Récupérer un fournisseur grâce à son id
+
+  async findOne(id: number): Promise<SupplierDetailDto> {
+    const supplier = await this.supplierRepository
+      .createQueryBuilder('supplier')
+      .leftJoinAndSelect('supplier.supplier', 'establishment')
+      .leftJoinAndSelect('supplier.labels', 'labels')
+      .leftJoinAndSelect('supplier.productCategories', 'category')
+      .leftJoinAndSelect('establishment.documents', 'documents')
+      .where('supplier.supplierId = :id', {id})
+      .getOne();
+
+    if(!supplier) {
+      throw new NotFoundException(`Supplier with id ${id} not found`)
+    }
+
+    // Transformation de l'entité en DetailsDto
+    return {
+      id: supplier.supplierId,
+      name: supplier.supplier.legalName,
+      city: supplier.supplier.city,
+      priceRange: supplier.priceRange,
+      labels: supplier.labels.map(label => label.name),
+      productCategories: supplier.productCategories.map(ProductCategory => ProductCategory.name),
+      description: supplier.supplier.description,
+      deliveryRadiusKm: supplier.deliveryRadiusKm,
+      deliveryInformation: supplier.deliveryInformation,
+      minimumOrderAmount: supplier.minimumOrderAmount,
+      website: supplier.supplier.website,
+      instagram: supplier.supplier.instagram,
+      facebook: supplier.supplier.facebook,
+      documents: supplier.supplier.documents
+    }
   }
 
-  update(id: number, updateSupplierDto: UpdateSupplierAttributesDto) {
-    return `This action updates a #${id} supplier ${JSON.stringify(updateSupplierDto)}`;
+
+  // Méthode pour mettre à jour un fournisseur
+  async update(
+    id: number, 
+    dto: UpdateSupplierAttributesDto): Promise<SupplierAttributes> {
+      const supplierAttributes = await this.supplierRepository.findOneBy({ supplierId: id });
+      if(!supplierAttributes) {
+        throw new NotFoundException(`SupplierAttributes with ID ${id} not found`);
+      }
+      Object.assign(supplierAttributes, dto);
+      return await this.supplierRepository.save(supplierAttributes)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} supplier`;
+  // Méthode pour supprimer un fournisseur
+  async remove(id: number): Promise<void> {
+    const supplierAttributes = await this.supplierRepository.findOneBy({ supplierId: id});
+    if (!supplierAttributes) {
+      throw new NotFoundException(`Supplier with ID ${id} not found`);
+    }
+    await this.supplierRepository.remove(supplierAttributes);
   }
 
   // Récupérer tous les labels
