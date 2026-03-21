@@ -11,7 +11,6 @@ import { CategoryDto } from './dto/category.dto';
 import { FilterDto } from './dto/supplier-filter.dto';
 import { SupplierListItemDto} from './dto/supplier-list-item.dto';
 import { SupplierDetailDto } from './dto/supplier-details.dto';
-import { SupplierType } from './enums/supplier-type.enum';
 import { Favorite } from 'src/favorites/entities/favorite.entity';
 import { Review } from 'src/reviews/entities/review.entity';
 import { SupplierStatsDto } from './dto/supplier-stats.dto';
