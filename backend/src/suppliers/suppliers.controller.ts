@@ -18,6 +18,7 @@ import { LabelDto } from './dto/label.dto';
 import { FilterDto } from './dto/supplier-filter.dto';
 import { SupplierDetailDto } from './dto/supplier-details.dto';
 import { SupplierListItemDto } from './dto/supplier-list-item.dto';
+import { SupplierStatsDto } from './dto/supplier-stats.dto';
 
 
 @ApiTags('suppliers')
@@ -57,11 +58,19 @@ export class SuppliersController {
     return this.suppliersService.findAll(filters);
   }
 
+  // GET /supplier/:id/stats
+  @Get(':id/stats')
+  @ApiOperation({ summary: 'Get a supplier by id and see all of the stats'})
+  @ApiOkResponse({ type: SupplierStatsDto })
+  findStats(@Param('id') id: string): Promise<SupplierStatsDto> {
+    return this.suppliersService.findStats(+id);
+  }
+
   // GET /suppliers/:id
   @Get(':id')
   @ApiOperation({ summary: 'Get a supplier by id'})
   @ApiOkResponse({ type: SupplierDetailDto })
-  findOne(@Param('id') id: number): Promise<SupplierDetailDto> {
+  findOne(@Param('id') id: string): Promise<SupplierDetailDto> {
     return this.suppliersService.findOne(+id);
   }
 
