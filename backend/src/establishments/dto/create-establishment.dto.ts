@@ -9,10 +9,7 @@ import {
   IsString,
   Length,
   MaxLength,
-  ValidateNested,
 } from 'class-validator';
-import { CreateSupplierAttributesDto } from 'src/suppliers/dto/create-supplier-attributes.dto';
-import { Type } from 'class-transformer';
 
 export class CreateEstablishmentDto {
   @ApiProperty({
