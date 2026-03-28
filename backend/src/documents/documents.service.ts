@@ -54,7 +54,7 @@ export class DocumentsService {
     this.validateMimeTypeForCategory(file, category);
     await this.checkCategoryLimit(establishmentId, category);
 
-    const storedFile = await this.filesService.create(file);
+    const storedFile = await this.filesService.create(file, 'public');
     const document = this.documentsRepository.create({
       establishmentId,
       fileId: storedFile.id,
@@ -70,7 +70,7 @@ export class DocumentsService {
         originalFilename: storedFile.originalFilename,
         mimeType: storedFile.mimeType,
         size: storedFile.size,
-        url: this.filesService.getPublicFileUrl(storedFile.storedFilename),
+        url: this.filesService.getPublicFileUrl(storedFile.path),
       },
     };
   }
@@ -99,12 +99,35 @@ export class DocumentsService {
           originalFilename: doc.file.originalFilename,
           mimeType: doc.file.mimeType,
           size: doc.file.size,
-          url: this.filesService.getPublicFileUrl(doc.file.storedFilename),
+          url: this.filesService.getPublicFileUrl(doc.file.path),
         },
       });
     }
 
     return grouped;
+  }
+
+  async findByCategory(
+    establishmentId: number,
+    category: DocumentCategory,
+  ): Promise<DocumentResponseDto[]> {
+    const documents = await this.documentsRepository.find({
+      where: { establishmentId, category },
+      relations: ['file'],
+      order: { createdAt: 'DESC' },
+    });
+
+    return documents.map((doc) => ({
+      id: doc.id,
+      category: doc.category,
+      file: {
+        id: doc.file.id,
+        originalFilename: doc.file.originalFilename,
+        mimeType: doc.file.mimeType,
+        size: doc.file.size,
+        url: this.filesService.getPublicFileUrl(doc.file.path),
+      },
+    }));
   }
 
   async delete(documentId: number, establishmentId: number): Promise<void> {

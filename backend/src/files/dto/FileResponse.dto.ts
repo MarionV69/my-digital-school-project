@@ -15,7 +15,7 @@ export class FileResponseDto {
 
   @ApiProperty({
     example:
-      'http://localhost:3000/documents/550e8400-e29b-41d4-a716-446655440000.pdf',
+      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/6de0c398-ea33-445b-aa55-84fe94ed3907.jpg',
   })
   url: string;
 }

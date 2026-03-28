@@ -17,9 +17,6 @@ export class StoredFile {
   @Column({ name: 'original_filename', type: 'varchar', length: 255 })
   originalFilename: string;
 
-  @Column({ name: 'stored_filename', type: 'varchar', length: 255 })
-  storedFilename: string;
-
   @Column({ name: 'mime_type', type: 'varchar', length: 50 })
   mimeType: string;
 
@@ -27,7 +24,7 @@ export class StoredFile {
   size: number; // Size of the file in bytes
 
   @Column({ type: 'varchar', length: 512 })
-  path: string;
+  path: string; // S3 key
 
   @CreateDateColumn({ name: 'uploaded_at', type: 'datetime' })
   uploadedAt: Date;

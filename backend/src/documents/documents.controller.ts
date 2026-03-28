@@ -9,6 +9,7 @@ import {
   ParseFilePipeBuilder,
   ParseIntPipe,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -27,6 +28,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
@@ -98,9 +100,17 @@ export class DocumentsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all documents grouped by category' })
+  @ApiOperation({
+    summary: 'Get all documents grouped by category or filtered',
+  })
+  @ApiQuery({
+    name: 'category',
+    required: false,
+    enum: DocumentCategory,
+    description: 'Filter by category (optional)',
+  })
   @ApiOkResponse({
-    description: 'Documents grouped by category',
+    description: 'Documents grouped by category or array if filtered)',
     type: GroupedDocumentsResponseDto,
   })
   @ApiForbiddenResponse({
@@ -108,7 +118,14 @@ export class DocumentsController {
   })
   async findAll(
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<GroupedDocumentsResponseDto> {
+    @Query('category') category?: DocumentCategory,
+  ): Promise<GroupedDocumentsResponseDto | DocumentResponseDto[]> {
+    if (category) {
+      return this.documentsService.findByCategory(
+        user.establishmentId!,
+        category,
+      );
+    }
     return this.documentsService.findAllByEstablishment(user.establishmentId!);
   }
 
