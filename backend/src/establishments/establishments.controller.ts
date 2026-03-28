@@ -31,14 +31,14 @@ export class EstablishmentsController {
 
   // Route pour récupérer tous les établissements
   @Get()
-  findAll(@CurrentUser() user: AuthenticatedUser,) {
+  findAll(@CurrentUser() user: AuthenticatedUser) {
     return this.establishmentsService.findAll(user);
   }
 
   // Route pour récupérer un établissement par son ID
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.establishmentsService.findOne(+id,);
+    return this.establishmentsService.findOne(+id);
   }
 
   // Route pour mettre à jour un établissement
@@ -53,10 +53,7 @@ export class EstablishmentsController {
 
   // Route pour supprimer un établissement
   @Delete(':id')
-  remove(
-    @Param('id') id: string,
-    @CurrentUser() user: AuthenticatedUser,
-  ) {
+  remove(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
     return this.establishmentsService.remove(+id, user);
   }
 }

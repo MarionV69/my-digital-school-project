@@ -1,16 +1,31 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import { SupplierType } from "../enums/supplier-type.enum";
-import { PriceRange } from "../enums/price-range.enum";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { SupplierType } from '../enums/supplier-type.enum';
+import { PriceRange } from '../enums/price-range.enum';
 
 export class CreateSupplierAttributesDto {
-
-  @ApiProperty({ enum: SupplierType, example: SupplierType.PRODUCER, default: SupplierType.PRODUCER })
+  @ApiProperty({
+    enum: SupplierType,
+    example: SupplierType.PRODUCER,
+    default: SupplierType.PRODUCER,
+  })
   @IsEnum(SupplierType)
   @IsNotEmpty()
   supplierType: SupplierType;
 
-  @ApiProperty({ enum: PriceRange, example: PriceRange.ECONOMIC, default: PriceRange.ECONOMIC })
+  @ApiProperty({
+    enum: PriceRange,
+    example: PriceRange.ECONOMIC,
+    default: PriceRange.ECONOMIC,
+  })
   @IsEnum(PriceRange)
   @IsNotEmpty()
   priceRange: PriceRange;
@@ -20,7 +35,9 @@ export class CreateSupplierAttributesDto {
   @IsOptional()
   deliveryRadiusKm?: number;
 
-  @ApiPropertyOptional({ example: 'Les livraisons sont effectuées entre 8h et 10h.'})
+  @ApiPropertyOptional({
+    example: 'Les livraisons sont effectuées entre 8h et 10h.',
+  })
   @IsString()
   @IsOptional()
   deliveryInformation?: string;
@@ -30,12 +47,12 @@ export class CreateSupplierAttributesDto {
   @IsOptional()
   minimumOrderAmount?: number;
 
-  @ApiPropertyOptional({ example: true, default: false})
+  @ApiPropertyOptional({ example: true, default: false })
   @IsBoolean()
   @IsOptional()
   isPremium?: boolean;
 
-  @ApiPropertyOptional({ example: true, default: true})
+  @ApiPropertyOptional({ example: true, default: true })
   @IsBoolean()
   @IsOptional()
   isVisible?: boolean;
@@ -44,14 +61,13 @@ export class CreateSupplierAttributesDto {
   @ApiPropertyOptional({ example: [1, 2] })
   @IsOptional()
   @IsArray()
-  @IsNumber({}, { each: true})
+  @IsNumber({}, { each: true })
   labels?: number[];
 
   // ProductCategories
   @ApiPropertyOptional({ example: [1, 2] })
   @IsOptional()
   @IsArray()
-  @IsNumber({}, { each: true})
+  @IsNumber({}, { each: true })
   productCategories?: number[];
-
 }

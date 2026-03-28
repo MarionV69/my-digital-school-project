@@ -21,7 +21,6 @@ export class EstablishmentsService {
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
-
   ) {}
 
   // Méthode pour créer un établissement
@@ -29,7 +28,6 @@ export class EstablishmentsService {
     dto: CreateEstablishmentDto,
     currentUser: AuthenticatedUser,
   ): Promise<Establishment> {
-
     // Vérification: Le user a t-il déjà un établissement
     if (currentUser.establishmentId) {
       throw new BadRequestException(
@@ -43,8 +41,8 @@ export class EstablishmentsService {
 
     // Lier le user à cet établissement
     await this.userRepository.update(currentUser.id, {
-        establishmentId: savedEstablishment.id,
-      });
+      establishmentId: savedEstablishment.id,
+    });
 
     return savedEstablishment;
   }
@@ -91,23 +89,24 @@ export class EstablishmentsService {
       throw new NotFoundException(`Establishment with ID ${id} not found`);
     }
     if (establishment.id !== currentUser.establishmentId) {
-      throw new ForbiddenException('You are not authorized to update this establishment.')
+      throw new ForbiddenException(
+        'You are not authorized to update this establishment.',
+      );
     }
     Object.assign(establishment, dto);
     return await this.establishmentRepo.save(establishment);
   }
 
   // Méthode pour supprimer un établissement
-  async remove(
-    id: number,
-    currentUser: AuthenticatedUser,
-  ): Promise<void> {
+  async remove(id: number, currentUser: AuthenticatedUser): Promise<void> {
     const establishment = await this.establishmentRepo.findOneBy({ id });
     if (!establishment) {
       throw new NotFoundException(`Establishment with ID ${id} not found`);
     }
     if (establishment.id !== currentUser.establishmentId) {
-      throw new ForbiddenException('You are not authorized to delete this establishment.')
+      throw new ForbiddenException(
+        'You are not authorized to delete this establishment.',
+      );
     }
     await this.establishmentRepo.remove(establishment);
   }

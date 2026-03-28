@@ -10,10 +10,16 @@ import { Review } from 'src/reviews/entities/review.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([SupplierAttributes, Label, ProductCategory, Favorite, Review]),
+    TypeOrmModule.forFeature([
+      SupplierAttributes,
+      Label,
+      ProductCategory,
+      Favorite,
+      Review,
+    ]),
   ],
   controllers: [SuppliersController],
   providers: [SuppliersService],
-  exports: [SuppliersService]
+  exports: [SuppliersService],
 })
 export class SuppliersModule {}

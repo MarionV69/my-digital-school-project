@@ -1,10 +1,17 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
-import { SupplierType } from "../enums/supplier-type.enum";
-import { IsArray, IsBoolean, IsEnum, IsInt, IsNumber, IsOptional, IsString } from "class-validator";
-import { PriceRange } from "../enums/price-range.enum";
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { SupplierType } from '../enums/supplier-type.enum';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { PriceRange } from '../enums/price-range.enum';
 
 export class UpdateSupplierAttributesDto {
-
   @ApiPropertyOptional({ enum: SupplierType, example: SupplierType.PRODUCER })
   @IsEnum(SupplierType)
   @IsOptional()
@@ -47,13 +54,13 @@ export class UpdateSupplierAttributesDto {
   @ApiPropertyOptional({ example: [1, 2] })
   @IsOptional()
   @IsArray()
-  @IsNumber({}, { each: true})
+  @IsNumber({}, { each: true })
   labels?: number[];
-  
+
   // ProductCategories
   @ApiPropertyOptional({ example: [1, 2] })
   @IsOptional()
   @IsArray()
-  @IsNumber({}, { each: true})
+  @IsNumber({}, { each: true })
   productCategories?: number[];
 }
