@@ -6,6 +6,8 @@ import NotFoundPage from "../pages/NotFoundPage";
 import CreateEstablishmentPage from "../pages/onboarding/CreateEstablishmentPage";
 import RestaurantDashboard from "../pages/restaurant/DashboardPage";
 import SupplierDashboard from "../pages/supplier/DashboardPage";
+// import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
+import ConversationsPage from "../pages/shared/ConversationsPage";
 // import ProtectedRoute from "./ProtectedRoute";
 // import RestaurantRoute from "./RestaurantRoute";
 // import SupplierRoute from "./SupplierRoute";
@@ -40,23 +42,29 @@ export const router = createBrowserRouter([
         path: "/onboarding/create-establishment",
         Component: CreateEstablishmentPage,
       },
-      // Restaurant routes (Establishment type must be RESTAURANT)
       {
-        // Component: RestaurantRoute,  // A DECOMMENTER LORSQUE LES ROUTES RESTAURANTS SERONT EN PLACE
+        // Component: EstablishmentRequiredRoute, // A DECOMMENTER LORSQUE LES ROUTES RESTAURANT ET SUPPLIER SERONT EN PLACE
         children: [
+          { path: "/conversations", Component: ConversationsPage },
+          // Restaurant routes (Establishment type must be RESTAURANT)
           {
-            path: "/restaurant/dashboard",
-            Component: RestaurantDashboard,
+            // Component: RestaurantRoute,  // A DECOMMENTER LORSQUE LES ROUTES RESTAURANTS SERONT EN PLACE
+            children: [
+              {
+                path: "/restaurant/dashboard",
+                Component: RestaurantDashboard,
+              },
+            ],
           },
-        ],
-      },
-      // Supplier routes (Establishment type must be SUPPLIER)
-      {
-        // Component: SupplierRoute,  // A DECOMMENTER LORSQUE LES ROUTES SUPPLIERS SERONT EN PLACE
-        children: [
+          // Supplier routes (Establishment type must be SUPPLIER)
           {
-            path: "/supplier/dashboard",
-            Component: SupplierDashboard,
+            // Component: SupplierRoute,  // A DECOMMENTER LORSQUE LES ROUTES SUPPLIERS SERONT EN PLACE
+            children: [
+              {
+                path: "/supplier/dashboard",
+                Component: SupplierDashboard,
+              },
+            ],
           },
         ],
       },

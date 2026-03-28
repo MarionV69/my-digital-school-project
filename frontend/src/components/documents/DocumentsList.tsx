@@ -38,7 +38,7 @@ function DocumentsList() {
   }
 
   return (
-    <section className="bg-[#fdf4ef] border-2 border-brand-dark max-w-6xl mx-auto my-6 p-6 rounded-lg text-brand-dark">
+    <section className="bg-cream border-2 border-brand-dark max-w-6xl mx-auto my-6 p-6 rounded-lg text-brand-dark">
       <h2 className="text-3xl font-bold mb-10 text-center">
         Vos documents publiques
       </h2>
