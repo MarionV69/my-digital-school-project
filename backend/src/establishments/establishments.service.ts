@@ -12,7 +12,6 @@ import { Repository } from 'typeorm';
 import { EstablishmentType } from './enums/establishment-type.enum';
 import { User } from '../users/entities/user.entity';
 import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
-import { SuppliersService } from 'src/suppliers/suppliers.service';
 
 @Injectable()
 export class EstablishmentsService {
@@ -23,7 +22,6 @@ export class EstablishmentsService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
 
-    private suppliersService: SuppliersService,
   ) {}
 
   // Méthode pour créer un établissement
@@ -31,20 +29,17 @@ export class EstablishmentsService {
     dto: CreateEstablishmentDto,
     currentUser: AuthenticatedUser,
   ): Promise<Establishment> {
+
     // Vérification: Le user a t-il déjà un établissement
     if (currentUser.establishmentId) {
       throw new BadRequestException(
         "Vous avez déjà créé un établissement. Un utilisateur ne peut gérer qu'un seul établissement.",
       );
     }
+
     // Créer l'établissement
     const establishment = this.establishmentRepo.create(dto);
     const savedEstablishment = await this.establishmentRepo.save(establishment);
-
-    // Créer les supplierAttributes si l'Establishment est un 'SUPPLIER'
-    if (savedEstablishment.type === EstablishmentType.SUPPLIER) {
-      await this.suppliersService.create({ supplierId: savedEstablishment.id})
-    }
 
     // Lier le user à cet établissement
     await this.userRepository.update(currentUser.id, {
