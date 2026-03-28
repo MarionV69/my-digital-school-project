@@ -13,6 +13,13 @@ import { EstablishmentType } from '../establishments/enums/establishment-type.en
 import { DocumentResponseDto } from './dto/document-response.dto';
 import { GroupedDocumentsResponseDto } from './dto/grouped-documents-response.dto';
 
+export interface DocumentUrls {
+  logoUrl: string | null;
+  coverPhotoUrl: string | null;
+  catalogUrl: string | null;
+  galleryPhotos: string[];
+}
+
 @Injectable()
 export class DocumentsService {
   constructor(
@@ -183,5 +190,42 @@ export class DocumentsService {
         `Maximum ${this.CATEGORY_LIMITS[category]} ${category} files allowed. Please delete an existing file first.`,
       );
     }
+  }
+
+  /**
+   * Extract all document URLs from already-loaded documents (JOIN file needed)
+   * Use destructuring to get only what you need:
+   * const { logoUrl, coverPhotoUrl } = this.documentsService.getAllDocumentUrls(docs);
+   */
+  getAllDocumentUrls(documents: Document[]): DocumentUrls {
+    const result: DocumentUrls = {
+      logoUrl: null,
+      coverPhotoUrl: null,
+      catalogUrl: null,
+      galleryPhotos: [],
+    };
+
+    for (const doc of documents || []) {
+      if (!doc.file) continue;
+
+      const url = this.filesService.getPublicFileUrl(doc.file.path);
+
+      switch (doc.category) {
+        case DocumentCategory.LOGO:
+          result.logoUrl = url;
+          break;
+        case DocumentCategory.COVER_PHOTO:
+          result.coverPhotoUrl = url;
+          break;
+        case DocumentCategory.CATALOG:
+          result.catalogUrl = url;
+          break;
+        case DocumentCategory.GALLERY_PHOTO:
+          result.galleryPhotos.push(url);
+          break;
+      }
+    }
+
+    return result;
   }
 }
