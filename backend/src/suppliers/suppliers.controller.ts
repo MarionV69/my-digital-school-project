@@ -12,13 +12,16 @@ import {
 import { SuppliersService } from './suppliers.service';
 import { CreateSupplierAttributesDto } from './dto/create-supplier-attributes.dto';
 import { UpdateSupplierAttributesDto } from './dto/update-supplier-attributes.dto';
-import { ApiBearerAuth, ApiExcludeEndpoint, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CategoryDto } from './dto/category.dto';
 import { LabelDto } from './dto/label.dto';
 import { FilterDto } from './dto/supplier-filter.dto';
 import { SupplierDetailDto } from './dto/supplier-details.dto';
 import { SupplierListItemDto } from './dto/supplier-list-item.dto';
 import { SupplierStatsDto } from './dto/supplier-stats.dto';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
+import { Public } from 'src/common/decorators/public.decorator';
 
 
 @ApiTags('suppliers')
@@ -28,6 +31,7 @@ export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
 
   // GET /labels
+  @Public()
   @Get('labels')
   @ApiOperation({ summary: 'Get all labels.'})
   @ApiOkResponse({ type: [LabelDto]})
@@ -36,6 +40,7 @@ export class SuppliersController {
   }
 
   // GET /categories
+  @Public()
   @Get('categories')
   @ApiOperation({ summary: 'Get all categories of product.'})
   @ApiOkResponse({ type: [CategoryDto]})
@@ -45,12 +50,17 @@ export class SuppliersController {
 
   // POST /supplier
   @Post()
-  @ApiExcludeEndpoint()
-  create(@Body() createSupplierDto: CreateSupplierAttributesDto) {
-    return this.suppliersService.create(createSupplierDto);
+  @ApiOperation({ summary: 'Create supplierAttributes'})
+  @ApiCreatedResponse()
+  create(
+    @Body() createSupplierDto: CreateSupplierAttributesDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.suppliersService.create(createSupplierDto, user);
   }
 
   // GET /suppliers?filtres
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all suppliers with optional filters' })
   @ApiOkResponse({ type: [SupplierListItemDto]})
@@ -67,6 +77,7 @@ export class SuppliersController {
   }
 
   // GET /suppliers/:id
+  @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Get a supplier by id'})
   @ApiOkResponse({ type: SupplierDetailDto })
@@ -81,8 +92,9 @@ export class SuppliersController {
   update(
     @Param('id') id: string,
     @Body() updateSupplierDto: UpdateSupplierAttributesDto,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.suppliersService.update(+id, updateSupplierDto);
+    return this.suppliersService.update(+id, updateSupplierDto, user);
   }
 
   // DELETE /supplier/:id
@@ -90,8 +102,11 @@ export class SuppliersController {
   @HttpCode(204)
   @ApiOperation({ summary: 'Delete a supplier'})
   @ApiNoContentResponse()
-  remove(@Param('id') id: string) {
-    return this.suppliersService.remove(+id);
+  remove(
+    @Param('id') id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.suppliersService.remove(+id, user);
   }
 
 }

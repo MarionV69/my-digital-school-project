@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,7 +12,6 @@ import { Repository } from 'typeorm';
 import { EstablishmentType } from './enums/establishment-type.enum';
 import { User } from '../users/entities/user.entity';
 import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
-import { SuppliersService } from 'src/suppliers/suppliers.service';
 
 @Injectable()
 export class EstablishmentsService {
@@ -22,7 +22,6 @@ export class EstablishmentsService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
 
-    private suppliersService: SuppliersService,
   ) {}
 
   // Méthode pour créer un établissement
@@ -30,36 +29,22 @@ export class EstablishmentsService {
     dto: CreateEstablishmentDto,
     currentUser: AuthenticatedUser,
   ): Promise<Establishment> {
+
     // Vérification: Le user a t-il déjà un établissement
     if (currentUser.establishmentId) {
       throw new BadRequestException(
         "Vous avez déjà créé un établissement. Un utilisateur ne peut gérer qu'un seul établissement.",
       );
     }
+
     // Créer l'établissement
     const establishment = this.establishmentRepo.create(dto);
     const savedEstablishment = await this.establishmentRepo.save(establishment);
 
-    // Créer les supplierAttributes si l'Establishment est un 'SUPPLIER'
-    if (savedEstablishment.type === EstablishmentType.SUPPLIER) {
-      await this.suppliersService.create({ supplierId: savedEstablishment.id})
-    }
-
-
-    console.log('currentUser:', currentUser);
-    console.log('savedEstablishment.id:', savedEstablishment.id);
-
     // Lier le user à cet établissement
-    if (currentUser && currentUser.id) {
-      console.log('Tentative de mise à jour du user ID:', currentUser.id);
-      await this.userRepository.update(currentUser.id, {
+    await this.userRepository.update(currentUser.id, {
         establishmentId: savedEstablishment.id,
       });
-
-      console.log('User mis à jour');
-    } else {
-      console.log('❌ currentUser ou currentUser.userId manquant');
-    }
 
     return savedEstablishment;
   }
@@ -99,20 +84,30 @@ export class EstablishmentsService {
   async update(
     id: number,
     dto: UpdateEstablishmentDto,
+    currentUser: AuthenticatedUser,
   ): Promise<Establishment> {
     const establishment = await this.establishmentRepo.findOneBy({ id });
     if (!establishment) {
       throw new NotFoundException(`Establishment with ID ${id} not found`);
+    }
+    if (establishment.id !== currentUser.establishmentId) {
+      throw new ForbiddenException('You are not authorized to update this establishment.')
     }
     Object.assign(establishment, dto);
     return await this.establishmentRepo.save(establishment);
   }
 
   // Méthode pour supprimer un établissement
-  async remove(id: number): Promise<void> {
+  async remove(
+    id: number,
+    currentUser: AuthenticatedUser,
+  ): Promise<void> {
     const establishment = await this.establishmentRepo.findOneBy({ id });
     if (!establishment) {
       throw new NotFoundException(`Establishment with ID ${id} not found`);
+    }
+    if (establishment.id !== currentUser.establishmentId) {
+      throw new ForbiddenException('You are not authorized to delete this establishment.')
     }
     await this.establishmentRepo.remove(establishment);
   }

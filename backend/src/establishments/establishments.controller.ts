@@ -6,13 +6,13 @@ import {
   Patch,
   Param,
   Delete,
-  Request,
 } from '@nestjs/common';
 import { EstablishmentsService } from './establishments.service';
 import { CreateEstablishmentDto } from './dto/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dto/update-establishment.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
+import type { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 
 @ApiTags('establishments')
 @ApiBearerAuth()
@@ -24,21 +24,21 @@ export class EstablishmentsController {
   @Post()
   create(
     @Body() createEstablishmentDto: CreateEstablishmentDto,
-    @Request() req: Request & { user: AuthenticatedUser },
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.establishmentsService.create(createEstablishmentDto, req.user);
+    return this.establishmentsService.create(createEstablishmentDto, user);
   }
 
   // Route pour récupérer tous les établissements
   @Get()
-  findAll(@Request() req: Request & { user: AuthenticatedUser }) {
-    return this.establishmentsService.findAll(req.user);
+  findAll(@CurrentUser() user: AuthenticatedUser,) {
+    return this.establishmentsService.findAll(user);
   }
 
   // Route pour récupérer un établissement par son ID
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.establishmentsService.findOne(+id);
+    return this.establishmentsService.findOne(+id,);
   }
 
   // Route pour mettre à jour un établissement
@@ -46,13 +46,17 @@ export class EstablishmentsController {
   update(
     @Param('id') id: string,
     @Body() updateEstablishmentDto: UpdateEstablishmentDto,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.establishmentsService.update(+id, updateEstablishmentDto);
+    return this.establishmentsService.update(+id, updateEstablishmentDto, user);
   }
 
   // Route pour supprimer un établissement
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.establishmentsService.remove(+id);
+  remove(
+    @Param('id') id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.establishmentsService.remove(+id, user);
   }
 }

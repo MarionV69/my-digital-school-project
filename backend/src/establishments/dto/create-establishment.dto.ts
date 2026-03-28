@@ -9,10 +9,7 @@ import {
   IsString,
   Length,
   MaxLength,
-  ValidateNested,
 } from 'class-validator';
-import { CreateSupplierAttributesDto } from 'src/suppliers/dto/create-supplier-attributes.dto';
-import { Type } from 'class-transformer';
 
 export class CreateEstablishmentDto {
   @ApiProperty({
@@ -118,16 +115,4 @@ export class CreateEstablishmentDto {
   @IsOptional()
   @MaxLength(255)
   instagram?: string;
-
-  // Sous-objet SupplierAttributes
-  @ApiProperty({
-    type: CreateSupplierAttributesDto,
-    required: false,
-    description:
-      'Supplier attributes for the establishment (if establishment is a supplier).',
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateSupplierAttributesDto)
-  supplierAttributes?: CreateSupplierAttributesDto;
 }

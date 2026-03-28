@@ -1,9 +1,9 @@
 import { CreateSupplierAttributesDto } from './dto/create-supplier-attributes.dto';
 import { UpdateSupplierAttributesDto } from './dto/update-supplier-attributes.dto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { SupplierAttributes } from './entities/supplier-attributes.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { ProductCategory } from './entities/product-category.entity';
 import { Label } from './entities/label.entity';
 import { LabelDto } from './dto/label.dto';
@@ -14,6 +14,7 @@ import { SupplierDetailDto } from './dto/supplier-details.dto';
 import { Favorite } from 'src/favorites/entities/favorite.entity';
 import { Review } from 'src/reviews/entities/review.entity';
 import { SupplierStatsDto } from './dto/supplier-stats.dto';
+import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
 
 @Injectable()
 export class SuppliersService {
@@ -36,14 +37,35 @@ export class SuppliersService {
 
     @InjectRepository(Review)
     private reviewRepository:
-    Repository<Review>
+    Repository<Review>,
 
   ) {}
 
-  // Créer les supplierAttributes directement après la création d'un Establishement de type 'SUPPLIER'
-  async create(createSupplierDto: CreateSupplierAttributesDto): Promise<void> {
+  // Créer les supplierAttributes
+  async create(
+    dto: CreateSupplierAttributesDto,
+    currentUser: AuthenticatedUser,
+  ): Promise<void> {
+
+    const labels = dto.labels
+      ? await this.labelRepository.findBy({id: In(dto.labels)})
+      : [];
+    
+    const productCategories = dto.productCategories
+      ? await this.categoryRepository.findBy({id: In(dto.productCategories)})
+      : [];
+
     const supplier = this.supplierRepository.create({
-      supplierId: createSupplierDto.supplierId
+      supplierId: currentUser.establishmentId ?? undefined,
+      supplierType: dto.supplierType,
+      priceRange: dto.priceRange,
+      deliveryRadiusKm: dto.deliveryRadiusKm,
+      deliveryInformation: dto.deliveryInformation,
+      minimumOrderAmount: dto.minimumOrderAmount,
+      isPremium: dto.isPremium,
+      isVisible: dto.isVisible,
+      labels: labels,
+      productCategories: productCategories
     })
     
     await this.supplierRepository.save(supplier)
@@ -73,7 +95,7 @@ export class SuppliersService {
     }
 
     if (filters.search) {
-      query.andWhere('establishment.name LIKE :search', { search: `%${filters.search}%` });
+      query.andWhere('(establishment.tradeName LIKE :search OR establishment.legalName LIKE :search)', { search: `%${filters.search}%` });
     }
 
     if (filters.priceRange) {
@@ -169,25 +191,60 @@ export class SuppliersService {
 
   }
 
-
   // Méthode pour mettre à jour un fournisseur
   async update(
     id: number, 
-    dto: UpdateSupplierAttributesDto): Promise<SupplierAttributes> {
-      const supplierAttributes = await this.supplierRepository.findOneBy({ supplierId: id });
+    dto: UpdateSupplierAttributesDto,
+    currentUser: AuthenticatedUser,
+  ): Promise<SupplierAttributes> {
+
+      const supplierAttributes = await this.supplierRepository.findOne({ 
+        where: { supplierId: id },
+        relations: ['labels', 'productCategories']
+      });
+
       if(!supplierAttributes) {
         throw new NotFoundException(`SupplierAttributes with ID ${id} not found`);
       }
+
+      if(supplierAttributes.supplierId !== currentUser.establishmentId) {
+        throw new ForbiddenException('Your are not authorized to update this supplier.')
+      }
+
+      // Gérer les labels si présents
+      if (dto.labels) {
+        supplierAttributes.labels = dto.labels
+        ? await this.labelRepository.findBy({id: In(dto.labels)})
+        : [];
+      }
+
+      // Gérer les productCategories si présents
+      if (dto.productCategories) {
+        supplierAttributes.productCategories = dto.productCategories
+        ? await this.categoryRepository.findBy({id: In(dto.productCategories)})
+        : [];
+      }
+
       Object.assign(supplierAttributes, dto);
       return await this.supplierRepository.save(supplierAttributes)
   }
 
   // Méthode pour supprimer un fournisseur
-  async remove(id: number): Promise<void> {
+  async remove(
+    id: number,
+    currentUser: AuthenticatedUser,
+  ): Promise<void> {
+
     const supplierAttributes = await this.supplierRepository.findOneBy({ supplierId: id});
+
     if (!supplierAttributes) {
       throw new NotFoundException(`Supplier with ID ${id} not found`);
     }
+
+    if (supplierAttributes.supplierId !== currentUser.establishmentId) {
+      throw new ForbiddenException('You are not authorized to remove this supplier.')
+    }
+
     await this.supplierRepository.remove(supplierAttributes);
   }
 
