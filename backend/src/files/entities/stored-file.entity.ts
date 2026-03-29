@@ -24,7 +24,7 @@ export class StoredFile {
   size: number; // Size of the file in bytes
 
   @Column({ type: 'varchar', length: 512 })
-  path: string; // S3 key
+  path: string; // S3 key (e.g. "public/6de0c398-ea33-445b-aa55-84fe94ed3907.jpg")
 
   @CreateDateColumn({ name: 'uploaded_at', type: 'datetime' })
   uploadedAt: Date;

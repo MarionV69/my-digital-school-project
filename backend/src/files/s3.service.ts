@@ -17,9 +17,17 @@ export class S3Service {
   private region: string;
 
   constructor(private configService: ConfigService) {
-    this.region = this.configService.get<string>('AWS_REGION')!;
-    this.bucket = this.configService.get<string>('AWS_BUCKET')!;
+    const region = this.configService.get<string>('AWS_REGION');
+    const bucket = this.configService.get<string>('AWS_BUCKET');
+    const accessKey = this.configService.get<string>('AWS_ACCESS_KEY');
+    const secretKey = this.configService.get<string>('AWS_SECRET_KEY');
 
+    if (!region || !bucket || !accessKey || !secretKey) {
+      throw new Error('Missing AWS configuration in environment variables');
+    }
+
+    this.region = region;
+    this.bucket = bucket;
     this.s3Client = new S3Client({
       region: this.region,
       credentials: {
