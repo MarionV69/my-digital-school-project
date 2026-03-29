@@ -13,9 +13,14 @@ export class EstablishmentGuard implements CanActivate {
       .switchToHttp()
       .getRequest<Request & { user: AuthenticatedUser }>();
 
-    if (!request.user.establishmentId || !request.user.establishmentType) {
+    const user = request.user;
+    if (!user) {
+      throw new ForbiddenException('User not authenticated');
+    }
+    if (!user.establishmentId || !user.establishmentType) {
       throw new ForbiddenException('You must create an establishment first');
     }
+
     return true;
   }
 }

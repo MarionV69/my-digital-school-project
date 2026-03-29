@@ -14,8 +14,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
-import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { CreateDocumentDto } from '../documents/dto/create-document.dto';
 import {
   ApiBadRequestResponse,
@@ -39,6 +37,8 @@ import { DocumentResponseDto } from '../documents/dto/document-response.dto';
 import { DocumentsService } from './documents.service';
 import { GroupedDocumentsResponseDto } from './dto/grouped-documents-response.dto';
 import { EstablishmentGuard } from 'src/common/guards/establishment.guard';
+import { CurrentEstablishmentUser } from 'src/common/decorators/current-establishment-user.decorator';
+import { type UserWithEstablishment } from 'src/common/types/user-with-establishment.type';
 
 @ApiTags('documents')
 @ApiBearerAuth()
@@ -78,7 +78,7 @@ export class DocumentsController {
   })
   @UseInterceptors(FileInterceptor('file', multerPublicOptions))
   async upload(
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentEstablishmentUser() user: UserWithEstablishment,
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addMaxSizeValidator({
@@ -90,9 +90,9 @@ export class DocumentsController {
     )
     file: Express.Multer.File,
     @Body() dto: CreateDocumentDto,
-  ) {
+  ): Promise<DocumentResponseDto> {
     return this.documentsService.upload(
-      user.establishmentId!,
+      user.establishmentId,
       user.establishmentType,
       file,
       dto.category,
@@ -117,16 +117,16 @@ export class DocumentsController {
     description: 'You must create an establishment before managing documents',
   })
   async findAll(
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentEstablishmentUser() user: UserWithEstablishment,
     @Query('category') category?: DocumentCategory,
   ): Promise<GroupedDocumentsResponseDto | DocumentResponseDto[]> {
     if (category) {
       return this.documentsService.findByCategory(
-        user.establishmentId!,
+        user.establishmentId,
         category,
       );
     }
-    return this.documentsService.findAllByEstablishment(user.establishmentId!);
+    return this.documentsService.findAllByEstablishment(user.establishmentId);
   }
 
   @Delete(':id')
@@ -138,9 +138,9 @@ export class DocumentsController {
     description: 'You must create an establishment before managing documents',
   })
   async delete(
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentEstablishmentUser() user: UserWithEstablishment,
     @Param('id', ParseIntPipe) documentId: number,
-  ) {
-    return this.documentsService.delete(documentId, user.establishmentId!);
+  ): Promise<void> {
+    return this.documentsService.delete(documentId, user.establishmentId);
   }
 }

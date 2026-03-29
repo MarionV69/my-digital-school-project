@@ -18,14 +18,14 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { CurrentUser } from '../common/decorators/current-user.decorator';
-import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
 import { SendMessageDto } from './dto/send-message.dto';
 import { EstablishmentGuard } from '../common/guards/establishment.guard';
 import { Conversation } from './entities/conversation.entity';
 import { ConversationResponseDto } from './dto/conversation-response.dto';
 import { UnreadCountResponseDto } from './dto/unread-count-response.dto';
 import { MessageResponseDto } from './dto/message-response.dto';
+import { CurrentEstablishmentUser } from 'src/common/decorators/current-establishment-user.decorator';
+import { type UserWithEstablishment } from 'src/common/types/user-with-establishment.type';
 
 @ApiTags('conversations')
 @ApiBearerAuth()
@@ -43,11 +43,11 @@ export class ConversationsController {
   @ApiNotFoundResponse({ description: 'Supplier not found' })
   createConversation(
     @Body() createConversationDto: CreateConversationDto,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentEstablishmentUser() user: UserWithEstablishment,
   ): Promise<Conversation> {
     return this.conversationsService.createConversation(
-      user.establishmentId!,
-      user.establishmentType!,
+      user.establishmentId,
+      user.establishmentType,
       createConversationDto.supplierId,
     );
   }
@@ -62,12 +62,12 @@ export class ConversationsController {
   sendMessage(
     @Param('id', ParseIntPipe) conversationId: number,
     @Body() sendMessageDto: SendMessageDto,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentEstablishmentUser() user: UserWithEstablishment,
   ): Promise<MessageResponseDto> {
     return this.conversationsService.sendMessage(
       conversationId,
-      user.establishmentId!,
-      user.establishmentType!,
+      user.establishmentId,
+      user.establishmentType,
       sendMessageDto.content,
     );
   }
@@ -76,11 +76,11 @@ export class ConversationsController {
   @ApiOperation({ summary: 'Get all conversations' })
   @ApiOkResponse({ type: [ConversationResponseDto] })
   getConversations(
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentEstablishmentUser() user: UserWithEstablishment,
   ): Promise<ConversationResponseDto[]> {
     return this.conversationsService.getConversations(
-      user.establishmentId!,
-      user.establishmentType!,
+      user.establishmentId,
+      user.establishmentType,
     );
   }
 
@@ -88,11 +88,11 @@ export class ConversationsController {
   @ApiOperation({ summary: 'Get total unread messages count' })
   @ApiOkResponse({ type: UnreadCountResponseDto })
   getUnreadCount(
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentEstablishmentUser() user: UserWithEstablishment,
   ): Promise<UnreadCountResponseDto> {
     return this.conversationsService.getTotalUnreadCount(
-      user.establishmentId!,
-      user.establishmentType!,
+      user.establishmentId,
+      user.establishmentType,
     );
   }
 
@@ -105,12 +105,12 @@ export class ConversationsController {
   @ApiNotFoundResponse({ description: 'Conversation not found' })
   getConversationMessages(
     @Param('id', ParseIntPipe) conversationId: number,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentEstablishmentUser() user: UserWithEstablishment,
   ): Promise<MessageResponseDto[]> {
     return this.conversationsService.getConversationMessages(
       conversationId,
-      user.establishmentId!,
-      user.establishmentType!,
+      user.establishmentId,
+      user.establishmentType,
     );
   }
 }

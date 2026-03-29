@@ -14,7 +14,7 @@ export const CurrentEstablishmentUser = createParamDecorator(
 
     const user = request.user;
     if (!user) {
-      throw new Error('User not authenticated');
+      throw new ForbiddenException('User not authenticated');
     }
     if (!user.establishmentId || !user.establishmentType) {
       throw new ForbiddenException('User must have an establishment');
