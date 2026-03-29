@@ -27,12 +27,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { EstablishmentGuard } from '../common/guards/establishment.guard';
-import { CurrentUser } from '../common/decorators/current-user.decorator';
-import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
 import { ReviewResponseDto } from './dto/review-response.dto';
 import { ReplyReviewDto } from './dto/reply-review.dto';
 import { SupplierReviewsResponseDto } from './dto/supplier-reviews-response.dto';
 import { Public } from '../common/decorators/public.decorator';
+import { CurrentEstablishmentUser } from 'src/common/decorators/current-establishment-user.decorator';
+import { type UserWithEstablishment } from 'src/common/types/user-with-establishment.type';
 
 @ApiTags('reviews')
 @ApiBearerAuth()
@@ -51,11 +51,11 @@ export class ReviewsController {
   })
   createReview(
     @Body() createReviewDto: CreateReviewDto,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentEstablishmentUser() user: UserWithEstablishment,
   ): Promise<ReviewResponseDto> {
     return this.reviewsService.createReview(
-      user.establishmentId!,
-      user.establishmentType!,
+      user.establishmentId,
+      user.establishmentType,
       createReviewDto,
     );
   }
@@ -82,12 +82,12 @@ export class ReviewsController {
   replyToReview(
     @Param('id', ParseIntPipe) reviewId: number,
     @Body() replyReviewDto: ReplyReviewDto,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentEstablishmentUser() user: UserWithEstablishment,
   ): Promise<ReviewResponseDto> {
     return this.reviewsService.replyToReview(
       reviewId,
-      user.establishmentId!,
-      user.establishmentType!,
+      user.establishmentId,
+      user.establishmentType,
       replyReviewDto,
     );
   }
@@ -100,12 +100,12 @@ export class ReviewsController {
   @ApiNotFoundResponse({ description: 'Review not found' })
   deleteReview(
     @Param('id', ParseIntPipe) reviewId: number,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentEstablishmentUser() user: UserWithEstablishment,
   ): Promise<void> {
     return this.reviewsService.deleteReview(
       reviewId,
-      user.establishmentId!,
-      user.establishmentType!,
+      user.establishmentId,
+      user.establishmentType,
     );
   }
 }
