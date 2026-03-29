@@ -1,17 +1,5 @@
-import { randomUUID } from 'crypto';
-import { diskStorage, FileFilterCallback } from 'multer';
-import { extname } from 'path';
-import { PRIVATE_UPLOAD_PATH, PUBLIC_UPLOAD_PATH } from './storage.config';
+import { FileFilterCallback, memoryStorage } from 'multer';
 import { BadRequestException } from '@nestjs/common';
-
-const generateFileName = (
-  _req: Express.Request,
-  file: Express.Multer.File,
-  cb: (error: Error | null, filename: string) => void,
-) => {
-  const uniqueName = randomUUID() + extname(file.originalname);
-  cb(null, uniqueName);
-};
 
 const allowedMimeTypes = [
   'image/png',
@@ -36,10 +24,7 @@ const fileFilter = (
 };
 
 export const multerPublicOptions = {
-  storage: diskStorage({
-    destination: PUBLIC_UPLOAD_PATH,
-    filename: generateFileName,
-  }),
+  storage: memoryStorage(),
   limits: {
     fileSize: 20 * 1024 * 1024,
   },
@@ -47,10 +32,7 @@ export const multerPublicOptions = {
 };
 
 export const multerPrivateOptions = {
-  storage: diskStorage({
-    destination: PRIVATE_UPLOAD_PATH,
-    filename: generateFileName,
-  }),
+  storage: memoryStorage(),
   limits: {
     fileSize: 10 * 1024 * 1024,
   },

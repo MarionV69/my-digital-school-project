@@ -8,6 +8,12 @@ import { Reflector } from '@nestjs/core';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // CORS configuration
+  app.enableCors({
+    origin: [process.env.FRONTEND_URL || 'http://localhost:5173'],
+    credentials: true, // to add if cookies
+  });
+
   // Global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({

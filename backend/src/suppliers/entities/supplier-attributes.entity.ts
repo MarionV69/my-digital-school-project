@@ -22,10 +22,20 @@ export class SupplierAttributes {
   @PrimaryColumn({ name: 'supplier_id', type: 'int' })
   supplierId: number;
 
-  @Column({ name: 'supplier_type', type: 'enum', enum: SupplierType, default: SupplierType.PRODUCER })
+  @Column({
+    name: 'supplier_type',
+    type: 'enum',
+    enum: SupplierType,
+    default: SupplierType.PRODUCER,
+  })
   supplierType: SupplierType;
 
-  @Column({ name: 'price_range', type: 'enum', enum: PriceRange, default: PriceRange.ECONOMIC })
+  @Column({
+    name: 'price_range',
+    type: 'enum',
+    enum: PriceRange,
+    default: PriceRange.ECONOMIC,
+  })
   priceRange: PriceRange;
 
   @Column({ name: 'delivery_radius_km', type: 'int', nullable: true })
@@ -62,7 +72,7 @@ export class SupplierAttributes {
   @JoinColumn({ name: 'supplier_id' })
   supplier: Establishment;
 
-  // Chaque établissement (de type 'SUPPLIER') peut avoir plusieurs labels 
+  // Chaque établissement (de type 'SUPPLIER') peut avoir plusieurs labels
   @ManyToMany(() => Label, (label) => label.suppliers)
   @JoinTable({
     name: 'supplier_label',

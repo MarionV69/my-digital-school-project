@@ -1,10 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CategoryDto {
+  @ApiProperty({ example: 1 })
+  id: number;
 
-    @ApiProperty({example: 1})
-    id: number;
-
-    @ApiProperty({example: "Fruits"})
-    name: string;
+  @ApiProperty({ example: 'Fruits' })
+  name: string;
 }

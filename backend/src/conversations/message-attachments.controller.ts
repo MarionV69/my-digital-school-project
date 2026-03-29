@@ -9,7 +9,6 @@ import {
   UploadedFile,
   HttpStatus,
   ParseFilePipeBuilder,
-  StreamableFile,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -73,8 +72,16 @@ export class MessageAttachmentsController {
   }
 
   @Get(':messageId/attachments/:fileId')
-  @ApiOperation({ summary: 'Stream a private attachment' })
-  @ApiOkResponse({ description: 'File stream' })
+  @ApiOperation({ summary: 'Get signed URL for private attachment' })
+  @ApiOkResponse({
+    description: 'Signed URL for the attachment',
+    schema: {
+      type: 'object',
+      properties: {
+        url: { type: 'string', example: 'https://bucket.s3...?X-Amz-...' },
+      },
+    },
+  })
   @ApiForbiddenResponse({
     description: 'Not a participant of this conversation',
   })
@@ -83,8 +90,8 @@ export class MessageAttachmentsController {
     @Param('messageId', ParseIntPipe) messageId: number,
     @Param('fileId', ParseIntPipe) fileId: number,
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<StreamableFile> {
-    return this.conversationsService.streamAttachment(
+  ): Promise<{ url: string }> {
+    return this.conversationsService.getAttachmentSignedUrl(
       messageId,
       fileId,
       user.establishmentId!,

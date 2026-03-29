@@ -13,6 +13,13 @@ import { EstablishmentType } from '../establishments/enums/establishment-type.en
 import { DocumentResponseDto } from './dto/document-response.dto';
 import { GroupedDocumentsResponseDto } from './dto/grouped-documents-response.dto';
 
+export interface DocumentUrls {
+  logoUrl: string | null;
+  coverPhotoUrl: string | null;
+  catalogUrl: string | null;
+  galleryPhotos: string[];
+}
+
 @Injectable()
 export class DocumentsService {
   constructor(
@@ -54,7 +61,7 @@ export class DocumentsService {
     this.validateMimeTypeForCategory(file, category);
     await this.checkCategoryLimit(establishmentId, category);
 
-    const storedFile = await this.filesService.create(file);
+    const storedFile = await this.filesService.create(file, 'public');
     const document = this.documentsRepository.create({
       establishmentId,
       fileId: storedFile.id,
@@ -70,7 +77,7 @@ export class DocumentsService {
         originalFilename: storedFile.originalFilename,
         mimeType: storedFile.mimeType,
         size: storedFile.size,
-        url: this.filesService.getPublicFileUrl(storedFile.storedFilename),
+        url: this.filesService.getPublicFileUrl(storedFile.path),
       },
     };
   }
@@ -99,12 +106,35 @@ export class DocumentsService {
           originalFilename: doc.file.originalFilename,
           mimeType: doc.file.mimeType,
           size: doc.file.size,
-          url: this.filesService.getPublicFileUrl(doc.file.storedFilename),
+          url: this.filesService.getPublicFileUrl(doc.file.path),
         },
       });
     }
 
     return grouped;
+  }
+
+  async findByCategory(
+    establishmentId: number,
+    category: DocumentCategory,
+  ): Promise<DocumentResponseDto[]> {
+    const documents = await this.documentsRepository.find({
+      where: { establishmentId, category },
+      relations: ['file'],
+      order: { createdAt: 'DESC' },
+    });
+
+    return documents.map((doc) => ({
+      id: doc.id,
+      category: doc.category,
+      file: {
+        id: doc.file.id,
+        originalFilename: doc.file.originalFilename,
+        mimeType: doc.file.mimeType,
+        size: doc.file.size,
+        url: this.filesService.getPublicFileUrl(doc.file.path),
+      },
+    }));
   }
 
   async delete(documentId: number, establishmentId: number): Promise<void> {
@@ -160,5 +190,43 @@ export class DocumentsService {
         `Maximum ${this.CATEGORY_LIMITS[category]} ${category} files allowed. Please delete an existing file first.`,
       );
     }
+  }
+
+  /**
+   * Extract all document URLs from already-loaded documents
+   *
+   * @param documents - Array of documents with file relation loaded via JOIN
+   * @returns Object containing document URLs grouped by category
+   */
+  getAllDocumentUrls(documents: Document[]): DocumentUrls {
+    const result: DocumentUrls = {
+      logoUrl: null,
+      coverPhotoUrl: null,
+      catalogUrl: null,
+      galleryPhotos: [],
+    };
+
+    for (const doc of documents || []) {
+      if (!doc.file) continue;
+
+      const url = this.filesService.getPublicFileUrl(doc.file.path);
+
+      switch (doc.category) {
+        case DocumentCategory.LOGO:
+          result.logoUrl = url;
+          break;
+        case DocumentCategory.COVER_PHOTO:
+          result.coverPhotoUrl = url;
+          break;
+        case DocumentCategory.CATALOG:
+          result.catalogUrl = url;
+          break;
+        case DocumentCategory.GALLERY_PHOTO:
+          result.galleryPhotos.push(url);
+          break;
+      }
+    }
+
+    return result;
   }
 }

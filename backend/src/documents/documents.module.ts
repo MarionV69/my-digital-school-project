@@ -9,5 +9,6 @@ import { Document } from './entities/document.entity';
   imports: [FilesModule, TypeOrmModule.forFeature([Document])],
   controllers: [DocumentsController],
   providers: [DocumentsService],
+  exports: [DocumentsService],
 })
 export class DocumentsModule {}

@@ -2,7 +2,6 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-  StreamableFile,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Conversation } from './entities/conversation.entity';
@@ -14,7 +13,6 @@ import { ConversationResponseDto } from './dto/conversation-response.dto';
 import { UnreadCountResponseDto } from './dto/unread-count-response.dto';
 import { FilesService } from '../files/files.service';
 import { MessageAttachmentResponseDto } from './dto/message-attachments-response.dto';
-import { createReadStream } from 'node:fs';
 import { MessageResponseDto } from './dto/message-response.dto';
 
 @Injectable()
@@ -186,21 +184,29 @@ export class ConversationsService {
       relations: ['files'],
     });
 
-    return messages.map((message) => ({
-      id: message.id,
-      conversationId: message.conversationId,
-      senderType: message.senderType,
-      content: message.content,
-      sentAt: message.sentAt,
-      isReadByRecipient: message.isReadByRecipient,
-      attachments: message.files.map((file) => ({
-        id: file.id,
-        originalFilename: file.originalFilename,
-        mimeType: file.mimeType,
-        size: file.size,
-        endpoint: this.filesService.getPrivateFileEndpoint(message.id, file.id),
+    return Promise.all(
+      messages.map(async (message) => ({
+        id: message.id,
+        conversationId: message.conversationId,
+        senderType: message.senderType,
+        content: message.content,
+        sentAt: message.sentAt,
+        isReadByRecipient: message.isReadByRecipient,
+        attachments: await Promise.all(
+          message.files.map(async (file) => ({
+            id: file.id,
+            originalFilename: file.originalFilename,
+            mimeType: file.mimeType,
+            size: file.size,
+            endpoint: this.filesService.getPrivateFileEndpoint(
+              message.id,
+              file.id,
+            ),
+            url: await this.filesService.getPrivateFileSignedUrl(file.path), // Expires in 1 hour
+          })),
+        ),
       })),
-    }));
+    );
   }
 
   async getTotalUnreadCount(
@@ -243,10 +249,15 @@ export class ConversationsService {
       establishmentType,
     );
 
-    const storedFile = await this.filesService.create(file);
+    const storedFile = await this.filesService.create(file, 'private');
 
     message.files.push(storedFile);
     await this.messagesRepository.save(message);
+
+    // Signed URL expires in 1 hour
+    const signedUrl = await this.filesService.getPrivateFileSignedUrl(
+      storedFile.path,
+    );
 
     return {
       id: storedFile.id,
@@ -257,16 +268,17 @@ export class ConversationsService {
         messageId,
         storedFile.id,
       ),
+      url: signedUrl,
     };
   }
 
-  // Streams private file after verifying conversation participation
-  async streamAttachment(
+  // Get signed URL for private attachment after verifying conversation participation
+  async getAttachmentSignedUrl(
     messageId: number,
     fileId: number,
     establishmentId: number,
     establishmentType: EstablishmentType,
-  ): Promise<StreamableFile> {
+  ): Promise<{ url: string }> {
     const message = await this.messagesRepository.findOne({
       where: { id: messageId },
       relations: ['conversation', 'files'],
@@ -283,12 +295,12 @@ export class ConversationsService {
     const file = message.files.find((f) => f.id === fileId);
     if (!file) throw new NotFoundException('Attachment not found');
 
-    const fileStream = createReadStream(file.path);
+    // Signed URL expires in 1 hour
+    const signedUrl = await this.filesService.getPrivateFileSignedUrl(
+      file.path,
+    );
 
-    return new StreamableFile(fileStream, {
-      type: file.mimeType,
-      disposition: `inline; filename="${file.originalFilename}"`,
-    });
+    return { url: signedUrl };
   }
 
   // Ensures the current establishment is a participant of the conversation
