@@ -193,9 +193,10 @@ export class DocumentsService {
   }
 
   /**
-   * Extract all document URLs from already-loaded documents (JOIN file needed)
-   * Use destructuring to get only what you need:
-   * const { logoUrl, coverPhotoUrl } = this.documentsService.getAllDocumentUrls(docs);
+   * Extract all document URLs from already-loaded documents
+   *
+   * @param documents - Array of documents with file relation loaded via JOIN
+   * @returns Object containing document URLs grouped by category
    */
   getAllDocumentUrls(documents: Document[]): DocumentUrls {
     const result: DocumentUrls = {
