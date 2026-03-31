@@ -5,9 +5,12 @@ import { Establishment } from './entities/establishment.entity';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { Favorite } from 'src/favorites/entities/favorite.entity';
 import { User } from 'src/users/entities/user.entity';
+import { DocumentsModule } from 'src/documents/documents.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Establishment, Favorite, User])],
+  imports: [TypeOrmModule.forFeature([Establishment, Favorite, User]),
+  DocumentsModule,
+],
   controllers: [EstablishmentsController],
   providers: [EstablishmentsService],
   exports: [EstablishmentsService],

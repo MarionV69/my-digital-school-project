@@ -19,6 +19,7 @@ import { Favorite } from 'src/favorites/entities/favorite.entity';
 import { Review } from 'src/reviews/entities/review.entity';
 import { SupplierStatsDto } from './dto/supplier-stats.dto';
 import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
+import { DocumentsService } from 'src/documents/documents.service';
 
 @Injectable()
 export class SuppliersService {
@@ -37,6 +38,8 @@ export class SuppliersService {
 
     @InjectRepository(Review)
     private reviewRepository: Repository<Review>,
+
+    private documentsService: DocumentsService,
   ) {}
 
   // Créer les supplierAttributes
@@ -74,7 +77,9 @@ export class SuppliersService {
       .createQueryBuilder('supplier')
       .leftJoinAndSelect('supplier.labels', 'label')
       .leftJoinAndSelect('supplier.productCategories', 'category')
-      .leftJoinAndSelect('supplier.supplier', 'establishment');
+      .leftJoinAndSelect('supplier.supplier', 'establishment')
+      .leftJoinAndSelect('establishment.documents', 'documents')
+      .leftJoinAndSelect('documents.file', 'file');
 
     // Filtres conditionnels
     if (filters.supplierType) {
@@ -125,7 +130,14 @@ export class SuppliersService {
     // Transformation des entités en ListItemDto
     const suppliers = await query.getMany();
 
-    return suppliers.map((supplier) => ({
+    return suppliers.map((supplier) => {
+
+      // Extraction du logo et de l'image de couverture
+      const { logoUrl, coverPhotoUrl } = this.documentsService.getAllDocumentUrls(
+        supplier.supplier.documents || [],
+      );
+
+      return {
       id: supplier.supplierId,
       type: supplier.supplierType,
       name: supplier.supplier.legalName,
@@ -137,7 +149,10 @@ export class SuppliersService {
       productCategories: supplier.productCategories.map(
         (ProductCategory) => ProductCategory.name,
       ),
-    }));
+      logoUrl,
+      coverPhotoUrl,
+    };
+  });
   }
 
   // Récupérer un fournisseur grâce à son id
@@ -149,6 +164,7 @@ export class SuppliersService {
       .leftJoinAndSelect('supplier.labels', 'labels')
       .leftJoinAndSelect('supplier.productCategories', 'category')
       .leftJoinAndSelect('establishment.documents', 'documents')
+      .leftJoinAndSelect('documents.file', 'file')
       .where('supplier.supplierId = :id', { id })
       .getOne();
 
@@ -156,12 +172,17 @@ export class SuppliersService {
       throw new NotFoundException(`Supplier with id ${id} not found`);
     }
 
+    // Extraction des URLs de tous les documents du fournisseur
+    const docUrls = this.documentsService.getAllDocumentUrls(supplier.supplier.documents || []);
+
     // Transformation de l'entité en DetailsDto
     return {
       id: supplier.supplierId,
       name: supplier.supplier.legalName,
       city: supplier.supplier.city,
+      postalCode: supplier.supplier.postalCode,
       priceRange: supplier.priceRange,
+      isPremium: supplier.isPremium,
       labels: supplier.labels.map((label) => label.name),
       productCategories: supplier.productCategories.map(
         (ProductCategory) => ProductCategory.name,
@@ -173,7 +194,7 @@ export class SuppliersService {
       website: supplier.supplier.website,
       instagram: supplier.supplier.instagram,
       facebook: supplier.supplier.facebook,
-      documents: supplier.supplier.documents,
+      ...docUrls,
     };
   }
 

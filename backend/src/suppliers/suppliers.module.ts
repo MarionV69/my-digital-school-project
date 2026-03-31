@@ -7,6 +7,7 @@ import { ProductCategory } from './entities/product-category.entity';
 import { SupplierAttributes } from './entities/supplier-attributes.entity';
 import { Favorite } from 'src/favorites/entities/favorite.entity';
 import { Review } from 'src/reviews/entities/review.entity';
+import { DocumentsModule } from 'src/documents/documents.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { Review } from 'src/reviews/entities/review.entity';
       Favorite,
       Review,
     ]),
+    DocumentsModule,
   ],
   controllers: [SuppliersController],
   providers: [SuppliersService],
