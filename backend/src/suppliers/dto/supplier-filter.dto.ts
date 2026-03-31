@@ -3,12 +3,14 @@ import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
 import { PriceRange } from '../enums/price-range.enum';
 import { Transform } from 'class-transformer';
 import { SupplierType } from '../enums/supplier-type.enum';
+import { parse } from 'path';
 
 export class FilterDto {
   @ApiPropertyOptional({ example: 'PRODUCER', enum: SupplierType })
@@ -53,4 +55,10 @@ export class FilterDto {
   @IsArray()
   @Transform(({ value }): string[] => (Array.isArray(value) ? value : [value]))
   productCategories?: string[];
+
+  @ApiPropertyOptional({ example: 4 })
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value}) => parseFloat(value))
+  minRating?: number;
 }

@@ -79,7 +79,8 @@ export class SuppliersService {
       .leftJoinAndSelect('supplier.productCategories', 'category')
       .leftJoinAndSelect('supplier.supplier', 'establishment')
       .leftJoinAndSelect('establishment.documents', 'documents')
-      .leftJoinAndSelect('documents.file', 'file');
+      .leftJoinAndSelect('documents.file', 'file')
+      .leftJoinAndSelect('establishment.reviewsReceived', 'reviewsReceived');
 
     // Filtres conditionnels
     if (filters.supplierType) {
@@ -137,6 +138,12 @@ export class SuppliersService {
         supplier.supplier.documents || [],
       );
 
+      // Calcul du nombre de reviews et de la note moyenne à partir des reviews 
+      const reviewsCount = supplier.supplier.reviewsReceived?.length || 0;
+      const averageRating = reviewsCount > 0
+        ? supplier.supplier.reviewsReceived.reduce((sum, review) => sum + review.rating, 0) / reviewsCount
+        : 0;
+
       return {
       id: supplier.supplierId,
       type: supplier.supplierType,
@@ -151,8 +158,17 @@ export class SuppliersService {
       ),
       logoUrl,
       coverPhotoUrl,
+      reviewsCount,
+      averageRating,
     };
-  });
+  })
+
+  // Trier les fournisseurs en fonction de leurs notes moyennes (du plus élevé au plus bas)
+  .sort((a, b) =>
+    (b.averageRating || 0) - (a.averageRating || 0))
+  
+  // Filtrer les fournisseurs en fonction de la note minimale si elle est définie
+  .filter((supplier) => supplier.averageRating >= (filters.minRating ?? 0));
   }
 
   // Récupérer un fournisseur grâce à son id
@@ -165,6 +181,8 @@ export class SuppliersService {
       .leftJoinAndSelect('supplier.productCategories', 'category')
       .leftJoinAndSelect('establishment.documents', 'documents')
       .leftJoinAndSelect('documents.file', 'file')
+      .leftJoinAndSelect('establishment.reviewsReceived', 'reviewsReceived')
+      .leftJoinAndSelect('reviewsReceived.reviewer', 'reviewer')  
       .where('supplier.supplierId = :id', { id })
       .getOne();
 
@@ -174,6 +192,12 @@ export class SuppliersService {
 
     // Extraction des URLs de tous les documents du fournisseur
     const docUrls = this.documentsService.getAllDocumentUrls(supplier.supplier.documents || []);
+
+    // Calcul du nombre de reviews et de la note moyenne à partir des reviews
+    const reviewsCount = supplier.supplier.reviewsReceived?.length || 0;
+    const averageRating = reviewsCount > 0
+      ? supplier.supplier.reviewsReceived.reduce((sum, review) => sum + review.rating, 0) / reviewsCount
+      : 0;
 
     // Transformation de l'entité en DetailsDto
     return {
@@ -195,6 +219,14 @@ export class SuppliersService {
       instagram: supplier.supplier.instagram,
       facebook: supplier.supplier.facebook,
       ...docUrls,
+      reviewsCount,
+      averageRating,
+      reviews: supplier.supplier.reviewsReceived?.map((review) => ({
+        reviewerRestaurant: review.reviewer?.legalName || 'Restaurant inconnu',
+        rating: review.rating,
+        comment: review.comment,
+        createdAt: review.createdAt,
+      })) || [],
     };
   }
 

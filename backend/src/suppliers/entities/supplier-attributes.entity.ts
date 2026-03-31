@@ -5,6 +5,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
@@ -13,6 +14,7 @@ import { PriceRange } from '../enums/price-range.enum';
 import { Label } from './label.entity';
 import { ProductCategory } from './product-category.entity';
 import { Establishment } from '../../establishments/entities/establishment.entity';
+import { Review } from 'src/reviews/entities/review.entity';
 
 @Entity('supplier_attributes')
 @Index('idx_supplier_type', ['supplierType'])
@@ -92,4 +94,5 @@ export class SupplierAttributes {
     },
   })
   productCategories: ProductCategory[];
+
 }
