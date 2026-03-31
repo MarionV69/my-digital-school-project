@@ -26,9 +26,6 @@ async function bootstrap() {
   // Global serialization interceptor for class-transformer decorators (e.g., @Exclude)
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-  // Enable CORS
-  app.enableCors();
-
   // Swagger API documentation
   const document = SwaggerModule.createDocument(
     app,
