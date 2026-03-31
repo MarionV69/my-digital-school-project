@@ -10,7 +10,6 @@ import {
 import { PriceRange } from '../enums/price-range.enum';
 import { Transform } from 'class-transformer';
 import { SupplierType } from '../enums/supplier-type.enum';
-import { parse } from 'path';
 
 export class FilterDto {
   @ApiPropertyOptional({ example: 'PRODUCER', enum: SupplierType })
