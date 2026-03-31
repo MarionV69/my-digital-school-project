@@ -12,6 +12,8 @@ import { Repository } from 'typeorm';
 import { EstablishmentType } from './enums/establishment-type.enum';
 import { User } from '../users/entities/user.entity';
 import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
+import { EstablishmentDetailsDto } from './dto/establishment-details.dto';
+import { EstablishmentPreviewDto } from './dto/establishment-preview.dto';
 
 @Injectable()
 export class EstablishmentsService {
@@ -23,7 +25,7 @@ export class EstablishmentsService {
     private userRepository: Repository<User>,
   ) {}
 
-  // Méthode pour créer un établissement
+  // POST /establishments
   async create(
     dto: CreateEstablishmentDto,
     currentUser: AuthenticatedUser,
@@ -66,38 +68,81 @@ export class EstablishmentsService {
     });
   }
 
-  // Méthode pour récupérer un établissement par son ID
-  async findOne(id: number): Promise<Establishment> {
-    const establishment = await this.establishmentRepo.findOne({
-      where: { id },
-      relations: ['supplierAttributes'],
-    });
+  // GET /establishments/:id
+  async findOne(
+    id: number,
+    currentUser: AuthenticatedUser,
+  ): Promise<EstablishmentDetailsDto> {
+
+    const establishment = await this.establishmentRepo.findOneBy({ id });
+
     if (!establishment) {
       throw new NotFoundException(`Establishment with ID ${id} not found`);
     }
-    return establishment;
+
+    if (currentUser.establishmentId !== id) {
+      throw new ForbiddenException(
+        'You are not authorized to view this establishment.',)
+    }
+
+    return {
+      siret: establishment.siret,
+      legalName: establishment.legalName,
+      tradeName: establishment.tradeName ?? undefined,
+      vatNumber: establishment.vatNumber ?? undefined,
+      email: establishment.email ?? undefined,
+      phone: establishment.phone ?? undefined,
+      address: establishment.address,
+      city: establishment.city,
+      postalCode: establishment.postalCode,
+      country: establishment.country,
+      description: establishment.description ?? undefined,
+      website: establishment.website ?? undefined,
+      instagram: establishment.instagram ?? undefined,
+      facebook: establishment.facebook ?? undefined,
+    }
   }
 
-  // Méthode pour mettre à jour un établissement
+  // GET /establishments/:id/preview
+  async findPreview(id: number): Promise<EstablishmentPreviewDto> {
+
+    const establishment = await this.establishmentRepo.findOneBy({ id });
+
+    if (!establishment) {
+      throw new NotFoundException(`Establishment with ID ${id} not found`);
+    } 
+
+    return {
+      legalName: establishment.legalName,
+      city: establishment.city,
+      website: establishment.website ?? undefined,
+    }
+  }
+
+  // PATCH /establishments/:id
   async update(
     id: number,
     dto: UpdateEstablishmentDto,
     currentUser: AuthenticatedUser,
   ): Promise<Establishment> {
+
     const establishment = await this.establishmentRepo.findOneBy({ id });
+
     if (!establishment) {
       throw new NotFoundException(`Establishment with ID ${id} not found`);
     }
+
     if (establishment.id !== currentUser.establishmentId) {
       throw new ForbiddenException(
         'You are not authorized to update this establishment.',
       );
     }
+    
     Object.assign(establishment, dto);
     return await this.establishmentRepo.save(establishment);
   }
 
-  // Méthode pour supprimer un établissement
+  // DELETE /establishments/:id
   async remove(id: number, currentUser: AuthenticatedUser): Promise<void> {
     const establishment = await this.establishmentRepo.findOneBy({ id });
     if (!establishment) {
