@@ -12,7 +12,6 @@ import { Repository } from 'typeorm';
 import { EstablishmentType } from './enums/establishment-type.enum';
 import { User } from '../users/entities/user.entity';
 import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
-import { authenticate } from 'passport';
 import { EstablishmentDetailsDto } from './dto/establishment-details.dto';
 import { EstablishmentPreviewDto } from './dto/establishment-preview.dto';
 
