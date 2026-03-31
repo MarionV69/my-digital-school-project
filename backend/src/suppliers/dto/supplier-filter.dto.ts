@@ -3,6 +3,7 @@ import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -53,4 +54,10 @@ export class FilterDto {
   @IsArray()
   @Transform(({ value }): string[] => (Array.isArray(value) ? value : [value]))
   productCategories?: string[];
+
+  @ApiPropertyOptional({ example: 4 })
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value}) => parseFloat(value))
+  minRating?: number;
 }

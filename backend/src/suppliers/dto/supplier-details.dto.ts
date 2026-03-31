@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { SupplierListItemDto } from './supplier-list-item.dto';
+import { ReviewDto } from './review.dto';
 
 export class SupplierDetailDto extends SupplierListItemDto {
   @ApiPropertyOptional({
@@ -41,5 +42,13 @@ export class SupplierDetailDto extends SupplierListItemDto {
     ], type: [String],
   })
   galleryPhotos?: string[] | null;
+
+  @ApiPropertyOptional({type: [ReviewDto], example: [{
+      reviewerRestaurant: 'Le Gourmet',
+      rating: 4,
+      comment: 'Très bons produits !',
+      createdAt: '2024-06-01T12:34:56Z',
+    }]})
+  reviews?: ReviewDto[]
 
 }
