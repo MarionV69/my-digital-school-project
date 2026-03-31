@@ -32,6 +32,14 @@ export class SupplierDetailDto extends SupplierListItemDto {
   })
   facebook: string | null;
 
-  @ApiPropertyOptional()
-  documents?: any[] | null;
+  @ApiPropertyOptional({ example: 'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/catalog.pdf' })
+  catalogUrl?: string | null;
+
+  @ApiPropertyOptional({ example:  [
+      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/photo1.jpg',
+      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/photo2.jpg',
+    ], type: [String],
+  })
+  galleryPhotos?: string[] | null;
+
 }

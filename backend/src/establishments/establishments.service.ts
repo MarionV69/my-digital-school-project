@@ -14,6 +14,7 @@ import { User } from '../users/entities/user.entity';
 import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
 import { EstablishmentDetailsDto } from './dto/establishment-details.dto';
 import { EstablishmentPreviewDto } from './dto/establishment-preview.dto';
+import { DocumentsService } from 'src/documents/documents.service';
 
 @Injectable()
 export class EstablishmentsService {
@@ -23,6 +24,8 @@ export class EstablishmentsService {
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
+    private documentsService: DocumentsService,
   ) {}
 
   // POST /establishments
@@ -74,7 +77,12 @@ export class EstablishmentsService {
     currentUser: AuthenticatedUser,
   ): Promise<EstablishmentDetailsDto> {
 
-    const establishment = await this.establishmentRepo.findOneBy({ id });
+    const establishment = await this.establishmentRepo
+      .createQueryBuilder('establishment')
+      .leftJoinAndSelect('establishment.documents', 'documents')
+      .leftJoinAndSelect('documents.file', 'file')
+      .where('establishment.id = :id', { id })
+      .getOne();
 
     if (!establishment) {
       throw new NotFoundException(`Establishment with ID ${id} not found`);
@@ -100,22 +108,33 @@ export class EstablishmentsService {
       website: establishment.website ?? undefined,
       instagram: establishment.instagram ?? undefined,
       facebook: establishment.facebook ?? undefined,
+      ...this.documentsService.getAllDocumentUrls(establishment.documents ?? []),
     }
   }
 
   // GET /establishments/:id/preview
   async findPreview(id: number): Promise<EstablishmentPreviewDto> {
 
-    const establishment = await this.establishmentRepo.findOneBy({ id });
+    const establishment = await this.establishmentRepo
+      .createQueryBuilder('establishment')
+      .leftJoinAndSelect('establishment.documents', 'documents')
+      .leftJoinAndSelect('documents.file', 'file')
+      .where('establishment.id = :id', { id })
+      .getOne();
+
 
     if (!establishment) {
       throw new NotFoundException(`Establishment with ID ${id} not found`);
     } 
 
+    // Extraction de l'URL du logo depuis les documents liés à l'établissement
+    const { logoUrl } =  this.documentsService.getAllDocumentUrls(establishment.documents ?? []);
+
     return {
       legalName: establishment.legalName,
       city: establishment.city,
       website: establishment.website ?? undefined,
+      logoUrl,
     }
   }
 
