@@ -31,7 +31,7 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
-import { multerPublicOptions } from '../config/multer.config';
+import { multerOptions } from '../config/multer.config';
 import { DocumentCategory } from '../documents/enums/document.enum';
 import { DocumentResponseDto } from '../documents/dto/document-response.dto';
 import { DocumentsService } from './documents.service';
@@ -76,13 +76,13 @@ export class DocumentsController {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('file', multerPublicOptions))
+  @UseInterceptors(FileInterceptor('file', multerOptions))
   async upload(
     @CurrentEstablishmentUser() user: UserWithEstablishment,
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addMaxSizeValidator({
-          maxSize: 10 * 1024 * 1024, // 10MB
+          maxSize: 15 * 1024 * 1024, // 15MB
         })
         .build({
           errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,

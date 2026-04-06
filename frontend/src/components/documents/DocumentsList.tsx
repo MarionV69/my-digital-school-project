@@ -94,24 +94,32 @@ function DocumentsList() {
           {/* CATALOG (Supplier only) */}
           {user?.establishmentType === EstablishmentType.SUPPLIER && (
             <div className="flex flex-col items-center w-full md:w-auto">
-              <h3 className="text-2xl font-semibold mb-4">Catalogue</h3>
-              {documents.CATALOG[0] ? (
-                <div className="space-y-3 flex flex-col items-center">
-                  <DocumentCard
-                    document={documents.CATALOG[0]}
-                    onDeleteSuccess={fetchDocuments}
-                  />
-                  <p className="text-sm italic text-center">
-                    Supprimez le catalogue pour en télécharger un nouveau.
-                  </p>
+              <h3 className="text-2xl font-semibold mb-4">
+                Catalogues, documents divers
+              </h3>
+              {documents.CATALOG.length > 0 && (
+                <div className="space-y-3 flex flex-col items-center mb-4">
+                  {documents.CATALOG.map((doc) => (
+                    <DocumentCard
+                      key={doc.id}
+                      document={doc}
+                      onDeleteSuccess={fetchDocuments}
+                    />
+                  ))}
                 </div>
-              ) : (
+              )}
+              {documents.CATALOG.length < 4 ? (
                 <DocumentUploadButton
                   category="CATALOG"
                   allowedMimeTypes={["application/pdf"]}
-                  label="Ajouter votre catalogue (PDF)"
+                  label="Ajouter un document (PDF)"
                   onUploadSuccess={fetchDocuments}
                 />
+              ) : (
+                <p className="text-sm italic text-center max-w-md">
+                  4 documents PDF maximum. Supprimez un document pour en ajouter
+                  un nouveau.
+                </p>
               )}
             </div>
           )}

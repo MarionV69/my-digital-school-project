@@ -121,31 +121,23 @@ export async function seedSuppliers(
         });
       }
 
-      // Créer catalogue
-      if (supplierData.catalogFile) {
-        const catalogFile = await fileRepo.save({
-          originalFilename: supplierData.catalogFile.originalFilename,
-          path: supplierData.catalogFile.path,
-          mimeType: supplierData.catalogFile.mimeType,
-          size: supplierData.catalogFile.size,
-        });
+      // Créer catalogues
+      if (supplierData.catalogFiles && supplierData.catalogFiles.length > 0) {
+        for (const catalogFileData of supplierData.catalogFiles) {
+          const catalogFile = await fileRepo.save(catalogFileData);
 
-        await documentRepo.save({
-          establishmentId: establishment.id,
-          fileId: catalogFile.id,
-          category: DocumentCategory.CATALOG,
-        });
+          await documentRepo.save({
+            establishmentId: establishment.id,
+            fileId: catalogFile.id,
+            category: DocumentCategory.CATALOG,
+          });
+        }
       }
 
       // Créer gallery photos
       if (supplierData.galleryFiles && supplierData.galleryFiles.length > 0) {
         for (const galleryFileData of supplierData.galleryFiles) {
-          const galleryFile = await fileRepo.save({
-            originalFilename: galleryFileData.originalFilename,
-            path: galleryFileData.path,
-            mimeType: galleryFileData.mimeType,
-            size: galleryFileData.size,
-          });
+          const galleryFile = await fileRepo.save(galleryFileData);
 
           await documentRepo.save({
             establishmentId: establishment.id,

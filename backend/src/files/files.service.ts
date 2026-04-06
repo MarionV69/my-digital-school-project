@@ -2,13 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { StoredFile } from './entities/stored-file.entity';
-import { ConfigService } from '@nestjs/config';
 import { S3Service } from './s3.service';
 
 @Injectable()
 export class FilesService {
   constructor(
-    private readonly configService: ConfigService,
     private readonly s3Service: S3Service,
     @InjectRepository(StoredFile)
     private readonly filesRepository: Repository<StoredFile>,
@@ -46,24 +44,13 @@ export class FilesService {
   // Delete file from S3 and remove DB record
   async delete(id: number): Promise<void> {
     const file = await this.findOne(id);
-
-    try {
-      await this.s3Service.deleteFile(file.path);
-    } catch (error) {
-      console.error(`Error deleting S3 file ${file.path}:`, error);
-    }
-
+    await this.s3Service.deleteFile(file.path);
     await this.filesRepository.remove(file);
   }
 
   // Get public URL (direct S3 URL for /public/* files)
   getPublicFileUrl(s3Key: string): string {
     return this.s3Service.getPublicUrl(s3Key);
-  }
-
-  // Get private file endpoint (will be used to generate signed URL)
-  getPrivateFileEndpoint(messageId: number, fileId: number): string {
-    return `/messages/${messageId}/attachments/${fileId}`;
   }
 
   // Generate signed URL for private files

@@ -4,6 +4,7 @@ import { deleteDocument } from "../../api/documents";
 import type { DocumentItem } from "../../types/documents.types";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import ImageWithLoader from "../common/ImageWithLoader";
 
 type DocumentCardProps = {
   document: DocumentItem;
@@ -37,10 +38,10 @@ function DocumentCard({ document, onDeleteSuccess }: DocumentCardProps) {
   if (document.file.mimeType.startsWith("image/")) {
     return (
       <div className="relative shadow-md shadow-brand-dark/60 rounded-lg">
-        <img
+        <ImageWithLoader
           src={document.file.url}
           alt={document.file.originalFilename}
-          className="w-full h-auto sm:h-40 sm:w-auto object-cover rounded-lg"
+          className="w-full h-40"
         />
         <div className="absolute top-2 right-2">
           {!showConfirm ? (

@@ -23,18 +23,10 @@ const fileFilter = (
   cb(null, true);
 };
 
-export const multerPublicOptions = {
+export const multerOptions = {
   storage: memoryStorage(),
   limits: {
-    fileSize: 20 * 1024 * 1024,
-  },
-  fileFilter,
-};
-
-export const multerPrivateOptions = {
-  storage: memoryStorage(),
-  limits: {
-    fileSize: 10 * 1024 * 1024,
+    fileSize: 20 * 1024 * 1024, // 20 Mo
   },
   fileFilter,
 };

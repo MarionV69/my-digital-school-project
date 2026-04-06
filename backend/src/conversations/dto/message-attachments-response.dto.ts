@@ -15,10 +15,4 @@ export class MessageAttachmentResponseDto {
 
   @ApiProperty({ example: '/messages/1/attachments/2' })
   endpoint: string;
-
-  @ApiProperty({
-    example:
-      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/private/...',
-  })
-  url: string;
 }

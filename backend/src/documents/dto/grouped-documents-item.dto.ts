@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FileResponseDto } from '../../files/dto/FileResponse.dto';
+import { FileResponseDto } from '../../files/dto/file-response.dto';
 
 export class GroupedDocumentItemDto {
   @ApiProperty({ example: 5 })

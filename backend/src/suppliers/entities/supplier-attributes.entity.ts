@@ -92,5 +92,4 @@ export class SupplierAttributes {
     },
   })
   productCategories: ProductCategory[];
-
 }

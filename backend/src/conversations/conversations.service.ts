@@ -184,29 +184,21 @@ export class ConversationsService {
       relations: ['files'],
     });
 
-    return Promise.all(
-      messages.map(async (message) => ({
-        id: message.id,
-        conversationId: message.conversationId,
-        senderType: message.senderType,
-        content: message.content,
-        sentAt: message.sentAt,
-        isReadByRecipient: message.isReadByRecipient,
-        attachments: await Promise.all(
-          message.files.map(async (file) => ({
-            id: file.id,
-            originalFilename: file.originalFilename,
-            mimeType: file.mimeType,
-            size: file.size,
-            endpoint: this.filesService.getPrivateFileEndpoint(
-              message.id,
-              file.id,
-            ),
-            url: await this.filesService.getPrivateFileSignedUrl(file.path), // Expires in 1 hour
-          })),
-        ),
+    return messages.map((message) => ({
+      id: message.id,
+      conversationId: message.conversationId,
+      senderType: message.senderType,
+      content: message.content,
+      sentAt: message.sentAt,
+      isReadByRecipient: message.isReadByRecipient,
+      attachments: message.files.map((file) => ({
+        id: file.id,
+        originalFilename: file.originalFilename,
+        mimeType: file.mimeType,
+        size: file.size,
+        endpoint: `/messages/${message.id}/attachments/${file.id}`, // Endpoint to get signed URL after verifying conversation participation
       })),
-    );
+    }));
   }
 
   async getTotalUnreadCount(
@@ -254,21 +246,12 @@ export class ConversationsService {
     message.files.push(storedFile);
     await this.messagesRepository.save(message);
 
-    // Signed URL expires in 1 hour
-    const signedUrl = await this.filesService.getPrivateFileSignedUrl(
-      storedFile.path,
-    );
-
     return {
       id: storedFile.id,
       originalFilename: storedFile.originalFilename,
       mimeType: storedFile.mimeType,
       size: storedFile.size,
-      endpoint: this.filesService.getPrivateFileEndpoint(
-        messageId,
-        storedFile.id,
-      ),
-      url: signedUrl,
+      endpoint: `/messages/${messageId}/attachments/${storedFile.id}`,
     };
   }
 

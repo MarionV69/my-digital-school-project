@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import {
   S3Client,
   PutObjectCommand,
@@ -15,6 +19,7 @@ export class S3Service {
   private s3Client: S3Client;
   private bucket: string;
   private region: string;
+  private readonly logger = new Logger(S3Service.name);
 
   constructor(private configService: ConfigService) {
     const region = this.configService.get<string>('AWS_REGION');
@@ -31,8 +36,8 @@ export class S3Service {
     this.s3Client = new S3Client({
       region: this.region,
       credentials: {
-        accessKeyId: this.configService.get<string>('AWS_ACCESS_KEY')!,
-        secretAccessKey: this.configService.get<string>('AWS_SECRET_KEY')!,
+        accessKeyId: accessKey,
+        secretAccessKey: secretKey,
       },
     });
   }
@@ -45,16 +50,26 @@ export class S3Service {
     const uniqueName = randomUUID() + extname(file.originalname);
     const key = `${folder}/${uniqueName}`;
 
-    await this.s3Client.send(
-      new PutObjectCommand({
-        Bucket: this.bucket,
-        Key: key,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-      }),
-    );
+    try {
+      await this.s3Client.send(
+        new PutObjectCommand({
+          Bucket: this.bucket,
+          Key: key,
+          Body: file.buffer,
+          ContentType: file.mimetype,
+        }),
+      );
 
-    return key;
+      return key;
+    } catch (error) {
+      this.logger.error(
+        `Failed to upload file to S3 (key: ${key})`,
+        error instanceof Error ? error.stack : String(error),
+      );
+      throw new InternalServerErrorException(
+        'Failed to upload file. Please try again later.',
+      );
+    }
   }
 
   // Direct public URL (for /public/* only)
@@ -64,21 +79,41 @@ export class S3Service {
 
   // Signed URL (for /private/*)
   async getSignedUrl(key: string, expiresIn: number = 3600): Promise<string> {
-    const command = new GetObjectCommand({
-      Bucket: this.bucket,
-      Key: key,
-    });
+    try {
+      const command = new GetObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+      });
 
-    return getSignedUrl(this.s3Client, command, { expiresIn });
+      return await getSignedUrl(this.s3Client, command, { expiresIn });
+    } catch (error) {
+      this.logger.error(
+        `Failed to generate signed URL (key: ${key})`,
+        error instanceof Error ? error.stack : String(error),
+      );
+      throw new InternalServerErrorException(
+        'Failed to access file. Please try again later.',
+      );
+    }
   }
 
   // Delete file from S3
   async deleteFile(key: string): Promise<void> {
-    await this.s3Client.send(
-      new DeleteObjectCommand({
-        Bucket: this.bucket,
-        Key: key,
-      }),
-    );
+    try {
+      await this.s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: this.bucket,
+          Key: key,
+        }),
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to delete file from S3 (key: ${key})`,
+        error instanceof Error ? error.stack : String(error),
+      );
+      throw new InternalServerErrorException(
+        'Failed to delete file. Please try again later.',
+      );
+    }
   }
 }
