@@ -76,7 +76,6 @@ export class EstablishmentsService {
     id: number,
     currentUser: AuthenticatedUser,
   ): Promise<EstablishmentDetailsDto> {
-
     const establishment = await this.establishmentRepo
       .createQueryBuilder('establishment')
       .leftJoinAndSelect('establishment.documents', 'documents')
@@ -90,7 +89,8 @@ export class EstablishmentsService {
 
     if (currentUser.establishmentId !== id) {
       throw new ForbiddenException(
-        'You are not authorized to view this establishment.',)
+        'You are not authorized to view this establishment.',
+      );
     }
 
     return {
@@ -108,13 +108,14 @@ export class EstablishmentsService {
       website: establishment.website ?? undefined,
       instagram: establishment.instagram ?? undefined,
       facebook: establishment.facebook ?? undefined,
-      ...this.documentsService.getAllDocumentUrls(establishment.documents ?? []),
-    }
+      ...this.documentsService.getAllDocumentUrls(
+        establishment.documents ?? [],
+      ),
+    };
   }
 
   // GET /establishments/:id/preview
   async findPreview(id: number): Promise<EstablishmentPreviewDto> {
-
     const establishment = await this.establishmentRepo
       .createQueryBuilder('establishment')
       .leftJoinAndSelect('establishment.documents', 'documents')
@@ -122,20 +123,21 @@ export class EstablishmentsService {
       .where('establishment.id = :id', { id })
       .getOne();
 
-
     if (!establishment) {
       throw new NotFoundException(`Establishment with ID ${id} not found`);
-    } 
+    }
 
     // Extraction de l'URL du logo depuis les documents liés à l'établissement
-    const { logoUrl } =  this.documentsService.getAllDocumentUrls(establishment.documents ?? []);
+    const { logoUrl } = this.documentsService.getAllDocumentUrls(
+      establishment.documents ?? [],
+    );
 
     return {
       legalName: establishment.legalName,
       city: establishment.city,
       website: establishment.website ?? undefined,
       logoUrl,
-    }
+    };
   }
 
   // PATCH /establishments/:id
@@ -144,7 +146,6 @@ export class EstablishmentsService {
     dto: UpdateEstablishmentDto,
     currentUser: AuthenticatedUser,
   ): Promise<Establishment> {
-
     const establishment = await this.establishmentRepo.findOneBy({ id });
 
     if (!establishment) {
@@ -156,7 +157,7 @@ export class EstablishmentsService {
         'You are not authorized to update this establishment.',
       );
     }
-    
+
     Object.assign(establishment, dto);
     return await this.establishmentRepo.save(establishment);
   }

@@ -8,9 +8,10 @@ import { User } from 'src/users/entities/user.entity';
 import { DocumentsModule } from 'src/documents/documents.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Establishment, Favorite, User]),
-  DocumentsModule,
-],
+  imports: [
+    TypeOrmModule.forFeature([Establishment, Favorite, User]),
+    DocumentsModule,
+  ],
   controllers: [EstablishmentsController],
   providers: [EstablishmentsService],
   exports: [EstablishmentsService],

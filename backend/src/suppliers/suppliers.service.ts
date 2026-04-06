@@ -131,44 +131,52 @@ export class SuppliersService {
     // Transformation des entités en ListItemDto
     const suppliers = await query.getMany();
 
-    return suppliers.map((supplier) => {
+    return (
+      suppliers
+        .map((supplier) => {
+          // Extraction du logo et de l'image de couverture
+          const { logoUrl, coverPhotoUrl } =
+            this.documentsService.getAllDocumentUrls(
+              supplier.supplier.documents || [],
+            );
 
-      // Extraction du logo et de l'image de couverture
-      const { logoUrl, coverPhotoUrl } = this.documentsService.getAllDocumentUrls(
-        supplier.supplier.documents || [],
-      );
+          // Calcul du nombre de reviews et de la note moyenne à partir des reviews
+          const reviewsCount = supplier.supplier.reviewsReceived?.length || 0;
+          const averageRating =
+            reviewsCount > 0
+              ? supplier.supplier.reviewsReceived.reduce(
+                  (sum, review) => sum + review.rating,
+                  0,
+                ) / reviewsCount
+              : 0;
 
-      // Calcul du nombre de reviews et de la note moyenne à partir des reviews 
-      const reviewsCount = supplier.supplier.reviewsReceived?.length || 0;
-      const averageRating = reviewsCount > 0
-        ? supplier.supplier.reviewsReceived.reduce((sum, review) => sum + review.rating, 0) / reviewsCount
-        : 0;
+          return {
+            id: supplier.supplierId,
+            type: supplier.supplierType,
+            name: supplier.supplier.legalName,
+            postalCode: supplier.supplier.postalCode,
+            city: supplier.supplier.city,
+            priceRange: supplier.priceRange,
+            isPremium: supplier.isPremium,
+            labels: supplier.labels.map((label) => label.name),
+            productCategories: supplier.productCategories.map(
+              (ProductCategory) => ProductCategory.name,
+            ),
+            logoUrl,
+            coverPhotoUrl,
+            reviewsCount,
+            averageRating,
+          };
+        })
 
-      return {
-      id: supplier.supplierId,
-      type: supplier.supplierType,
-      name: supplier.supplier.legalName,
-      postalCode: supplier.supplier.postalCode,
-      city: supplier.supplier.city,
-      priceRange: supplier.priceRange,
-      isPremium: supplier.isPremium,
-      labels: supplier.labels.map((label) => label.name),
-      productCategories: supplier.productCategories.map(
-        (ProductCategory) => ProductCategory.name,
-      ),
-      logoUrl,
-      coverPhotoUrl,
-      reviewsCount,
-      averageRating,
-    };
-  })
+        // Trier les fournisseurs en fonction de leurs notes moyennes (du plus élevé au plus bas)
+        .sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0))
 
-  // Trier les fournisseurs en fonction de leurs notes moyennes (du plus élevé au plus bas)
-  .sort((a, b) =>
-    (b.averageRating || 0) - (a.averageRating || 0))
-  
-  // Filtrer les fournisseurs en fonction de la note minimale si elle est définie
-  .filter((supplier) => supplier.averageRating >= (filters.minRating ?? 0));
+        // Filtrer les fournisseurs en fonction de la note minimale si elle est définie
+        .filter(
+          (supplier) => supplier.averageRating >= (filters.minRating ?? 0),
+        )
+    );
   }
 
   // Récupérer un fournisseur grâce à son id
@@ -182,7 +190,7 @@ export class SuppliersService {
       .leftJoinAndSelect('establishment.documents', 'documents')
       .leftJoinAndSelect('documents.file', 'file')
       .leftJoinAndSelect('establishment.reviewsReceived', 'reviewsReceived')
-      .leftJoinAndSelect('reviewsReceived.reviewer', 'reviewer')  
+      .leftJoinAndSelect('reviewsReceived.reviewer', 'reviewer')
       .where('supplier.supplierId = :id', { id })
       .getOne();
 
@@ -191,13 +199,19 @@ export class SuppliersService {
     }
 
     // Extraction des URLs de tous les documents du fournisseur
-    const docUrls = this.documentsService.getAllDocumentUrls(supplier.supplier.documents || []);
+    const docUrls = this.documentsService.getAllDocumentUrls(
+      supplier.supplier.documents || [],
+    );
 
     // Calcul du nombre de reviews et de la note moyenne à partir des reviews
     const reviewsCount = supplier.supplier.reviewsReceived?.length || 0;
-    const averageRating = reviewsCount > 0
-      ? supplier.supplier.reviewsReceived.reduce((sum, review) => sum + review.rating, 0) / reviewsCount
-      : 0;
+    const averageRating =
+      reviewsCount > 0
+        ? supplier.supplier.reviewsReceived.reduce(
+            (sum, review) => sum + review.rating,
+            0,
+          ) / reviewsCount
+        : 0;
 
     // Transformation de l'entité en DetailsDto
     return {
@@ -221,12 +235,14 @@ export class SuppliersService {
       ...docUrls,
       reviewsCount,
       averageRating,
-      reviews: supplier.supplier.reviewsReceived?.map((review) => ({
-        reviewerRestaurant: review.reviewer?.legalName || 'Restaurant inconnu',
-        rating: review.rating,
-        comment: review.comment,
-        createdAt: review.createdAt,
-      })) || [],
+      reviews:
+        supplier.supplier.reviewsReceived?.map((review) => ({
+          reviewerRestaurant:
+            review.reviewer?.legalName || 'Restaurant inconnu',
+          rating: review.rating,
+          comment: review.comment,
+          createdAt: review.createdAt,
+        })) || [],
     };
   }
 
