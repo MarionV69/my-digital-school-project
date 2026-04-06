@@ -4,6 +4,9 @@ import { Establishment } from '../../establishments/entities/establishment.entit
 import { EstablishmentType } from '../../establishments/enums/establishment-type.enum';
 import { restaurantsData } from '../data/restaurants.data';
 import { UserRole } from '../../users/enums/user-role.enum';
+import { StoredFile } from '../../files/entities/stored-file.entity';
+import { Document } from '../../documents/entities/document.entity';
+import { DocumentCategory } from '../../documents/enums/document.enum';
 
 export async function seedRestaurants(
   dataSource: DataSource,
@@ -13,6 +16,8 @@ export async function seedRestaurants(
 
   const userRepo = dataSource.getRepository(User);
   const establishmentRepo = dataSource.getRepository(Establishment);
+  const fileRepo = dataSource.getRepository(StoredFile);
+  const documentRepo = dataSource.getRepository(Document);
 
   for (const restaurantData of restaurantsData) {
     let user = await userRepo.findOne({
@@ -52,6 +57,28 @@ export async function seedRestaurants(
       await userRepo.update(user.id, {
         establishmentId: establishment.id,
       });
+
+      // Créer logo
+      if (restaurantData.logoFile) {
+        const logoFile = await fileRepo.save(restaurantData.logoFile);
+
+        await documentRepo.save({
+          establishmentId: establishment.id,
+          fileId: logoFile.id,
+          category: DocumentCategory.LOGO,
+        });
+      }
+
+      // Créer cover
+      if (restaurantData.coverFile) {
+        const coverFile = await fileRepo.save(restaurantData.coverFile);
+
+        await documentRepo.save({
+          establishmentId: establishment.id,
+          fileId: coverFile.id,
+          category: DocumentCategory.COVER_PHOTO,
+        });
+      }
 
       console.log(`  ✅ Restaurant créé: ${user.email}`);
     } else {

@@ -1,6 +1,7 @@
 # Uploads (now using S3)
 uploads/
 fake-files/
+fake-files-compressed/
 
 # compiled output
 /dist

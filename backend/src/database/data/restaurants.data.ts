@@ -1,3 +1,18 @@
+const RESTAURANT_FILES = {
+  logoFile: {
+    path: 'public/restaurant-logo.webp',
+    originalFilename: 'restaurant-logo.webp',
+    mimeType: 'image/webp',
+    size: 50000,
+  },
+  coverFile: {
+    path: 'public/restaurant-cover.webp',
+    originalFilename: 'restaurant-cover.webp',
+    mimeType: 'image/webp',
+    size: 150000,
+  },
+};
+
 export const restaurantsData = [
   {
     firstName: 'Pierre',
@@ -17,6 +32,7 @@ export const restaurantsData = [
       'Restaurant gastronomique, cuisine lyonnaise créative avec produits du terroir',
     website: 'https://legourmet-lyon.fr',
     instagram: '@legourmet_lyon',
+    ...RESTAURANT_FILES,
   },
   {
     firstName: 'Marie',
@@ -35,6 +51,8 @@ export const restaurantsData = [
     description:
       'Bouchon traditionnel lyonnais, cuisine authentique, ambiance conviviale',
     website: 'https://bouchon-terreaux.fr',
+    instagram: '@bouchon_terreaux',
+    ...RESTAURANT_FILES,
   },
   {
     firstName: 'Thomas',
@@ -54,5 +72,6 @@ export const restaurantsData = [
       'Brasserie contemporaine au Confluence, cuisine française moderne',
     website: 'https://brasserie-confluence.fr',
     instagram: '@brasserie_confluence',
+    ...RESTAURANT_FILES,
   },
 ];

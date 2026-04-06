@@ -10,6 +10,7 @@ import { seedReviews } from './seeders/reviews.seeder';
 import { restaurantsData } from './data/restaurants.data';
 import { suppliersData } from './data/suppliers.data';
 import { SeedModule } from './seed.module';
+import { seedFavorites } from './seeders/favorites.seeder';
 
 async function seed() {
   console.log('🌱 Starting seed...\n');
@@ -48,6 +49,10 @@ async function seed() {
 
     // 6. Reviews
     await seedReviews(dataSource);
+    console.log();
+
+    // 7. Favorites
+    await seedFavorites(dataSource);
     console.log();
 
     // Summary

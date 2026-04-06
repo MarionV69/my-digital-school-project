@@ -1,7 +1,20 @@
 import { EstablishmentType } from '../../establishments/enums/establishment-type.enum';
 
+interface MessageData {
+  senderType: EstablishmentType;
+  content: string;
+  sentAt: Date;
+  isReadByRecipient: boolean;
+  attachment?: {
+    originalFilename: string;
+    mimeType: string;
+    size: number;
+    path: string;
+  };
+}
+
 // Constant messages for conversations
-const MESSAGES_NEGOCIATION = [
+const MESSAGES_NEGOCIATION: MessageData[] = [
   {
     senderType: EstablishmentType.RESTAURANT,
     content: 'Bonjour, vos produits nous intéressent.',
@@ -16,29 +29,36 @@ const MESSAGES_NEGOCIATION = [
     isReadByRecipient: true,
   },
   {
-    senderType: EstablishmentType.RESTAURANT,
+    senderType: EstablishmentType.SUPPLIER,
     content:
-      'Et avez-vous des tarifs préférentiels en cas d’engagement sur plusieurs mois ?',
+      'Bonjour, oui c’est tout à fait possible. Nous pouvons organiser un premier test et discuter des conditions ensuite.',
     sentAt: new Date('2026-03-07T09:06:00'),
     isReadByRecipient: true,
   },
   {
-    senderType: EstablishmentType.SUPPLIER,
+    senderType: EstablishmentType.RESTAURANT,
     content:
-      'Bonjour, oui c’est tout à fait possible. Nous pouvons organiser un premier test et discuter des conditions ensuite.',
+      'Et avez-vous des tarifs préférentiels en cas d’engagement sur plusieurs mois ?',
     sentAt: new Date('2026-03-07T09:30:00'),
-    isReadByRecipient: false,
+    isReadByRecipient: true,
   },
+
   {
     senderType: EstablishmentType.SUPPLIER,
     content:
-      'Nous proposons également des conditions adaptées selon les volumes.',
+      "Nous proposons des abonnements à partir de 6 mois d'engagement avec tarifs préférentiels et avantages adaptés selon les volumes de commandes. Je vous mets en pièces joint notre brochure d'abonnements pour que vous puissiez voir les différentes options disponibles.",
     sentAt: new Date('2026-03-07T09:35:00'),
     isReadByRecipient: false,
+    attachment: {
+      originalFilename: 'abonnements.pdf',
+      mimeType: 'application/pdf',
+      size: 500000,
+      path: 'private/abonnements.pdf',
+    },
   },
 ];
 
-const MESSAGES_DELIVERY_ZONE = [
+const MESSAGES_DELIVERY_ZONE: MessageData[] = [
   {
     senderType: EstablishmentType.RESTAURANT,
     content: 'Bonjour, nous cherchons de nouveaux fournisseurs.',
