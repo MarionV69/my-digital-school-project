@@ -51,6 +51,7 @@ export async function seedRestaurants(
         email: restaurantData.email,
         website: restaurantData.website,
         instagram: restaurantData.instagram,
+        facebook: restaurantData.facebook,
       });
 
       // Lier user à l'établissement

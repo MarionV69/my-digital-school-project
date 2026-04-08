@@ -31,7 +31,8 @@ export const restaurantsData = [
     description:
       'Restaurant gastronomique, cuisine lyonnaise créative avec produits du terroir',
     website: 'https://legourmet-lyon.fr',
-    instagram: '@legourmet_lyon',
+    instagram: 'https://instagram.com/legourmet_lyon',
+    facebook: 'https://facebook.com/LeGourmetLyonnais',
     ...RESTAURANT_FILES,
   },
   {
@@ -51,7 +52,8 @@ export const restaurantsData = [
     description:
       'Bouchon traditionnel lyonnais, cuisine authentique, ambiance conviviale',
     website: 'https://bouchon-terreaux.fr',
-    instagram: '@bouchon_terreaux',
+    instagram: 'https://instagram.com/bouchon_terreaux',
+    facebook: 'https://facebook.com/BouchonDesTerreaux',
     ...RESTAURANT_FILES,
   },
   {
@@ -71,7 +73,8 @@ export const restaurantsData = [
     description:
       'Brasserie contemporaine au Confluence, cuisine française moderne',
     website: 'https://brasserie-confluence.fr',
-    instagram: '@brasserie_confluence',
+    instagram: 'https://instagram.com/brasserie_confluence',
+    facebook: 'https://facebook.com/BrasserieConfluence',
     ...RESTAURANT_FILES,
   },
 ];
