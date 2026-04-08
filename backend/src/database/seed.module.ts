@@ -39,7 +39,7 @@ import { Favorite } from '../favorites/entities/favorite.entity';
         Review,
         Favorite,
       ],
-      synchronize: true, // ok pour dev
+      synchronize: false,
     }),
   ],
 })

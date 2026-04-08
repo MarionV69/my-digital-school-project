@@ -28,7 +28,7 @@ import { FavoritesModule } from './favorites/favorites.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       autoLoadEntities: true,
-      synchronize: true, // dev only - not in production!
+      synchronize: false,
     }),
     UsersModule,
     FilesModule,

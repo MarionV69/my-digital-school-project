@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('file')
+@Entity('stored_file')
 export class StoredFile {
   @PrimaryGeneratedColumn()
   id: number;
