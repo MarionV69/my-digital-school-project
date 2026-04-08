@@ -58,6 +58,6 @@ export class FilterDto {
   @ApiPropertyOptional({ example: 4 })
   @IsOptional()
   @IsNumber()
-  @Transform(({ value}) => parseFloat(value))
+  @Transform(({ value }) => parseFloat(value))
   minRating?: number;
 }

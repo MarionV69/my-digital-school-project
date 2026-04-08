@@ -64,17 +64,7 @@ export const sendAttachment = async (
   return response.data;
 };
 
-// Open attachment in a new tab by fetching the file as a blob and creating a URL for it
 export const openAttachment = async (endpoint: string): Promise<void> => {
-  const response = await api.get(endpoint, {
-    responseType: "blob",
-  });
-
-  const url = URL.createObjectURL(response.data);
-  window.open(url, "_blank");
-
-  // Cleanup after file is loaded in new tab
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-  }, 1000);
+  const response = await api.get<{ url: string }>(endpoint);
+  window.open(response.data.url, "_blank");
 };

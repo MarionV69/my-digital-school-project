@@ -25,7 +25,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { type AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
 import { EstablishmentGuard } from '../common/guards/establishment.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerPrivateOptions } from '../config/multer.config';
+import { multerOptions } from '../config/multer.config';
 import { MessageAttachmentResponseDto } from './dto/message-attachments-response.dto';
 import { ConversationsService } from './conversations.service';
 
@@ -52,7 +52,7 @@ export class MessageAttachmentsController {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('file', multerPrivateOptions))
+  @UseInterceptors(FileInterceptor('file', multerOptions))
   sendAttachment(
     @Param('messageId', ParseIntPipe) messageId: number,
     @UploadedFile(

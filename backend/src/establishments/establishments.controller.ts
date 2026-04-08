@@ -11,7 +11,14 @@ import {
 import { EstablishmentsService } from './establishments.service';
 import { CreateEstablishmentDto } from './dto/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dto/update-establishment.dto';
-import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import type { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { EstablishmentDetailsDto } from './dto/establishment-details.dto';

@@ -26,10 +26,18 @@ export class SupplierListItemDto {
   @ApiPropertyOptional({ example: ['Viandes', 'Poissons'] })
   productCategories?: string[];
 
-  @ApiPropertyOptional({ example: 'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/logo.jpg', nullable: true })
+  @ApiPropertyOptional({
+    example:
+      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/logo.jpg',
+    nullable: true,
+  })
   logoUrl?: string | null;
 
-  @ApiPropertyOptional({ example: 'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/cover.jpg', nullable: true })
+  @ApiPropertyOptional({
+    example:
+      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/cover.jpg',
+    nullable: true,
+  })
   coverPhotoUrl?: string | null;
 
   @ApiPropertyOptional({ example: 120 })

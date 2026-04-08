@@ -16,7 +16,7 @@ import { GroupedDocumentsResponseDto } from './dto/grouped-documents-response.dt
 export interface DocumentUrls {
   logoUrl: string | null;
   coverPhotoUrl: string | null;
-  catalogUrl: string | null;
+  catalogs: string[];
   galleryPhotos: string[];
 }
 
@@ -31,7 +31,7 @@ export class DocumentsService {
   private readonly CATEGORY_LIMITS: Record<DocumentCategory, number> = {
     [DocumentCategory.LOGO]: 1,
     [DocumentCategory.COVER_PHOTO]: 1,
-    [DocumentCategory.CATALOG]: 1,
+    [DocumentCategory.CATALOG]: 4,
     [DocumentCategory.GALLERY_PHOTO]: 6,
   };
   // Allowed mime types for each category
@@ -202,7 +202,7 @@ export class DocumentsService {
     const result: DocumentUrls = {
       logoUrl: null,
       coverPhotoUrl: null,
-      catalogUrl: null,
+      catalogs: [],
       galleryPhotos: [],
     };
 
@@ -219,7 +219,7 @@ export class DocumentsService {
           result.coverPhotoUrl = url;
           break;
         case DocumentCategory.CATALOG:
-          result.catalogUrl = url;
+          result.catalogs.push(url);
           break;
         case DocumentCategory.GALLERY_PHOTO:
           result.galleryPhotos.push(url);
