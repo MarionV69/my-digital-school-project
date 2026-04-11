@@ -1,0 +1,20 @@
+# Image de base
+FROM node:lts-alpine
+
+# Répertoire de travail dans le conteneur
+WORKDIR /home/node
+
+# Copie des fichiers de configuration et des dépendances dans le conteneur
+COPY package.json package-lock.json ./
+
+# Installation des dépendances au moment du build pour éviter de les réinstaller à chaque changement de code
+RUN npm install
+
+# Copie du reste des fichiers de l'application
+COPY . .
+
+# Exposition du port utilisé par Vite
+EXPOSE 5173
+
+# Commande pour démarrer l'application en mode développement
+CMD ["npm", "run", "dev", "--", "--host"]

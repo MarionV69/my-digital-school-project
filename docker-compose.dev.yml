@@ -1,0 +1,34 @@
+services:
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports: 
+      - "5173:5173"
+    volumes:
+      # Synchronisation du dossier en local avec le dossier dans le conteneur pour permettre le live reload
+      - type: bind
+        source: ./frontend
+        target: /home/node
+      # Exclusion du dossier node_modules pour éviter les conflits entre les dépendances locales et celles dans le conteneur
+      - type: volume
+        target: /home/node/node_modules
+    # Permet d'avoir un terminal interactif pour le conteneur, utile pour le développement
+    stdin_open: true
+    tty: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Utilisé pour le live reload sur certains systèmes de fichiers
+      - WATCHPACK_POLLING=true # Utilisé pour le live reload sur certains systèmes de fichiers
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - type: bind
+        source: ./backend/src
+        target: /app/src
+    ports:
+      - "3000:3000"
+  
+
