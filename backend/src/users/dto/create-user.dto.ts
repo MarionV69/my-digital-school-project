@@ -3,7 +3,7 @@ import { UserRole } from '../enums/user-role.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
-  @ApiProperty({ example: 'john@restaurant.com' })
+  @ApiProperty({ example: 'contact@legourmet-lyon.com' })
   @IsEmail()
   email: string;
 
@@ -21,11 +21,11 @@ export class CreateUserDto {
   })
   password: string;
 
-  @ApiProperty({ example: 'Doe' })
+  @ApiProperty({ example: 'Dubois' })
   @IsString()
   lastName: string;
 
-  @ApiProperty({ example: 'John' })
+  @ApiProperty({ example: 'Pierre' })
   @IsString()
   firstName: string;
 
