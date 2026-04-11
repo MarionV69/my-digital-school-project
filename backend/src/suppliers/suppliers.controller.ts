@@ -31,7 +31,6 @@ import type { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.i
 import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('suppliers')
-@ApiBearerAuth()
 @Controller('suppliers')
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
@@ -56,6 +55,7 @@ export class SuppliersController {
 
   // POST /supplier
   @Post()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create supplierAttributes' })
   @ApiCreatedResponse()
   create(
@@ -76,6 +76,7 @@ export class SuppliersController {
 
   // GET /supplier/:id/stats
   @Get(':id/stats')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get a supplier by id and see all of the stats' })
   @ApiOkResponse({ type: SupplierStatsDto })
   findStats(@Param('id') id: string): Promise<SupplierStatsDto> {
@@ -93,6 +94,7 @@ export class SuppliersController {
 
   // PATCH /suppliers/:id
   @Patch(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Make changes on a supplier' })
   @ApiOkResponse({ type: SupplierDetailDto })
   update(
@@ -105,6 +107,7 @@ export class SuppliersController {
 
   // DELETE /supplier/:id
   @Delete(':id')
+  @ApiBearerAuth()
   @HttpCode(204)
   @ApiOperation({ summary: 'Delete a supplier' })
   @ApiNoContentResponse()
