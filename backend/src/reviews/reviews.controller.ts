@@ -35,13 +35,13 @@ import { CurrentEstablishmentUser } from 'src/common/decorators/current-establis
 import { type UserWithEstablishment } from 'src/common/types/user-with-establishment.type';
 
 @ApiTags('reviews')
-@ApiBearerAuth()
 @UseGuards(EstablishmentGuard)
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @Post()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a review for a supplier' })
   @ApiCreatedResponse({ type: ReviewResponseDto })
   @ApiForbiddenResponse({ description: 'Only restaurants can create reviews' })
@@ -60,11 +60,11 @@ export class ReviewsController {
     );
   }
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all reviews for a supplier' })
   @ApiOkResponse({ type: SupplierReviewsResponseDto })
   @ApiQuery({ name: 'supplierId', type: Number, required: true })
-  @Public()
   getSupplierReviews(
     @Query('supplierId', ParseIntPipe) supplierId: number,
   ): Promise<SupplierReviewsResponseDto> {
@@ -72,6 +72,7 @@ export class ReviewsController {
   }
 
   @Patch(':id/reply')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Reply to a review' })
   @ApiOkResponse({ type: ReviewResponseDto })
   @ApiForbiddenResponse({ description: 'Only suppliers can reply to reviews' })
@@ -93,6 +94,7 @@ export class ReviewsController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a review' })
   @ApiNoContentResponse({ description: 'Review deleted successfully' })
