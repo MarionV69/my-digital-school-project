@@ -8,7 +8,18 @@ describe('ConversationsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ConversationsController],
-      providers: [ConversationsService],
+      providers: [
+        {
+          provide: ConversationsService,
+          useValue: {
+            createConversation: jest.fn(),
+            sendMessage: jest.fn(),
+            getConversations: jest.fn(),
+            getTotalUnreadCount: jest.fn(),
+            getConversationMessages: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<ConversationsController>(ConversationsController);
