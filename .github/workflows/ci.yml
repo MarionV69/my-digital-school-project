@@ -29,13 +29,13 @@ jobs:
     steps:
       # ÉTAPE 1 : Télécharge ton code depuis GitHub
       - name: Checkout code
-        uses: actions/checkout@v4 # Action GitHub officielle pour récupérer le code
+        uses: actions/checkout@v5 # Action GitHub officielle pour récupérer le code
 
-      # ÉTAPE 2 : Installe Node.js version 20
+      # ÉTAPE 2 : Installe Node.js version 22
       - name: Setup Node.js
-        uses: actions/setup-node@v4 # Action GitHub pour installer Node.js
+        uses: actions/setup-node@v5 # Action GitHub pour installer Node.js
         with:
-          node-version: "20" # Version de Node.js
+          node-version: "22" # Version de Node.js
 
       # ========== FRONTEND ==========
 
