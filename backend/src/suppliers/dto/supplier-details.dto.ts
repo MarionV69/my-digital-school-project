@@ -40,7 +40,7 @@ export class SupplierDetailDto extends SupplierListItemDto {
     ],
     type: [String],
   })
-  catalogs?: string[];
+  catalogUrls?: string[];
 
   @ApiPropertyOptional({
     example: [

@@ -74,18 +74,20 @@ export class EstablishmentDetailsDto {
   coverPhotoUrl?: string | null;
 
   @ApiPropertyOptional({
-    example:
-      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/catalog.pdf',
-    nullable: true,
+    example: [
+      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/catalog1.pdf',
+      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/catalog2.pdf',
+    ],
+    type: [String],
   })
-  catalogUrl?: string | null;
+  catalogUrls?: string[];
 
   @ApiPropertyOptional({
     example: [
       'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/photo1.jpg',
       'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/photo2.jpg',
     ],
-    required: false,
+    type: [String],
   })
   galleryPhotos?: string[];
 }
