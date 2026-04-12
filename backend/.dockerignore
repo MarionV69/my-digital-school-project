@@ -1,0 +1,30 @@
+# Dépendances
+node_modules/
+
+# Build Typescript
+dist/
+
+# Variables d'environnement
+.env
+.env.*
+
+# Fichiers uploadés par les utilisateurs
+uploads/
+
+# Docker lui-même
+Dockerfile.env
+.dockerignore
+
+# Git
+.git/
+.gitignore
+
+# Qualité de code
+.prettierrc
+eslint.config.mjs
+
+# Tests
+test/
+
+# Documentation
+README.md

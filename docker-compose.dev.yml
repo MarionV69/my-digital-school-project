@@ -1,34 +1,89 @@
 services:
+
+  database:
+    image: mysql:8
+    container_name: lbf-database
+    restart: unless-stopped
+    # Utilisation d'un fichier .env pour stocker les variables d'environnement sensibles
+    env_file:
+      - ./backend/.env
+    ports: 
+      - "3307:3306"
+    volumes:
+      - type: volume
+        source: database_data
+        target: /var/lib/mysql
+
+  phpmyadmin: 
+    image: phpmyadmin:latest
+    container_name: lbf-phpmyadmin
+    env_file:
+      - ./backend/.env
+    environment:
+      - PMA_HOST=database
+      - PMA_PORT=3306
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: lbf-backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - DB_HOST=database
+    volumes:
+      # Synchronisation du dossier en local avec le dossier dans le conteneur pour permettre le live reload
+      - type: bind
+        source: ./backend
+        target: /app
+      # Exclusion du dossier node_modules pour éviter les conflits entre les dépendances locales et celles dans le conteneur
+      - type: volume
+        target: /app/node_modules
+    depends_on:
+      - database
+
   frontend:
     build: 
       context: ./frontend
       dockerfile: Dockerfile.dev
+    container_name: lbf-frontend
     ports: 
       - "5173:5173"
     volumes:
       # Synchronisation du dossier en local avec le dossier dans le conteneur pour permettre le live reload
       - type: bind
         source: ./frontend
-        target: /home/node
+        target: /app
       # Exclusion du dossier node_modules pour éviter les conflits entre les dépendances locales et celles dans le conteneur
       - type: volume
-        target: /home/node/node_modules
+        target: /app/node_modules
+    depends_on:
+      - backend
     # Permet d'avoir un terminal interactif pour le conteneur, utile pour le développement
     stdin_open: true
     tty: true
     environment:
       - CHOKIDAR_USEPOLLING=true # Utilisé pour le live reload sur certains systèmes de fichiers
       - WATCHPACK_POLLING=true # Utilisé pour le live reload sur certains systèmes de fichiers
-  
-  backend:
+  reverse-proxy:
     build:
-      context: ./backend
+      context: ./reverse-proxy
       dockerfile: Dockerfile.dev
-    volumes:
-      - type: bind
-        source: ./backend/src
-        target: /app/src
+    container_name: lbf-reverse-proxy
     ports:
-      - "3000:3000"
-  
+      - "8888:80"
+    depends_on:
+      - backend
+      - database
+
+volumes:
+  database_data:
 

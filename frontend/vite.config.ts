@@ -10,5 +10,6 @@ export default defineConfig({
       usePolling: true,
     },
     host: true,
+    allowedHosts: ['frontend', 'localhost'],
   },
 });
