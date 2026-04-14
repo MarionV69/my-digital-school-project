@@ -12,11 +12,12 @@ import { FilesService } from '../files/files.service';
 import { EstablishmentType } from '../establishments/enums/establishment-type.enum';
 import { DocumentResponseDto } from './dto/document-response.dto';
 import { GroupedDocumentsResponseDto } from './dto/grouped-documents-response.dto';
+import { FileResponseDto } from 'src/files/dto/file-response.dto';
 
 export interface DocumentUrls {
   logoUrl: string | null;
   coverPhotoUrl: string | null;
-  catalogs: string[];
+  catalogs: FileResponseDto[];
   galleryPhotos: string[];
 }
 
@@ -193,10 +194,8 @@ export class DocumentsService {
   }
 
   /**
-   * Extract all document URLs from already-loaded documents
-   *
-   * @param documents - Array of documents with file relation loaded via JOIN
-   * @returns Object containing document URLs grouped by category
+   * Extracts document URLs from already-loaded documents, grouped by category.
+   * Catalogs are returned as full objects (id, originalFilename, mimeType, size, url).
    */
   getAllDocumentUrls(documents: Document[]): DocumentUrls {
     const result: DocumentUrls = {
@@ -219,7 +218,13 @@ export class DocumentsService {
           result.coverPhotoUrl = url;
           break;
         case DocumentCategory.CATALOG:
-          result.catalogs.push(url);
+          result.catalogs.push({
+            id: doc.file.id,
+            originalFilename: doc.file.originalFilename,
+            mimeType: doc.file.mimeType,
+            size: doc.file.size,
+            url,
+          });
           break;
         case DocumentCategory.GALLERY_PHOTO:
           result.galleryPhotos.push(url);

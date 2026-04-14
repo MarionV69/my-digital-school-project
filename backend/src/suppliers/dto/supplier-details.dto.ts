@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { SupplierListItemDto } from './supplier-list-item.dto';
 import { ReviewDto } from './review.dto';
+import { FileResponseDto } from 'src/files/dto/file-response.dto';
 
 export class SupplierDetailDto extends SupplierListItemDto {
   @ApiPropertyOptional({
@@ -33,14 +34,8 @@ export class SupplierDetailDto extends SupplierListItemDto {
   })
   facebook: string | null;
 
-  @ApiPropertyOptional({
-    example: [
-      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/catalog1.pdf',
-      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/catalog2.pdf',
-    ],
-    type: [String],
-  })
-  catalogUrls?: string[];
+  @ApiPropertyOptional({ type: [FileResponseDto] })
+  catalogs: FileResponseDto[];
 
   @ApiPropertyOptional({
     example: [
@@ -49,7 +44,7 @@ export class SupplierDetailDto extends SupplierListItemDto {
     ],
     type: [String],
   })
-  galleryPhotos?: string[];
+  galleryPhotos: string[];
 
   @ApiPropertyOptional({
     type: [ReviewDto],
@@ -62,5 +57,5 @@ export class SupplierDetailDto extends SupplierListItemDto {
       },
     ],
   })
-  reviews?: ReviewDto[];
+  reviews: ReviewDto[];
 }
