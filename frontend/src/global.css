@@ -9,11 +9,11 @@
   --foreground: oklch(25% 0.01 0);        /* #333333 */
 
   /* Card */
-  --card: oklch(93% 0.005 0);             /* #ededed */
+  --card: oklch(96% 0.003 270);         /* #f2f2f7 */
   --card-foreground: oklch(25% 0.01 0);   /* #333333 */
 
   /* Autres */
-  --muted: oklch(96% 0.003 270);
+  --muted: oklch(96% 0.003 270); /* #f2f2f7 */
   --muted-foreground: oklch(65% 0.01 0);  /* #9e9e9e */
   --secondary: oklch(96% 0.003 270);  /* #f2f2f7 */
   --secondary-foreground: oklch(25% 0.01 0);  /* #333333 */
@@ -21,12 +21,13 @@
   /* Le Bon Fournisseur */
   --primary: oklch(18% 0.07 15);          /* #3e1013 */
   --primary-foreground: oklch(96% 0.02 95); /* #f3f2e0 crème */
+  --primary-mid: oklch(28% 0.09 15);  /* #7a282a */
 
   /* Erreurs */
   --destructive: oklch(0.577 0.245 27.325);
 
   /* Inputs */
-  --input: oklch(93% 0.005 0);         /* #ededed */
+  --input: oklch(96% 0.003 270);         /* #f2f2f7 */
   --ring: oklch(65% 0.01 0);              /* #9e9e9e */
   --popover: oklch(100% 0 0);             /* #ffffff */
   --popover-foreground: oklch(25% 0.01 0);/* #333333 */
@@ -64,6 +65,7 @@
   /* Le Bon Fournisseur */
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primary-mid: var(--primary-mid);
 
   /* Erreurs */
   --color-destructive: var(--destructive);
