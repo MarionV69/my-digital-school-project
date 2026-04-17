@@ -1,15 +1,29 @@
 import { createBrowserRouter } from "react-router-dom";
 import RegisterPage from "../pages/auth/RegisterPage";
 import LoginPage from "../pages/auth/LoginPage";
-import HomePage from "../pages/HomePage";
+import HomePage from "../pages/public/HomePage";
 import NotFoundPage from "../pages/NotFoundPage";
 import CreateEstablishmentPage from "../pages/onboarding/CreateEstablishmentPage";
-import RestaurantDashboard from "../pages/restaurant/DashboardPage";
-import SupplierDashboard from "../pages/supplier/DashboardPage";
-// import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
 import ConversationsPage from "../pages/shared/ConversationsPage";
+<<<<<<< HEAD
 import StylePage from "@/pages/StylePage";
+=======
+import PublicLayout from "../pages/layouts/PublicLayout";
+import SupplierDetailPage from "../pages/public/SupplierDetailPage";
+import HowItWorksPage from "../pages/public/HowItWorksPage";
+import LegalPage from "../pages/public/LegalPage";
+import PrivacyPage from "../pages/public/PrivacyPage";
+import TermsPage from "../pages/public/TermsPage";
+import SupplierProfilePage from "../pages/onboarding/SupplierProfilePage";
+import ConfirmationPage from "../pages/onboarding/ConfirmationPage";
+import AppLayout from "../pages/layouts/AppLayout";
+import ProfilePage from "../pages/shared/ProfilePage";
+import FavoritesPage from "../pages/restaurant/FavoritesPage";
+import StatisticsPage from "../pages/supplier/StatisticsPage";
+
+>>>>>>> 6919db0a (feat: setup routing architecture with layouts and page placeholders (#68))
 // import ProtectedRoute from "./ProtectedRoute";
+// import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
 // import RestaurantRoute from "./RestaurantRoute";
 // import SupplierRoute from "./SupplierRoute";
 
@@ -17,57 +31,73 @@ import StylePage from "@/pages/StylePage";
  * Route Configuration
  *
  * DEV NOTE: Auth guards are temporarily disabled for faster development.
- * Remember to uncomment ProtectedRoute, RestaurantRoute, and SupplierRoute
+ * Remember to uncomment ProtectedRoute, EstablishmentRequiredRoute, RestaurantRoute, and SupplierRoute
  * before deploying to production!
  */
 
 export const router = createBrowserRouter([
-  // Public routes
+  // Public routes with PublicLayout
   {
-    path: "/",
-    Component: HomePage,
+    Component: PublicLayout,
+    children: [
+      { path: "/", Component: HomePage },
+      { path: "/suppliers/:id", Component: SupplierDetailPage },
+      { path: "/login", Component: LoginPage },
+      { path: "/register", Component: RegisterPage },
+      { path: "/how-it-works", Component: HowItWorksPage },
+      { path: "/legal", Component: LegalPage },
+      { path: "/privacy", Component: PrivacyPage },
+      { path: "/terms", Component: TermsPage },
+    ],
   },
-  {
-    path: "/register",
-    Component: RegisterPage,
-  },
-  {
-    path: "/login",
-    Component: LoginPage,
-  },
+<<<<<<< HEAD
   {
     path: "/style",
     Component: StylePage
   },
+=======
+
+>>>>>>> 6919db0a (feat: setup routing architecture with layouts and page placeholders (#68))
   // Protected routes (User must be authenticated)
   {
     // Component: ProtectedRoute, // A DECOMMENTER LORSQUE LES ROUTES RESTAURANT ET SUPPLIER SERONT EN PLACE
     children: [
+      // Onboarding
       {
         path: "/onboarding/create-establishment",
         Component: CreateEstablishmentPage,
       },
       {
+        path: "/onboarding/supplier-profile",
+        Component: SupplierProfilePage,
+      },
+      {
+        path: "/onboarding/confirmation",
+        Component: ConfirmationPage,
+      },
+      // Establishment required routes with AppLayout
+      {
         // Component: EstablishmentRequiredRoute, // A DECOMMENTER LORSQUE LES ROUTES RESTAURANT ET SUPPLIER SERONT EN PLACE
         children: [
-          { path: "/conversations", Component: ConversationsPage },
-          // Restaurant routes (Establishment type must be RESTAURANT)
           {
-            // Component: RestaurantRoute,  // A DECOMMENTER LORSQUE LES ROUTES RESTAURANTS SERONT EN PLACE
+            Component: AppLayout,
             children: [
+              // Shared pages
+              { path: "/profile", Component: ProfilePage },
+              { path: "/conversations", Component: ConversationsPage },
+
+              // Restaurant routes (Establishment type must be RESTAURANT)
               {
-                path: "/restaurant/dashboard",
-                Component: RestaurantDashboard,
+                // Component: RestaurantRoute,  // A DECOMMENTER LORSQUE LES ROUTES RESTAURANTS SERONT EN PLACE
+                children: [{ path: "/favorites", Component: FavoritesPage }],
               },
-            ],
-          },
-          // Supplier routes (Establishment type must be SUPPLIER)
-          {
-            // Component: SupplierRoute,  // A DECOMMENTER LORSQUE LES ROUTES SUPPLIERS SERONT EN PLACE
-            children: [
+
+              // Supplier routes (Establishment type must be SUPPLIER)
               {
-                path: "/supplier/dashboard",
-                Component: SupplierDashboard,
+                // Component: SupplierRoute,  // A DECOMMENTER LORSQUE LES ROUTES SUPPLIERS SERONT EN PLACE
+                children: [
+                  { path: "/supplier/stats", Component: StatisticsPage },
+                ],
               },
             ],
           },
@@ -75,9 +105,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
   // Catch-all route for 404 Not Found
-  {
-    path: "*",
-    Component: NotFoundPage,
-  },
+  { path: "*", Component: NotFoundPage },
 ]);
