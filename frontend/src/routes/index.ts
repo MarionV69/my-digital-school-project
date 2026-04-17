@@ -8,6 +8,8 @@ import RestaurantDashboard from "../pages/restaurant/DashboardPage";
 import SupplierDashboard from "../pages/supplier/DashboardPage";
 // import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
 import ConversationsPage from "../pages/shared/ConversationsPage";
+import { StickyNote } from "lucide-react";
+import StylePage from "@/pages/StylePage";
 // import ProtectedRoute from "./ProtectedRoute";
 // import RestaurantRoute from "./RestaurantRoute";
 // import SupplierRoute from "./SupplierRoute";
@@ -33,6 +35,10 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     Component: LoginPage,
+  },
+  {
+    path: "/style",
+    Component: StylePage
   },
   // Protected routes (User must be authenticated)
   {
