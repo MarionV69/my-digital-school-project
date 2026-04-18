@@ -14,6 +14,7 @@ import { UnreadCountResponseDto } from './dto/unread-count-response.dto';
 import { FilesService } from '../files/files.service';
 import { MessageAttachmentResponseDto } from './dto/message-attachments-response.dto';
 import { MessageResponseDto } from './dto/message-response.dto';
+import { DocumentsService } from 'src/documents/documents.service';
 
 @Injectable()
 export class ConversationsService {
@@ -24,6 +25,7 @@ export class ConversationsService {
     @InjectRepository(Establishment)
     private establishmentsRepository: Repository<Establishment>,
     private readonly filesService: FilesService,
+    private readonly documentsService: DocumentsService,
   ) {}
 
   // Creates a new conversation or returns existing one if already exists
@@ -105,12 +107,18 @@ export class ConversationsService {
         ? EstablishmentType.SUPPLIER
         : EstablishmentType.RESTAURANT;
 
+    const otherParticipantKey = otherParticipantType.toLowerCase();
+
     const conversations = await this.conversationsRepository.find({
       where:
         establishmentType === EstablishmentType.RESTAURANT
           ? { restaurantId: establishmentId }
           : { supplierId: establishmentId },
-      relations: [otherParticipantType.toLowerCase()],
+      relations: [
+        otherParticipantKey,
+        `${otherParticipantKey}.documents`,
+        `${otherParticipantKey}.documents.file`,
+      ],
       order: { lastMessageAt: 'DESC' },
     });
 
@@ -140,6 +148,11 @@ export class ConversationsService {
           ? conversation.restaurant
           : conversation.supplier;
 
+      const { logoUrl, coverPhotoUrl } =
+        this.documentsService.getAllDocumentUrls(
+          otherParticipant.documents ?? [],
+        );
+
       return {
         id: conversation.id,
         lastMessageAt: conversation.lastMessageAt as Date,
@@ -147,6 +160,7 @@ export class ConversationsService {
         otherParticipant: {
           id: otherParticipant.id,
           name: otherParticipant.tradeName ?? otherParticipant.legalName,
+          avatarUrl: coverPhotoUrl ?? logoUrl ?? null, // Prefer cover photo as avatar, fallback to logo
         },
       };
     });

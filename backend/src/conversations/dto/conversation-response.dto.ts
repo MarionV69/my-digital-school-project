@@ -11,10 +11,15 @@ export class ConversationResponseDto {
   unreadCount: number;
 
   @ApiProperty({
-    example: { id: 5, name: 'Martin Bio' },
+    example: {
+      id: 5,
+      name: 'Martin Bio',
+      avatarUrl: 'https://bucket.s3.amazonaws.com/public/logo.jpg',
+    },
   })
   otherParticipant: {
     id: number;
     name: string;
+    avatarUrl: string | null;
   };
 }

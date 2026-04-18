@@ -7,10 +7,12 @@ import { Message } from './entities/message.entity';
 import { Establishment } from '../establishments/entities/establishment.entity';
 import { FilesModule } from '../files/files.module';
 import { MessageAttachmentsController } from './message-attachments.controller';
+import { DocumentsModule } from 'src/documents/documents.module';
 
 @Module({
   imports: [
     FilesModule,
+    DocumentsModule,
     TypeOrmModule.forFeature([Conversation, Message, Establishment]),
   ],
   controllers: [ConversationsController, MessageAttachmentsController],
