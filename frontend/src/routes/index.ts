@@ -5,10 +5,7 @@ import HomePage from "../pages/public/HomePage";
 import NotFoundPage from "../pages/NotFoundPage";
 import CreateEstablishmentPage from "../pages/onboarding/CreateEstablishmentPage";
 import ConversationsPage from "../pages/shared/ConversationsPage";
-<<<<<<< HEAD
 import StylePage from "@/pages/StylePage";
-=======
-import PublicLayout from "../pages/layouts/PublicLayout";
 import SupplierDetailPage from "../pages/public/SupplierDetailPage";
 import HowItWorksPage from "../pages/public/HowItWorksPage";
 import LegalPage from "../pages/public/LegalPage";
@@ -16,12 +13,12 @@ import PrivacyPage from "../pages/public/PrivacyPage";
 import TermsPage from "../pages/public/TermsPage";
 import SupplierProfilePage from "../pages/onboarding/SupplierProfilePage";
 import ConfirmationPage from "../pages/onboarding/ConfirmationPage";
-import AppLayout from "../pages/layouts/AppLayout";
 import ProfilePage from "../pages/shared/ProfilePage";
 import FavoritesPage from "../pages/restaurant/FavoritesPage";
 import StatisticsPage from "../pages/supplier/StatisticsPage";
+import PublicLayout from "../layouts/PublicLayout";
+import AppLayout from "../layouts/AppLayout";
 
->>>>>>> 6919db0a (feat: setup routing architecture with layouts and page placeholders (#68))
 // import ProtectedRoute from "./ProtectedRoute";
 // import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
 // import RestaurantRoute from "./RestaurantRoute";
@@ -50,14 +47,13 @@ export const router = createBrowserRouter([
       { path: "/terms", Component: TermsPage },
     ],
   },
-<<<<<<< HEAD
+
+  // Style guide (dev only)
   {
     path: "/style",
-    Component: StylePage
+    Component: StylePage,
   },
-=======
 
->>>>>>> 6919db0a (feat: setup routing architecture with layouts and page placeholders (#68))
   // Protected routes (User must be authenticated)
   {
     // Component: ProtectedRoute, // A DECOMMENTER LORSQUE LES ROUTES RESTAURANT ET SUPPLIER SERONT EN PLACE
@@ -75,6 +71,7 @@ export const router = createBrowserRouter([
         path: "/onboarding/confirmation",
         Component: ConfirmationPage,
       },
+
       // Establishment required routes with AppLayout
       {
         // Component: EstablishmentRequiredRoute, // A DECOMMENTER LORSQUE LES ROUTES RESTAURANT ET SUPPLIER SERONT EN PLACE
@@ -89,7 +86,10 @@ export const router = createBrowserRouter([
               // Restaurant routes (Establishment type must be RESTAURANT)
               {
                 // Component: RestaurantRoute,  // A DECOMMENTER LORSQUE LES ROUTES RESTAURANTS SERONT EN PLACE
-                children: [{ path: "/favorites", Component: FavoritesPage }],
+                children: [
+                  { path: "/suppliers", Component: HomePage },
+                  { path: "/favorites", Component: FavoritesPage },
+                ],
               },
 
               // Supplier routes (Establishment type must be SUPPLIER)
