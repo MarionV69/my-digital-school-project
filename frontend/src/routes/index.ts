@@ -16,6 +16,8 @@ import ConfirmationPage from "../pages/onboarding/ConfirmationPage";
 import ProfilePage from "../pages/shared/ProfilePage";
 import FavoritesPage from "../pages/restaurant/FavoritesPage";
 import StatisticsPage from "../pages/supplier/StatisticsPage";
+import SettingsPage from "@/pages/shared/SettingsPage";
+
 import PublicLayout from "../layouts/PublicLayout";
 import AppLayout from "../layouts/AppLayout";
 
@@ -82,6 +84,7 @@ export const router = createBrowserRouter([
               // Shared pages
               { path: "/profile", Component: ProfilePage },
               { path: "/conversations", Component: ConversationsPage },
+              { path: "/settings", Component: SettingsPage },
 
               // Restaurant routes (Establishment type must be RESTAURANT)
               {
