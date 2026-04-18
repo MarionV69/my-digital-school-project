@@ -75,7 +75,7 @@ function MessagesIcon({
     <Link to="/conversations" className={cn("relative", className)}>
       <Mail className="size-8 text-muted-foreground" />
       {count > 0 && (
-        <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+        <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-destructive text-xs font-medium text-primary-foreground">
           {count}
         </span>
       )}

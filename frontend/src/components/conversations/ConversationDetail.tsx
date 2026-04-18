@@ -1,10 +1,12 @@
 import { useEffect, useState, useRef } from "react";
-import { MessageSquare, X } from "lucide-react";
+import { ChevronLeft, ExternalLink, MessageSquare, User } from "lucide-react";
 import toast from "react-hot-toast";
 import { getConversationMessages } from "../../api/conversations";
 import type { Conversation, Message } from "../../types/conversations.types";
+import { Spinner } from "@/components/ui/spinner";
 import MessageBubble from "../../components/conversations/MessageBubble";
 import MessageInput from "../../components/conversations/MessageInput";
+import { cn } from "@/lib/utils";
 
 type ConversationDetailProps = {
   conversation: Conversation;
@@ -49,49 +51,71 @@ function ConversationDetail({ conversation }: ConversationDetailProps) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full overflow-y-scroll">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-brand-light border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Chargement de la conversation...</p>
-        </div>
+      <div className="flex h-full items-center justify-center">
+        <Spinner className="size-6 text-muted-foreground" />
       </div>
     );
   }
 
   return (
-    <div className={`flex flex-col h-full bg-gray-50 ${!show && "hidden"}`}>
+    <div
+      className={cn(
+        "flex h-full flex-col",
+        "bg-background md:bg-muted",
+        !show && "hidden",
+      )}
+    >
+      {" "}
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 p-3 shadow flex items-center gap-3">
+      <header className="flex items-center gap-3 border-b border-border bg-background px-4 py-3">
+        {/* Back button — mobile only */}
         <button
           onClick={() => setShow(false)}
-          className="p-2 hover:bg-gray-100 rounded-full transition cursor-pointer sm:hidden"
+          className="cursor-pointer rounded-full p-1.5 transition-colors hover:bg-muted sm:hidden"
           aria-label="Retour aux conversations"
         >
-          <X className="w-5 h-5 text-gray-600" />
+          <ChevronLeft className="size-5 text-foreground" />
         </button>
 
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-brand-light rounded-full flex items-center justify-center text-white">
-            <MessageSquare className="w-5 h-5" />
+        {/* Avatar */}
+        {conversation.otherParticipant.avatarUrl ? (
+          <img
+            src={conversation.otherParticipant.avatarUrl}
+            alt={conversation.otherParticipant.name}
+            className="size-10 rounded-full object-cover"
+          />
+        ) : (
+          <div className="flex size-10 items-center justify-center rounded-full bg-muted">
+            <User className="size-5 text-muted-foreground" />
           </div>
-          <div>
-            <h1 className="font-semibold text-brand-dark">
-              {conversation?.otherParticipant.name || "Conversation"}
-            </h1>
-            <p className="text-sm text-gray-500">
-              {messages.length} message{messages.length > 1 ? "s" : ""}
-            </p>
-          </div>
-        </div>
-      </div>
+        )}
 
+        {/* Name */}
+        <div className="flex-1 min-w-0">
+          <p className="truncate text-sm font-semibold text-foreground">
+            {conversation.otherParticipant.name}
+          </p>
+        </div>
+
+        {/* Recipient details */}
+        <button
+          className="cursor-pointer rounded-full p-1.5 transition-colors hover:bg-muted"
+          aria-label="Voir le profil"
+        >
+          <ExternalLink className="size-4 text-muted-foreground" />
+        </button>
+      </header>
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto py-6 px-4 pb-0  bg-cream/20">
+      <div className="flex-1 overflow-y-auto px-4 py-6">
         {messages.length === 0 ? (
-          <div className="text-center text-gray-500 py-12">
-            <MessageSquare className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-            <p>Aucun message pour l'instant.</p>
-            <p className="text-sm mt-1">Envoyez le premier message !</p>
+          <div className="flex flex-col items-center justify-center gap-3 py-12">
+            <MessageSquare className="size-12 text-muted-foreground/30" />
+            <p className="text-sm text-muted-foreground">
+              Aucun message pour l'instant.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Envoyez le premier message !
+            </p>
           </div>
         ) : (
           <>
@@ -102,7 +126,6 @@ function ConversationDetail({ conversation }: ConversationDetailProps) {
           </>
         )}
       </div>
-
       {/* Input */}
       <MessageInput
         conversationId={conversation.id}

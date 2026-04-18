@@ -16,7 +16,9 @@ function ContactButton({ supplierId }: ContactButtonProps) {
     setLoading(true);
     try {
       const conversation = await createConversation(supplierId);
-      navigate(`/conversations/${conversation.id}`);
+      navigate("/conversations", {
+        state: { conversationId: conversation.id },
+      });
     } catch (error) {
       console.error("Error creating conversation:", error);
       toast.error("Erreur lors de la création de la conversation");

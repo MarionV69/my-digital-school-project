@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { MessageSquare } from "lucide-react";
+import toast from "react-hot-toast";
 import type { Conversation } from "../../types/conversations.types";
 import { getConversations } from "../../api/conversations";
-import toast from "react-hot-toast";
-import { ArrowLeft, MessageSquare } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import ConversationDetail from "../../components/conversations/ConversationDetail";
 import ConversationItem from "../../components/conversations/ConversationItem";
 
 function ConversationsPage() {
+  const location = useLocation();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] =
     useState<Conversation | null>(null);
@@ -18,6 +21,16 @@ function ConversationsPage() {
       try {
         const data = await getConversations();
         setConversations(data);
+
+        // Auto-select conversation if coming from ContactButton
+        const conversationId = location.state?.conversationId;
+        if (conversationId) {
+          const target = data.find((c) => c.id === conversationId);
+          if (target) {
+            setSelectedConversation({ ...target, unreadCount: 0 });
+            setShowDetail(true);
+          }
+        }
       } catch (error) {
         console.error("Error fetching conversations:", error);
         toast.error("Erreur lors du chargement des conversations");
@@ -26,7 +39,7 @@ function ConversationsPage() {
       }
     };
     fetchConversations();
-  }, []);
+  }, [location.state]);
 
   const handleSelectConversation = (conversation: Conversation) => {
     setConversations((prev) =>
@@ -35,7 +48,7 @@ function ConversationsPage() {
       ),
     );
     setSelectedConversation({ ...conversation, unreadCount: 0 });
-    setShowDetail(true); // mobile
+    setShowDetail(true);
   };
 
   const handleBack = () => {
@@ -44,75 +57,74 @@ function ConversationsPage() {
 
   if (loading) {
     return (
-      <div className="text-center py-10">Chargement des conversations...</div>
+      <div className="flex h-[calc(100vh-73px)] items-center justify-center">
+        <Spinner className="size-6 text-muted-foreground" />
+      </div>
     );
   }
+
   if (conversations.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-center max-w-md px-4">
-          <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-700 mb-2">
-            Aucune conversation
-          </h2>
-        </div>
+      <div className="flex h-[calc(100vh-73px)] flex-col items-center justify-center gap-3">
+        <MessageSquare className="size-12 text-muted-foreground/30" />
+        <p className="font-medium text-muted-foreground">Aucune conversation</p>
       </div>
     );
   }
 
   return (
-    <section className="bg-cream border-2 border-brand-dark max-w-6xl mx-auto my-6 p-6 md:p-8 lg:12 rounded-lg text-brand-dark md:grid md:grid-cols-[1fr_2fr] md:gap-6 lg:gap-8">
+    <div className="flex h-[calc(100vh-73px)] overflow-hidden">
+      {/* Conversation list */}
       <div
         className={`${
-          showDetail ? "hidden md:block" : "block"
-        } overflow-y-auto`}
+          showDetail ? "hidden md:flex" : "flex"
+        } w-full flex-col border-r border-border md:w-72 lg:w-96`}
       >
-        <div>
-          <h1 className="text-3xl font-bold text-brand-dark mb-4">
-            Messagerie
+        <div className="px-6 py-5 border-b border-border">
+          <h1 className="text-xl font-semibold text-foreground">
+            Conversations
           </h1>
-          <p className="text-gray-600 mb-4">
-            {conversations.length} conversation
-            {conversations.length > 1 ? "s" : ""}
-          </p>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden m-1">
-            {conversations.map((conversation) => (
+        </div>
+
+        <ul className="flex-1 overflow-y-auto">
+          {conversations.map((conversation) => (
+            <li key={conversation.id}>
               <ConversationItem
-                key={conversation.id}
                 conversation={conversation}
                 onSelect={() => handleSelectConversation(conversation)}
                 isActive={selectedConversation?.id === conversation.id}
               />
-            ))}
-          </div>
-        </div>
+            </li>
+          ))}
+        </ul>
       </div>
+
+      {/* Conversation detail */}
       <div
-        className={`${
-          showDetail ? "block" : "hidden md:block"
-        } h-full flex flex-col`}
+        className={`${showDetail ? "flex" : "hidden md:flex"} flex-1 flex-col`}
       >
-        <div className="md:hidden pb-2">
+        {/* Back button — mobile only */}
+        <div className="md:hidden">
           <button
             onClick={handleBack}
-            className="btn hover:-translate-x-1 bg-brand-dark rounded-full font-medium fixed top-2 right-2"
+            className="cursor-pointer p-4 text-sm text-muted-foreground"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Retour
+            ← Retour
           </button>
         </div>
-        <div className="flex-1 rounded-lg shadow-md overflow-hidden bg-white h-full">
-          {selectedConversation ? (
-            <ConversationDetail conversation={selectedConversation} />
-          ) : (
-            <div className="text-center bg-cream/20 h-full flex flex-col items-center justify-center gap-3 text-gray-500">
-              <MessageSquare className="w-12 h-12 text-gray-300" />
-              <p className="font-medium">Sélectionnez une conversation</p>
-            </div>
-          )}
-        </div>
+
+        {selectedConversation ? (
+          <ConversationDetail conversation={selectedConversation} />
+        ) : (
+          <div className="flex flex-1 flex-col items-center justify-center gap-3">
+            <MessageSquare className="size-12 text-muted-foreground/30" />
+            <p className="text-sm text-muted-foreground">
+              Sélectionnez une conversation
+            </p>
+          </div>
+        )}
       </div>
-    </section>
+    </div>
   );
 }
 

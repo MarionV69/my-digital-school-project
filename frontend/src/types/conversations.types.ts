@@ -7,6 +7,7 @@ export type Conversation = {
   otherParticipant: {
     id: number;
     name: string;
+    avatarUrl: string | null;
   };
 };
 

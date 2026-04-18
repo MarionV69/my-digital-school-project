@@ -2,6 +2,7 @@ import { FileText, Image as ImageIcon } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import type { Message } from "../../types/conversations.types";
 import { openAttachment } from "../../api/conversations";
+import { cn } from "@/lib/utils";
 
 type MessageBubbleProps = {
   message: Message;
@@ -38,22 +39,31 @@ function MessageBubble({ message }: MessageBubbleProps) {
   };
 
   return (
-    <div className={`flex ${isMine ? "justify-end" : "justify-start"} mb-4`}>
+    <div
+      className={cn("mb-4 flex flex-col", isMine ? "items-end" : "items-start")}
+    >
+      {/* Timestamp */}
+      <span className="mb-1 px-1 text-xs text-muted-foreground">
+        {formatTime(message.sentAt)}
+      </span>
+
+      {/* Bubble */}
       <div
-        className={`max-w-[90%] rounded-lg px-4 py-2 shadow-md ${
+        className={cn(
+          "max-w-[70%] rounded-lg px-4 py-2",
           isMine
-            ? "bg-brand-light text-white"
-            : "bg-gray-200/80 text-brand-dark"
-        }`}
+            ? "bg-primary text-primary-foreground rounded-tr-none"
+            : "bg-background text-foreground shadow-sm rounded-tl-none",
+        )}
       >
         {/* Message content */}
-        <p className="whitespace-pre-wrap wrap-break-words">
+        <p className="whitespace-pre-wrap wrap-break-word text-sm">
           {message.content}
         </p>
 
         {/* Attachments */}
         {message.attachments.length > 0 && (
-          <div className="mt-3 space-y-2">
+          <div className="mt-2 space-y-1.5">
             {message.attachments.map((attachment) => {
               const isImage = attachment.mimeType.startsWith("image/");
 
@@ -61,19 +71,22 @@ function MessageBubble({ message }: MessageBubbleProps) {
                 <button
                   key={attachment.id}
                   onClick={() => openAttachment(attachment.endpoint)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded hover:cursor-pointer transition ${
+                  className={cn(
+                    "flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-left transition-colors",
                     isMine
-                      ? "bg-white/20 hover:bg-white/30 text-white"
-                      : "bg-white hover:bg-gray-50 text-brand-dark"
-                  }`}
+                      ? "hover:bg-white/10 text-primary-foreground"
+                      : "hover:bg-muted/80 text-foreground",
+                  )}
                 >
                   {isImage ? (
-                    <ImageIcon className="w-4 h-4 shrink-0" />
+                    <ImageIcon className="size-4 shrink-0" />
                   ) : (
-                    <FileText className="w-4 h-4 shrink-0" />
+                    <FileText className="size-4 shrink-0" />
                   )}
-                  <span className="text-sm">{attachment.originalFilename}</span>
-                  <span className="text-xs opacity-75 shrink-0">
+                  <span className="truncate text-sm">
+                    {attachment.originalFilename}
+                  </span>
+                  <span className="shrink-0 text-xs opacity-70">
                     ({(attachment.size / 1024).toFixed(0)} Ko)
                   </span>
                 </button>
@@ -81,15 +94,6 @@ function MessageBubble({ message }: MessageBubbleProps) {
             })}
           </div>
         )}
-
-        {/* Timestamp */}
-        <p
-          className={`text-xs mt-1 ${
-            isMine ? "text-white/70" : "text-gray-500"
-          }`}
-        >
-          {formatTime(message.sentAt)}
-        </p>
       </div>
     </div>
   );
