@@ -97,7 +97,7 @@ function ConversationDetail({ conversation }: ConversationDetailProps) {
           </p>
         </div>
 
-        {/* Recipient details */}
+        {/* Recipient details overview */}
         <button
           className="cursor-pointer rounded-full p-1.5 transition-colors hover:bg-muted"
           aria-label="Voir le profil"

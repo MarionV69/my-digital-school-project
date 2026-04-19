@@ -1,10 +1,16 @@
-import { useState, useRef } from "react";
+import { useState, useRef, type ChangeEvent, type FormEvent } from "react";
 import { Send, Paperclip, X } from "lucide-react";
 import toast from "react-hot-toast";
-import { sendMessage, sendAttachment } from "../../api/conversations";
+import { sendAttachment, sendMessage } from "../../api/conversations";
 import type { Message } from "../../types/conversations.types";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
+import { UPLOAD_CONFIG } from "@/config/upload.config";
+
+type PendingFile = {
+  id: string;
+  file: File;
+};
 
 type MessageInputProps = {
   conversationId: number;
@@ -14,10 +20,10 @@ type MessageInputProps = {
 function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
-  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!content.trim() && pendingFiles.length === 0) {
@@ -27,21 +33,26 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
 
     setSending(true);
     try {
-      const message = await sendMessage(
-        conversationId,
-        content.trim() || "📎 Pièce jointe",
-      );
+      const message = await sendMessage(conversationId, {
+        content,
+        attachment: pendingFiles[0]?.file,
+      });
 
-      // Attach all pending files
-      if (pendingFiles.length > 0) {
-        await Promise.all(
-          pendingFiles.map((file) => sendAttachment(message.id, file)),
-        );
-        setPendingFiles([]);
+      // Send remaining attachments one by one
+      if (pendingFiles.length > 1) {
+        for (const pendingFile of pendingFiles) {
+          const attachment = await sendAttachment(
+            conversationId,
+            message.id,
+            pendingFile.file,
+          );
+          message.attachments.push(attachment);
+        }
       }
 
       onMessageSent(message);
       setContent("");
+      setPendingFiles([]);
     } catch (error) {
       console.error("Error sending message:", error);
       toast.error("Erreur lors de l'envoi du message");
@@ -51,15 +62,33 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    if (files.length > 0) {
-      setPendingFiles((prev) => [...prev, ...files]);
+
+    const oversized = files.filter((f) => f.size > UPLOAD_CONFIG.MAX_FILE_SIZE);
+    if (oversized.length > 0) {
+      toast.error(
+        `Chaque fichier ne doit pas dépasser ${UPLOAD_CONFIG.MAX_FILE_SIZE / 1024 / 1024} Mo`,
+      );
+      return;
     }
+
+    setPendingFiles((prev) => {
+      const newFiles = files.map((file) => ({
+        id: crypto.randomUUID(),
+        file,
+      }));
+      const combined = [...prev, ...newFiles];
+      if (combined.length > UPLOAD_CONFIG.MAX_FILES) {
+        toast.error(`Maximum ${UPLOAD_CONFIG.MAX_FILES} fichiers par message`);
+        return prev;
+      }
+      return combined;
+    });
   };
 
-  const removeFile = (index: number) => {
-    setPendingFiles((prev) => prev.filter((_, i) => i !== index));
+  const removeFile = (id: string) => {
+    setPendingFiles((prev) => prev.filter((file) => file.id !== id));
   };
 
   return (
@@ -67,9 +96,9 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
       {/* Pending files preview */}
       {pendingFiles.length > 0 && (
         <div className="mb-2 flex flex-wrap gap-2">
-          {pendingFiles.map((file, index) => (
+          {pendingFiles.map(({ id, file }) => (
             <div
-              key={index}
+              key={id}
               className="inline-flex items-center gap-2 rounded-lg bg-muted px-3 py-1.5"
             >
               <Paperclip className="size-3 shrink-0 text-muted-foreground" />
@@ -78,7 +107,7 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
               </span>
               <button
                 type="button"
-                onClick={() => removeFile(index)}
+                onClick={() => removeFile(id)}
                 className="cursor-pointer text-muted-foreground hover:text-foreground"
               >
                 <X className="size-3" />
@@ -93,7 +122,7 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          disabled={sending}
+          disabled={sending || pendingFiles.length >= UPLOAD_CONFIG.MAX_FILES}
           className="cursor-pointer rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted disabled:opacity-50"
           aria-label="Joindre un fichier"
         >
@@ -105,7 +134,7 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
           multiple
           className="hidden"
           onChange={handleFileChange}
-          accept="*/*"
+          accept={UPLOAD_CONFIG.ACCEPTED_MIME_TYPES}
         />
 
         {/* Text input */}

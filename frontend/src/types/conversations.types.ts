@@ -26,13 +26,9 @@ export type MessageAttachment = {
   originalFilename: string;
   mimeType: string;
   size: number;
-  endpoint: string; // "/messages/1/attachments/2"
+  endpoint: string; // "/conversations/1/messages/2/attachments/3"
 };
 
 export type UnreadCount = {
   count: number;
-};
-
-export type SendMessageDto = {
-  content: string;
 };
