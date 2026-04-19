@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { isEmailValid, isNotEmptyString } from "../../utils/validation";
 import Input from "../common/Input";
-import { EstablishmentType } from "../../types/establishments.types";
 import { Eye, EyeOff } from "lucide-react";
 
 type LoginFormErrors = {
@@ -78,15 +77,11 @@ function LoginForm() {
 
       toast.success(`Bienvenue ${user.firstName} !`);
 
-      // Redirect based on establishment type
+      // Redirect based on establishment
       if (!user.establishmentId) {
         navigate("/onboarding/create-establishment");
-      } else if (user.establishmentType === EstablishmentType.RESTAURANT) {
-        navigate("/restaurant/dashboard");
-      } else if (user.establishmentType === EstablishmentType.SUPPLIER) {
-        navigate("/supplier/dashboard");
       } else {
-        navigate("/");
+        navigate("/profile");
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
