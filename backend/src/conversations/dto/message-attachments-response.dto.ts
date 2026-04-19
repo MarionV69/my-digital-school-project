@@ -13,6 +13,6 @@ export class MessageAttachmentResponseDto {
   @ApiProperty({ example: 102400 })
   size: number;
 
-  @ApiProperty({ example: '/messages/1/attachments/2' })
+  @ApiProperty({ example: '/conversations/1/messages/2/attachments/3' })
   endpoint: string;
 }
