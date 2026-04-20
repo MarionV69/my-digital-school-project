@@ -1,54 +1,65 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MessageSquare } from "lucide-react";
-import toast from "react-hot-toast";
 import type { Conversation } from "../../types/conversations.types";
-import { getConversations } from "../../api/conversations";
 import { Spinner } from "@/components/ui/spinner";
 import ConversationDetail from "../../components/conversations/ConversationDetail";
 import ConversationItem from "../../components/conversations/ConversationItem";
+import ContactButton from "@/components/conversations/ContactButton";
+import { getConversationMessages, getConversations } from "@/api/conversations";
+import { useUnreadCount } from "@/hooks/useUnreadCount";
 
 function ConversationsPage() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const initialConversationId = location.state?.conversationId ?? null;
+
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [selectedConversation, setSelectedConversation] =
-    useState<Conversation | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showDetail, setShowDetail] = useState(false);
 
+  const [selectedId, setSelectedId] = useState<number | null>(
+    initialConversationId,
+  );
+  const [showDetail, setShowDetail] = useState(!!initialConversationId);
+
+  const fetchConversations = useCallback(async () => {
+    try {
+      const data = await getConversations();
+      setConversations(data);
+    } catch (error) {
+      console.error("Error fetching conversations:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Initial fetch of conversations
   useEffect(() => {
-    const fetchConversations = async () => {
-      try {
-        const data = await getConversations();
-        setConversations(data);
-
-        // Auto-select conversation if coming from ContactButton
-        const conversationId = location.state?.conversationId;
-        if (conversationId) {
-          const target = data.find((c) => c.id === conversationId);
-          if (target) {
-            setSelectedConversation({ ...target, unreadCount: 0 });
-            setShowDetail(true);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching conversations:", error);
-        toast.error("Erreur lors du chargement des conversations");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchConversations();
-  }, [location.state]);
+  }, [fetchConversations]);
 
-  const handleSelectConversation = (conversation: Conversation) => {
-    setConversations((prev) =>
-      prev.map((c) =>
-        c.id === conversation.id ? { ...c, unreadCount: 0 } : c,
-      ),
-    );
-    setSelectedConversation({ ...conversation, unreadCount: 0 });
+  // polling unread => if unread count increases, refetch conversations to update badges
+  const { refreshUnreadCount } = useUnreadCount(fetchConversations);
+
+  // Clean navigation state to prevent unwanted conversation selection on back/forward navigation
+  useEffect(() => {
+    if (location.state) {
+      navigate(".", { replace: true, state: null });
+    }
+  }, [location.state, navigate]);
+
+  const selectedConversation =
+    conversations.find((c) => c.id === selectedId) || null;
+
+  const handleSelectConversation = async (conversation: Conversation) => {
+    setSelectedId(conversation.id);
     setShowDetail(true);
+
+    if (conversation.unreadCount > 0) {
+      await getConversationMessages(conversation.id);
+      await Promise.all([fetchConversations(), refreshUnreadCount()]);
+    }
   };
 
   const handleBack = () => {
@@ -74,7 +85,6 @@ function ConversationsPage() {
 
   return (
     <div className="flex h-[calc(100vh-73px)] overflow-hidden">
-      {/* Conversation list */}
       <div
         className={`${
           showDetail ? "hidden md:flex" : "flex"
@@ -84,6 +94,7 @@ function ConversationsPage() {
           <h1 className="text-xl font-semibold text-foreground">
             Conversations
           </h1>
+          <ContactButton supplierId={4} />
         </div>
 
         <ul className="flex-1 overflow-y-auto">
@@ -92,18 +103,16 @@ function ConversationsPage() {
               <ConversationItem
                 conversation={conversation}
                 onSelect={() => handleSelectConversation(conversation)}
-                isActive={selectedConversation?.id === conversation.id}
+                isActive={selectedId === conversation.id}
               />
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Conversation detail */}
       <div
         className={`${showDetail ? "flex" : "hidden md:flex"} flex-1 flex-col`}
       >
-        {/* Back button — mobile only */}
         <div className="md:hidden">
           <button
             onClick={handleBack}

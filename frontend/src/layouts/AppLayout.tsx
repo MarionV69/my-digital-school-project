@@ -17,6 +17,7 @@ import {
 import { useAuth } from "../hooks/useAuth";
 import { EstablishmentType } from "../types/establishments.types";
 import { cn } from "../lib/utils";
+import { useUnreadCount } from "@/hooks/useUnreadCount";
 
 function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
   return (
@@ -93,8 +94,7 @@ function AppLayout() {
   const isSupplier = user?.establishmentType === EstablishmentType.SUPPLIER;
   const isRestaurant = user?.establishmentType === EstablishmentType.RESTAURANT;
 
-  // TODO: connect to real unread count from API
-  const unreadCount = 2;
+  const { unreadCount } = useUnreadCount();
 
   function handleLogout() {
     logout();

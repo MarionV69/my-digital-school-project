@@ -155,7 +155,7 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
         <button
           type="submit"
           disabled={sending || (!content.trim() && pendingFiles.length === 0)}
-          className="cursor-pointer rounded-full bg-primary p-2 text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+          className="cursor-pointer rounded-full bg-primary p-2 text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Envoyer"
         >
           {sending ? (
