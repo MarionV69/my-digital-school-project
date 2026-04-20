@@ -17,7 +17,7 @@ import {
 import { useAuth } from "../hooks/useAuth";
 import { EstablishmentType } from "../types/establishments.types";
 import { cn } from "../lib/utils";
-import { useUnreadCount } from "@/hooks/useUnreadCount";
+import { useUnread } from "@/hooks/useUnreadCount";
 
 function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
   return (
@@ -94,7 +94,7 @@ function AppLayout() {
   const isSupplier = user?.establishmentType === EstablishmentType.SUPPLIER;
   const isRestaurant = user?.establishmentType === EstablishmentType.RESTAURANT;
 
-  const { unreadCount } = useUnreadCount();
+  const { totalUnreadCount } = useUnread();
 
   function handleLogout() {
     logout();
@@ -128,7 +128,7 @@ function AppLayout() {
 
           {/* Desktop right actions */}
           <div className="hidden items-center gap-4 md:flex">
-            <MessagesIcon count={unreadCount} />
+            <MessagesIcon count={totalUnreadCount} />
 
             {/* User icon and dropdown */}
             <div className="relative">
@@ -195,7 +195,7 @@ function AppLayout() {
 
           {/* Mobile right actions */}
           <div className="flex items-center gap-3 md:hidden">
-            <MessagesIcon count={unreadCount} />
+            <MessagesIcon count={totalUnreadCount} />
             <button
               onClick={() => setMobileMenuOpen((v) => !v)}
               className="cursor-pointer"
@@ -254,9 +254,9 @@ function AppLayout() {
                 icon={
                   <span className="relative">
                     <Mail className="size-4" />
-                    {unreadCount > 0 && (
+                    {totalUnreadCount > 0 && (
                       <span className="absolute -right-1.5 -top-1.5 flex size-3.5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-                        {unreadCount}
+                        {totalUnreadCount}
                       </span>
                     )}
                   </span>

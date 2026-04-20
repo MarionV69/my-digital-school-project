@@ -5,46 +5,49 @@ import { AuthProvider } from "./context/AuthProvider.tsx";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/index.ts";
 import { Toaster } from "react-hot-toast";
+import { UnreadProvider } from "./context/UnreadProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          // Durée par défaut
-          duration: 4000,
+      <UnreadProvider>
+        <RouterProvider router={router} />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            // Durée par défaut
+            duration: 4000,
 
-          // Success
-          success: {
-            duration: 3000,
-            style: {
-              background: "#fefefe",
-              color: "#3e1013",
-              border: "2px solid #7a282a",
+            // Success
+            success: {
+              duration: 3000,
+              style: {
+                background: "#fefefe",
+                color: "#3e1013",
+                border: "2px solid #7a282a",
+              },
+              iconTheme: {
+                primary: "#7a282a",
+                secondary: "#f3f2df",
+              },
             },
-            iconTheme: {
-              primary: "#7a282a",
-              secondary: "#f3f2df",
-            },
-          },
 
-          // Error
-          error: {
-            duration: 5000,
-            style: {
-              background: "#fefefe",
-              color: "#3e1013",
-              border: "2px solid #e21734",
+            // Error
+            error: {
+              duration: 5000,
+              style: {
+                background: "#fefefe",
+                color: "#3e1013",
+                border: "2px solid #e21734",
+              },
+              iconTheme: {
+                primary: "#e21734",
+                secondary: "#fff",
+              },
             },
-            iconTheme: {
-              primary: "#e21734",
-              secondary: "#fff",
-            },
-          },
-        }}
-      />
+          }}
+        />
+      </UnreadProvider>
     </AuthProvider>
   </StrictMode>,
 );

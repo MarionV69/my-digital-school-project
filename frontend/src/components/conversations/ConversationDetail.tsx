@@ -7,12 +7,14 @@ import { Spinner } from "@/components/ui/spinner";
 import MessageBubble from "../../components/conversations/MessageBubble";
 import MessageInput from "../../components/conversations/MessageInput";
 import { cn } from "@/lib/utils";
+import { useUnread } from "@/hooks/useUnreadCount";
 
 type ConversationDetailProps = {
   conversation: Conversation;
 };
 
 function ConversationDetail({ conversation }: ConversationDetailProps) {
+  const { refreshTotalUnreadCount } = useUnread();
   const [show, setShow] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +28,7 @@ function ConversationDetail({ conversation }: ConversationDetailProps) {
       try {
         const data = await getConversationMessages(conversation.id);
         setMessages(data);
+        await refreshTotalUnreadCount();
       } catch (error) {
         console.error("Error fetching messages:", error);
         toast.error("Erreur lors du chargement des messages");
@@ -34,7 +37,7 @@ function ConversationDetail({ conversation }: ConversationDetailProps) {
       }
     };
     fetchMessages();
-  }, [conversation.id]);
+  }, [conversation.id, refreshTotalUnreadCount]);
 
   const handleMessageSent = (message: Message) => {
     setMessages((prev) => [...prev, message]);

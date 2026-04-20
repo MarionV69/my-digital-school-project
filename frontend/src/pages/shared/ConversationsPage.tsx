@@ -5,13 +5,14 @@ import type { Conversation } from "../../types/conversations.types";
 import { Spinner } from "@/components/ui/spinner";
 import ConversationDetail from "../../components/conversations/ConversationDetail";
 import ConversationItem from "../../components/conversations/ConversationItem";
+import { getConversations } from "@/api/conversations";
 import ContactButton from "@/components/conversations/ContactButton";
-import { getConversationMessages, getConversations } from "@/api/conversations";
-import { useUnreadCount } from "@/hooks/useUnreadCount";
+import { useUnread } from "@/hooks/useUnreadCount";
 
 function ConversationsPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { totalUnreadCount } = useUnread();
 
   const initialConversationId = location.state?.conversationId ?? null;
 
@@ -34,13 +35,10 @@ function ConversationsPage() {
     }
   }, []);
 
-  // Initial fetch of conversations
+  // Refetch conversations when totalUnreadCount changes to update unread badges
   useEffect(() => {
     fetchConversations();
-  }, [fetchConversations]);
-
-  // polling unread => if unread count increases, refetch conversations to update badges
-  const { refreshUnreadCount } = useUnreadCount(fetchConversations);
+  }, [totalUnreadCount, fetchConversations]);
 
   // Clean navigation state to prevent unwanted conversation selection on back/forward navigation
   useEffect(() => {
@@ -55,11 +53,6 @@ function ConversationsPage() {
   const handleSelectConversation = async (conversation: Conversation) => {
     setSelectedId(conversation.id);
     setShowDetail(true);
-
-    if (conversation.unreadCount > 0) {
-      await getConversationMessages(conversation.id);
-      await Promise.all([fetchConversations(), refreshUnreadCount()]);
-    }
   };
 
   const handleBack = () => {
