@@ -1,49 +1,33 @@
 
+import api from "@/api/axiosConfig";
 import SearchBar from "@/components/home/SearchBar";
-import api from "@/lib/axios";
+import type { Supplier } from "@/types/supplier";
 import { User } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-interface Supplier {
-  id: number;
-  name: string;
-  city: string;
-  postalCode: string;
-  priceRange: string;
-  isPremium: boolean;
-  labels: string[];
-  productCategories: string[];
-  logoUrl: string;
-  coverPhotoUrl: string;
-  reviewsCount: number;
-  averageRating: number;
-}
 
 function HomePage() {
-  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [, setSuppliers] = useState<Supplier[]>([]);
 
-  async function handleSearch(query: string, location: string){
-    const params : Record<string, string> = {};
-    if (query) params.query = query;
-    if (location) params.city = location.split(",")[0].trim();
+ async function handleSearch(search: string, city: string) {
+    const params: Record<string, string> = {};
+    if (search) params.search = search;
+    if (city) params.city = city;
 
-    // GET /suppliers?query=boucherie&location=Lyon
-    const response = await api.get("/suppliers", {params});
-    setSuppliers(response.data);
-    console.log("Résultats :", response.data);
-  }
-
+    try {
+      const response = await api.get('/suppliers', {params});
+      console.log("Réponse reçue : ", response.data)
+      setSuppliers(response.data)
+    } catch (error) {
+      console.error("Erreur : " , error)
+    }
+}
+    
+  
   return (
-    <div>
-      <h1>HomePage</h1>
-      <Link to="/login" className="btn">
-        <User />
-        Se connecter
-      </Link>
-      <SearchBar onSearch={handleSearch}>
-
-      </SearchBar>
+    <div className="p-10">
+      <SearchBar onSearch={handleSearch} />
     </div>
   );
 }
