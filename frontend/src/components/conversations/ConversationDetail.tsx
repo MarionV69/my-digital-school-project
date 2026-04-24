@@ -2,20 +2,26 @@ import { useEffect, useState, useRef } from "react";
 import { ChevronLeft, ExternalLink, MessageSquare, User } from "lucide-react";
 import toast from "react-hot-toast";
 import { getConversationMessages } from "../../api/conversations";
-import type { Conversation, Message } from "../../types/conversations.types";
 import { Spinner } from "@/components/ui/spinner";
 import MessageBubble from "../../components/conversations/MessageBubble";
 import MessageInput from "../../components/conversations/MessageInput";
 import { cn } from "@/lib/utils";
-import { useUnread } from "@/hooks/useUnreadCount";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import type { ConversationsOutletContext } from "@/pages/shared/ConversationsLayout";
+import type { Message } from "@/types/conversations.types";
+import { Button } from "../ui/button";
 
 type ConversationDetailProps = {
-  conversation: Conversation;
+  conversationId: number;
 };
 
-function ConversationDetail({ conversation }: ConversationDetailProps) {
-  const { refreshTotalUnreadCount } = useUnread();
-  const [show, setShow] = useState(true);
+function ConversationDetail({ conversationId }: ConversationDetailProps) {
+  const navigate = useNavigate();
+  const { conversations, refreshTotalUnreadCount } =
+    useOutletContext<ConversationsOutletContext>();
+
+  const conversation = conversations.find((c) => c.id === conversationId);
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -26,7 +32,7 @@ function ConversationDetail({ conversation }: ConversationDetailProps) {
 
     const fetchMessages = async () => {
       try {
-        const data = await getConversationMessages(conversation.id);
+        const data = await getConversationMessages(conversationId);
         setMessages(data);
         await refreshTotalUnreadCount();
       } catch (error) {
@@ -37,7 +43,7 @@ function ConversationDetail({ conversation }: ConversationDetailProps) {
       }
     };
     fetchMessages();
-  }, [conversation.id, refreshTotalUnreadCount]);
+  }, [conversationId, refreshTotalUnreadCount]);
 
   const handleMessageSent = (message: Message) => {
     setMessages((prev) => [...prev, message]);
@@ -60,20 +66,26 @@ function ConversationDetail({ conversation }: ConversationDetailProps) {
     );
   }
 
+  if (!conversation) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-3">
+        <p className="text-sm text-muted-foreground">
+          Conversation introuvable
+        </p>
+        <Button variant="outline" onClick={() => navigate("/conversations")}>
+          Retour aux conversations
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <div
-      className={cn(
-        "flex h-full flex-col",
-        "bg-background md:bg-muted",
-        !show && "hidden",
-      )}
-    >
-      {" "}
+    <div className={cn("flex h-full flex-col", "bg-background md:bg-muted")}>
       {/* Header */}
       <header className="flex items-center gap-3 border-b border-border bg-background px-4 py-3">
         {/* Back button — mobile only */}
         <button
-          onClick={() => setShow(false)}
+          onClick={() => navigate("/conversations")}
           className="cursor-pointer rounded-full p-1.5 transition-colors hover:bg-muted sm:hidden"
           aria-label="Retour aux conversations"
         >

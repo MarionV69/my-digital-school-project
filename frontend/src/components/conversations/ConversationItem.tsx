@@ -1,16 +1,15 @@
 import { User } from "lucide-react";
 import type { Conversation } from "../../types/conversations.types";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 type ConversationItemProps = {
   conversation: Conversation;
-  onSelect: () => void;
   isActive?: boolean;
 };
 
 function ConversationItem({
   conversation,
-  onSelect,
   isActive = false,
 }: ConversationItemProps) {
   // Format date relative
@@ -36,10 +35,10 @@ function ConversationItem({
   };
 
   return (
-    <button
-      onClick={onSelect}
+    <Link
+      to={`/conversations/${conversation.id}`}
       className={cn(
-        "flex w-full cursor-pointer items-center gap-3 border-b border-border px-4 py-3 transition-colors",
+        "flex w-full items-center gap-3 border-b border-border px-4 py-3 transition-colors",
         isActive ? "bg-muted" : "bg-background hover:bg-muted/50",
       )}
     >
@@ -56,7 +55,7 @@ function ConversationItem({
             <User className="size-5 text-muted-foreground" />
           </div>
         )}
-        {/* Unread badge on avatar */}
+        {/* Unread badge */}
         {conversation.unreadCount > 0 && (
           <span className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-destructive text-xs font-medium text-primary-foreground">
             {conversation.unreadCount}
@@ -75,7 +74,7 @@ function ConversationItem({
           </span>
         </div>
       </div>
-    </button>
+    </Link>
   );
 }
 

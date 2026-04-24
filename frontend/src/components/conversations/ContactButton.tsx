@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MessageCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { createConversation } from "../../api/conversations";
+import { Button } from "../ui/button";
 
 type ContactButtonProps = {
   supplierId: number;
@@ -16,9 +16,7 @@ function ContactButton({ supplierId }: ContactButtonProps) {
     setLoading(true);
     try {
       const conversation = await createConversation(supplierId);
-      navigate("/conversations", {
-        state: { conversationId: conversation.id },
-      });
+      navigate(`/conversations/${conversation.id}`);
     } catch (error) {
       console.error("Error creating conversation:", error);
       toast.error("Erreur lors de la création de la conversation");
@@ -28,14 +26,9 @@ function ContactButton({ supplierId }: ContactButtonProps) {
   };
 
   return (
-    <button
-      onClick={handleContactClick}
-      disabled={loading}
-      className="btn flex items-center gap-2"
-    >
-      <MessageCircle className="w-5 h-5" />
+    <Button onClick={handleContactClick} disabled={loading}>
       {loading ? "Chargement..." : "Contacter le fournisseur"}
-    </button>
+    </Button>
   );
 }
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   Building2,
@@ -17,7 +17,8 @@ import {
 import { useAuth } from "../hooks/useAuth";
 import { EstablishmentType } from "../types/establishments.types";
 import { cn } from "../lib/utils";
-import { useUnread } from "@/hooks/useUnreadCount";
+import { getUnreadCount } from "@/api/conversations";
+import { usePolling } from "@/hooks/usePolling";
 
 function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
   return (
@@ -90,11 +91,22 @@ function AppLayout() {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [totalUnreadCount, setTotalUnreadCount] = useState(0);
 
   const isSupplier = user?.establishmentType === EstablishmentType.SUPPLIER;
   const isRestaurant = user?.establishmentType === EstablishmentType.RESTAURANT;
 
-  const { totalUnreadCount } = useUnread();
+  const fetchUnreadCount = useCallback(async () => {
+    try {
+      const count = await getUnreadCount();
+      setTotalUnreadCount(count);
+    } catch (error) {
+      console.error("Error fetching unread count:", error);
+    }
+  }, []);
+
+  // Poll unread count every 30 seconds)
+  usePolling(fetchUnreadCount, 30_000);
 
   function handleLogout() {
     logout();
@@ -303,7 +315,12 @@ function AppLayout() {
       </header>
 
       <main>
-        <Outlet />
+        <Outlet
+          context={{
+            totalUnreadCount,
+            refreshTotalUnreadCount: fetchUnreadCount,
+          }}
+        />
       </main>
     </div>
   );

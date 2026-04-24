@@ -4,8 +4,12 @@ export function usePolling(callback: () => void, intervalMs: number) {
   useEffect(() => {
     callback();
 
-    const interval = setInterval(callback, intervalMs);
+    const interval = setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      callback();
+    }, intervalMs);
 
+    // Refetch immediately when the tab becomes active again
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         callback();
