@@ -8,7 +8,7 @@ export interface Supplier {
     labels: string[];
     productCategories: string[];
     logoUrl: string[];
-    coverPhotosUrl: string;
+    coverPhotoUrl: string;
     reviewsCount: number;
     averageRating: number;
 }
