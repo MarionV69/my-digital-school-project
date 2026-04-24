@@ -31,11 +31,11 @@ export default function SearchBar({onSearch}: SearchBarProps) {
     }
 
     return(
-        <div className="flex flex-row justify-between items-center bg-card w-full rounded-lg">
+        <div className="flex flex-row justify-between items-center bg-card/80 w-full rounded-lg group transition-colors duration-1000 hover:bg-card">
 
             {/* Champ : nom du fournisseur */}
-            <div className="flex flex-row gap-3 py-2.5 px-4 w-full">
-                <Search size={18} className="text-muted-foreground"></Search>
+            <div className="flex flex-row gap-2 px-4 w-full items-center">
+                <Search size={16} className="text-muted-foreground transition-trasnform duration-1000 group-hover:scale-110"></Search>
                 <input
                     type="text"
                     placeholder="Nom du fournisseur"
@@ -46,14 +46,14 @@ export default function SearchBar({onSearch}: SearchBarProps) {
                 </input>
             </div>
 
-            <div className="flex flex-row gap-3 px-2.5 relative">
+            <div className="flex flex-row gap-3 relative">
 
                 {/* Séparateur vertical */}
-                <div className="w-px bg-muted-foreground/50"></div>
+                <div className="w-px bg-muted-foreground/20"></div>
 
                 {/* Champ: localisation */}
-                <div className="flex items-center gap-1">
-                    <MapPin size={18} className="text-primary"></MapPin>
+                <div className="flex items-center gap-2">
+                    <MapPin size={16} className="text-primary"></MapPin>
                     <input
                         type="text"
                         value={city}
@@ -65,7 +65,7 @@ export default function SearchBar({onSearch}: SearchBarProps) {
                 </div>
 
                 {/* Boutton Rechercher */}
-                <Button
+                <Button className="rounded-l-none"
                     onClick={onSubmit}
                 >Rechercher</Button>
                 

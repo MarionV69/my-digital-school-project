@@ -90,7 +90,9 @@ export class SuppliersService {
     }
 
     if (filters.city) {
-      query.andWhere('establishment.city = :city', { city: filters.city });
+      query.andWhere('establishment.city LIKE :city', {
+        city: `%${filters.city}%`,
+      });
     }
 
     if (filters.postalCode) {
