@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   Building2,
@@ -17,6 +17,8 @@ import {
 import { useAuth } from "../hooks/useAuth";
 import { EstablishmentType } from "../types/establishments.types";
 import { cn } from "../lib/utils";
+import { getUnreadCount } from "@/api/conversations";
+import { usePolling } from "@/hooks/usePolling";
 
 function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
   return (
@@ -75,7 +77,7 @@ function MessagesIcon({
     <Link to="/conversations" className={cn("relative", className)}>
       <Mail className="size-8 text-muted-foreground" />
       {count > 0 && (
-        <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+        <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-destructive text-xs font-medium text-primary-foreground">
           {count}
         </span>
       )}
@@ -89,12 +91,22 @@ function AppLayout() {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [totalUnreadCount, setTotalUnreadCount] = useState(0);
 
   const isSupplier = user?.establishmentType === EstablishmentType.SUPPLIER;
   const isRestaurant = user?.establishmentType === EstablishmentType.RESTAURANT;
 
-  // TODO: connect to real unread count from API
-  const unreadCount = 2;
+  const fetchUnreadCount = useCallback(async () => {
+    try {
+      const count = await getUnreadCount();
+      setTotalUnreadCount(count);
+    } catch (error) {
+      console.error("Error fetching unread count:", error);
+    }
+  }, []);
+
+  // Poll unread count every 30 seconds)
+  usePolling(fetchUnreadCount, 30_000);
 
   function handleLogout() {
     logout();
@@ -128,7 +140,7 @@ function AppLayout() {
 
           {/* Desktop right actions */}
           <div className="hidden items-center gap-4 md:flex">
-            <MessagesIcon count={unreadCount} />
+            <MessagesIcon count={totalUnreadCount} />
 
             {/* User icon and dropdown */}
             <div className="relative">
@@ -195,7 +207,7 @@ function AppLayout() {
 
           {/* Mobile right actions */}
           <div className="flex items-center gap-3 md:hidden">
-            <MessagesIcon count={unreadCount} />
+            <MessagesIcon count={totalUnreadCount} />
             <button
               onClick={() => setMobileMenuOpen((v) => !v)}
               className="cursor-pointer"
@@ -254,9 +266,9 @@ function AppLayout() {
                 icon={
                   <span className="relative">
                     <Mail className="size-4" />
-                    {unreadCount > 0 && (
+                    {totalUnreadCount > 0 && (
                       <span className="absolute -right-1.5 -top-1.5 flex size-3.5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-                        {unreadCount}
+                        {totalUnreadCount}
                       </span>
                     )}
                   </span>
@@ -303,7 +315,12 @@ function AppLayout() {
       </header>
 
       <main>
-        <Outlet />
+        <Outlet
+          context={{
+            totalUnreadCount,
+            refreshTotalUnreadCount: fetchUnreadCount,
+          }}
+        />
       </main>
     </div>
   );

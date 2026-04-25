@@ -17,11 +17,38 @@ export const createConversation = async (
 
 export const sendMessage = async (
   conversationId: number,
-  content: string,
+  { content, attachment }: { content?: string; attachment?: File },
 ): Promise<Message> => {
+  const formData = new FormData();
+
+  if (content?.trim()) {
+    formData.append("content", content);
+  }
+  if (attachment) {
+    formData.append("attachment", attachment);
+  }
+
   const response = await api.post<Message>(
     `/conversations/${conversationId}/messages`,
-    { content },
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } },
+  );
+
+  return response.data;
+};
+
+export const sendAttachment = async (
+  conversationId: number,
+  messageId: number,
+  attachment: File,
+): Promise<MessageAttachment> => {
+  const formData = new FormData();
+  formData.append("attachment", attachment);
+
+  const response = await api.post<MessageAttachment>(
+    `/conversations/${conversationId}/messages/${messageId}/attachments`,
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } },
   );
   return response.data;
 };
@@ -41,25 +68,6 @@ export const getConversationMessages = async (
 ): Promise<Message[]> => {
   const response = await api.get<Message[]>(
     `/conversations/${conversationId}/messages`,
-  );
-  return response.data;
-};
-
-export const sendAttachment = async (
-  messageId: number,
-  file: File,
-): Promise<MessageAttachment> => {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const response = await api.post<MessageAttachment>(
-    `/messages/${messageId}/attachments`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    },
   );
   return response.data;
 };

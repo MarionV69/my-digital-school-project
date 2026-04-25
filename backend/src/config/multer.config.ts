@@ -23,10 +23,18 @@ const fileFilter = (
   cb(null, true);
 };
 
-export const multerOptions = {
+export const attachmentMulterOptions = {
   storage: memoryStorage(),
   limits: {
-    fileSize: 20 * 1024 * 1024, // 20 Mo
+    fileSize: 10 * 1024 * 1024,
+  },
+  fileFilter,
+};
+
+export const documentMulterOptions = {
+  storage: memoryStorage(),
+  limits: {
+    fileSize: 15 * 1024 * 1024,
   },
   fileFilter,
 };

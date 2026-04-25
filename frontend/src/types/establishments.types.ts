@@ -5,3 +5,10 @@ export const EstablishmentType = {
 
 export type EstablishmentType =
   (typeof EstablishmentType)[keyof typeof EstablishmentType];
+
+export type EstablishmentPreview = {
+  legalName: string;
+  city: string;
+  website: string | null;
+  avatarUrl: string | null;
+};

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MessageCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { createConversation } from "../../api/conversations";
+import { Button } from "../ui/button";
 
 type ContactButtonProps = {
   supplierId: number;
@@ -26,14 +26,9 @@ function ContactButton({ supplierId }: ContactButtonProps) {
   };
 
   return (
-    <button
-      onClick={handleContactClick}
-      disabled={loading}
-      className="btn flex items-center gap-2"
-    >
-      <MessageCircle className="w-5 h-5" />
+    <Button onClick={handleContactClick} disabled={loading}>
       {loading ? "Chargement..." : "Contacter le fournisseur"}
-    </button>
+    </Button>
   );
 }
 

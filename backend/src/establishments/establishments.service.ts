@@ -128,15 +128,15 @@ export class EstablishmentsService {
     }
 
     // Extraction de l'URL du logo depuis les documents liés à l'établissement
-    const { logoUrl } = this.documentsService.getAllDocumentUrls(
+    const { logoUrl, coverPhotoUrl } = this.documentsService.getAllDocumentUrls(
       establishment.documents ?? [],
     );
 
     return {
       legalName: establishment.legalName,
       city: establishment.city,
-      website: establishment.website ?? undefined,
-      logoUrl,
+      website: establishment.website ?? null,
+      avatarUrl: coverPhotoUrl ?? logoUrl ?? null,
     };
   }
 

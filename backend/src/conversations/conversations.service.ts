@@ -14,6 +14,8 @@ import { UnreadCountResponseDto } from './dto/unread-count-response.dto';
 import { FilesService } from '../files/files.service';
 import { MessageAttachmentResponseDto } from './dto/message-attachments-response.dto';
 import { MessageResponseDto } from './dto/message-response.dto';
+import { DocumentsService } from 'src/documents/documents.service';
+import { StoredFile } from 'src/files/entities/stored-file.entity';
 
 @Injectable()
 export class ConversationsService {
@@ -24,6 +26,7 @@ export class ConversationsService {
     @InjectRepository(Establishment)
     private establishmentsRepository: Repository<Establishment>,
     private readonly filesService: FilesService,
+    private readonly documentsService: DocumentsService,
   ) {}
 
   // Creates a new conversation or returns existing one if already exists
@@ -58,11 +61,14 @@ export class ConversationsService {
     return this.conversationsRepository.save(conversation);
   }
 
+  // Creates a message in a conversation with an optional attachment.
+  // Either content or attachment must be provided.
   async sendMessage(
     conversationId: number,
     establishmentId: number,
     establishmentType: EstablishmentType,
     content: string,
+    attachment: Express.Multer.File | null,
   ): Promise<MessageResponseDto> {
     const conversation = await this.conversationsRepository.findOne({
       where: { id: conversationId },
@@ -72,11 +78,18 @@ export class ConversationsService {
 
     this.checkIsParticipant(conversation, establishmentId, establishmentType);
 
+    let storedAttachment: StoredFile | null = null;
+
+    if (attachment) {
+      storedAttachment = await this.filesService.create(attachment, 'private');
+    }
+
     const message = this.messagesRepository.create({
       conversationId,
       content,
       senderType: establishmentType,
       isReadByRecipient: false,
+      files: storedAttachment ? [storedAttachment] : [],
     });
 
     await this.messagesRepository.save(message);
@@ -92,8 +105,54 @@ export class ConversationsService {
       content: message.content,
       sentAt: message.sentAt,
       isReadByRecipient: message.isReadByRecipient,
-      attachments: [],
+      attachments: storedAttachment
+        ? [
+            this.buildAttachmentResponse(
+              storedAttachment,
+              conversationId,
+              message.id,
+            ),
+          ]
+        : [],
     };
+  }
+
+  // Uploads and attaches a file to an existing message.
+  async sendAttachment(
+    conversationId: number,
+    messageId: number,
+    establishmentId: number,
+    establishmentType: EstablishmentType,
+    attachment: Express.Multer.File,
+  ): Promise<MessageAttachmentResponseDto> {
+    const message = await this.messagesRepository.findOne({
+      where: { id: messageId },
+      relations: ['conversation', 'files'],
+    });
+
+    if (!message) throw new NotFoundException('Message not found');
+
+    this.checkMessageBelongsToConversation(message, conversationId);
+
+    this.checkIsParticipant(
+      message.conversation,
+      establishmentId,
+      establishmentType,
+    );
+
+    const storedAttachment = await this.filesService.create(
+      attachment,
+      'private',
+    );
+
+    message.files.push(storedAttachment);
+    await this.messagesRepository.save(message);
+
+    return this.buildAttachmentResponse(
+      storedAttachment,
+      conversationId,
+      messageId,
+    );
   }
 
   async getConversations(
@@ -105,12 +164,18 @@ export class ConversationsService {
         ? EstablishmentType.SUPPLIER
         : EstablishmentType.RESTAURANT;
 
+    const otherParticipantKey = otherParticipantType.toLowerCase();
+
     const conversations = await this.conversationsRepository.find({
       where:
         establishmentType === EstablishmentType.RESTAURANT
           ? { restaurantId: establishmentId }
           : { supplierId: establishmentId },
-      relations: [otherParticipantType.toLowerCase()],
+      relations: [
+        otherParticipantKey,
+        `${otherParticipantKey}.documents`,
+        `${otherParticipantKey}.documents.file`,
+      ],
       order: { lastMessageAt: 'DESC' },
     });
 
@@ -140,13 +205,19 @@ export class ConversationsService {
           ? conversation.restaurant
           : conversation.supplier;
 
+      const { logoUrl, coverPhotoUrl } =
+        this.documentsService.getAllDocumentUrls(
+          otherParticipant.documents ?? [],
+        );
+
       return {
         id: conversation.id,
-        lastMessageAt: conversation.lastMessageAt as Date,
+        lastMessageAt: conversation.lastMessageAt,
         unreadCount: unreadCountMap[conversation.id] ?? 0,
         otherParticipant: {
           id: otherParticipant.id,
           name: otherParticipant.tradeName ?? otherParticipant.legalName,
+          avatarUrl: coverPhotoUrl ?? logoUrl ?? null,
         },
       };
     });
@@ -191,13 +262,9 @@ export class ConversationsService {
       content: message.content,
       sentAt: message.sentAt,
       isReadByRecipient: message.isReadByRecipient,
-      attachments: message.files.map((file) => ({
-        id: file.id,
-        originalFilename: file.originalFilename,
-        mimeType: file.mimeType,
-        size: file.size,
-        endpoint: `/messages/${message.id}/attachments/${file.id}`, // Endpoint to get signed URL after verifying conversation participation
-      })),
+      attachments: message.files.map((file) =>
+        this.buildAttachmentResponse(file, conversationId, message.id),
+      ),
     }));
   }
 
@@ -222,43 +289,11 @@ export class ConversationsService {
     return { count };
   }
 
-  async sendAttachment(
-    messageId: number,
-    establishmentId: number,
-    establishmentType: EstablishmentType,
-    file: Express.Multer.File,
-  ): Promise<MessageAttachmentResponseDto> {
-    const message = await this.messagesRepository.findOne({
-      where: { id: messageId },
-      relations: ['conversation', 'files'],
-    });
-
-    if (!message) throw new NotFoundException('Message not found');
-
-    this.checkIsParticipant(
-      message.conversation,
-      establishmentId,
-      establishmentType,
-    );
-
-    const storedFile = await this.filesService.create(file, 'private');
-
-    message.files.push(storedFile);
-    await this.messagesRepository.save(message);
-
-    return {
-      id: storedFile.id,
-      originalFilename: storedFile.originalFilename,
-      mimeType: storedFile.mimeType,
-      size: storedFile.size,
-      endpoint: `/messages/${messageId}/attachments/${storedFile.id}`,
-    };
-  }
-
-  // Get signed URL for private attachment after verifying conversation participation
+  // Returns a temporary S3 signed URL (1 hour) after verifying conversation participation
   async getAttachmentSignedUrl(
+    conversationId: number,
     messageId: number,
-    fileId: number,
+    attachmentId: number,
     establishmentId: number,
     establishmentType: EstablishmentType,
   ): Promise<{ url: string }> {
@@ -269,16 +304,17 @@ export class ConversationsService {
 
     if (!message) throw new NotFoundException('Message not found');
 
+    this.checkMessageBelongsToConversation(message, conversationId);
+
     this.checkIsParticipant(
       message.conversation,
       establishmentId,
       establishmentType,
     );
 
-    const file = message.files.find((f) => f.id === fileId);
+    const file = message.files.find((f) => f.id === attachmentId);
     if (!file) throw new NotFoundException('Attachment not found');
 
-    // Signed URL expires in 1 hour
     const signedUrl = await this.filesService.getPrivateFileSignedUrl(
       file.path,
     );
@@ -302,5 +338,31 @@ export class ConversationsService {
       throw new ForbiddenException(
         'You are not a participant of this conversation',
       );
+  }
+
+  // Ensures the message belongs to the conversation
+  private checkMessageBelongsToConversation(
+    message: Message,
+    conversationId: number,
+  ): void {
+    if (message.conversationId !== conversationId) {
+      throw new ForbiddenException(
+        'Message does not belong to this conversation',
+      );
+    }
+  }
+
+  private buildAttachmentResponse(
+    file: StoredFile,
+    conversationId: number,
+    messageId: number,
+  ): MessageAttachmentResponseDto {
+    return {
+      id: file.id,
+      originalFilename: file.originalFilename,
+      mimeType: file.mimeType,
+      size: file.size,
+      endpoint: `/conversations/${conversationId}/messages/${messageId}/attachments/${file.id}`,
+    };
   }
 }
