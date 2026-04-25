@@ -56,7 +56,6 @@ function HomePage() {
       loadSuppliers();
   }, [search, city, filters]); 
 
-
     // Quand la SearchBar soumet
     function handleSearch(search: string, city: string) {
       setSearch(search);
