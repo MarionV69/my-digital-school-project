@@ -177,7 +177,7 @@ function LoginForm() {
       {/* Separator + register link */}
       <div className="relative mt-10">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-border" />
+          <span className="w-full border-t border-muted-foreground/50" />
         </div>
         <div className="relative flex justify-center text-xs text-muted-foreground">
           <span className="bg-background px-2">

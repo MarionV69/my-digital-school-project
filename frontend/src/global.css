@@ -5,38 +5,39 @@
 /* Définition des variables */
 :root {
   /* Général */
-  --background: oklch(100% 0 0);          /* #ffffff */
-  --foreground: oklch(25% 0.01 0);        /* #333333 */
+  --background: oklch(100% 0 0); /* #ffffff */
+  --foreground: oklch(25% 0.01 0); /* #333333 */
 
   /* Card */
-  --card: oklch(96% 0.003 270);         /* #f2f2f7 */
-  --card-foreground: oklch(25% 0.01 0);   /* #333333 */
+  --card: oklch(96% 0.003 270); /* #f2f2f7 */
+  --card-foreground: oklch(25% 0.01 0); /* #333333 */
 
   /* Autres */
   --muted: oklch(96% 0.003 270); /* #f2f2f7 */
-  --muted-foreground: oklch(65% 0.01 0);  /* #9e9e9e */
-  --secondary: oklch(96% 0.003 270);  /* #f2f2f7 */
-  --secondary-foreground: oklch(25% 0.01 0);  /* #333333 */
+  --muted-foreground: oklch(65% 0.01 0); /* #9e9e9e */
+  --secondary: oklch(96% 0.003 270); /* #f2f2f7 */
+  --secondary-foreground: oklch(25% 0.01 0); /* #333333 */
 
   /* Le Bon Fournisseur */
-  --primary: oklch(18% 0.07 15);          /* #3e1013 */
+  --primary: oklch(18% 0.07 15); /* #3e1013 */
   --primary-foreground: oklch(96% 0.02 95); /* #f3f2e0 crème */
-  --primary-mid: oklch(28% 0.09 15);  /* #7a282a */
+  --primary-mid: oklch(28% 0.09 15); /* #7a282a */
 
   /* Erreurs */
   --destructive: oklch(0.577 0.245 27.325);
 
   /* Inputs */
-  --input: oklch(96% 0.003 270);         /* #f2f2f7 */
-  --ring: oklch(65% 0.01 0);              /* #9e9e9e */
-  --popover: oklch(100% 0 0);             /* #ffffff */
-  --popover-foreground: oklch(25% 0.01 0);/* #333333 */
+  --input: oklch(96% 0.003 270); /* #f2f2f7 */
+  --input-border: oklch(82% 0.005 270); /* #d1d1d6 */
+  --ring: oklch(65% 0.01 0); /* #9e9e9e */
+  --popover: oklch(100% 0 0); /* #ffffff */
+  --popover-foreground: oklch(25% 0.01 0); /* #333333 */
 
   /* Radius */
   --radius: 0.5rem;
 
   /* Border */
-  --border: oklch(96% 0.003 270);         /* #f2f2f7 */
+  --border: oklch(96% 0.003 270); /* #f2f2f7 */
 }
 
 /* Déclaration des tokens de design à Tailwind v4 */
@@ -47,7 +48,6 @@
 }
 
 @theme inline {
-
   /* Général */
   --color-foreground: var(--foreground);
   --color-background: var(--background);
@@ -73,6 +73,7 @@
   /* Inputs */
   --color-ring: var(--ring);
   --color-input: var(--input);
+  --color-input-border: var(--input-border);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
 
@@ -116,4 +117,3 @@
     @apply border-border outline-ring/50;
   }
 }
-

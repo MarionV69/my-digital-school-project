@@ -8,8 +8,17 @@ import {
   isNotEmptyString,
   validatePassword,
 } from "../../utils/validation";
-import Input from "../common/Input";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Mail } from "lucide-react";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "../ui/field";
+import { Input } from "../ui/input";
+import { Checkbox } from "../ui/checkbox";
+import { Button } from "../ui/button";
 
 type RegisterFormErrors = {
   firstName?: string;
@@ -17,6 +26,7 @@ type RegisterFormErrors = {
   email?: string;
   password?: string;
   confirmPassword?: string;
+  acceptTerms?: string;
   general?: string;
 };
 
@@ -32,6 +42,7 @@ function RegisterForm() {
     email: "",
     password: "",
     confirmPassword: "",
+    acceptTerms: false,
   });
   const [errors, setErrors] = useState<RegisterFormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -54,12 +65,18 @@ function RegisterForm() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const { firstName, lastName, email, password, confirmPassword } = formData;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword,
+      acceptTerms,
+    } = formData;
 
     // Reset errors
     setErrors({});
 
-    // Validate form data
     const newErrors: RegisterFormErrors = {};
 
     // First name and last name validation
@@ -100,6 +117,12 @@ function RegisterForm() {
       newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
     }
 
+    // Accept terms validation
+    if (!acceptTerms) {
+      newErrors.acceptTerms =
+        "Vous devez accepter les conditions d'utilisation.";
+    }
+
     // If errors, stop here
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -116,9 +139,9 @@ function RegisterForm() {
         email,
         password,
         role: "OWNER",
+        acceptTerms,
       });
 
-      toast.success("Inscription réussie, bienvenue !");
       navigate("/onboarding/create-establishment");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -134,100 +157,199 @@ function RegisterForm() {
   return (
     <div>
       {errors.general && (
-        <p className="text-red-600 text-center mb-4">{errors.general}</p>
+        <p className="text-destructive text-center mb-2">{errors.general}</p>
       )}
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-4 max-w-md mx-auto"
-        noValidate
-      >
-        <Input
-          label="Prénom"
-          id="firstName"
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          disabled={isLoading}
-          required
-          error={errors.firstName}
-          autoFocus={true}
-        />
-        <Input
-          label="Nom"
-          id="lastName"
-          name="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          disabled={isLoading}
-          required
-          error={errors.lastName}
-        />
-        <Input
-          label="Email"
-          id="email"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          disabled={isLoading}
-          required
-          error={errors.email}
-        />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
+        <FieldGroup>
+          {/* First Name + Last Name */}
+          <div className="grid grid-cols-2 gap-4">
+            <Field data-invalid={!!errors.firstName}>
+              <FieldLabel htmlFor="firstName">Prénom</FieldLabel>
+              <Input
+                id="firstName"
+                name="firstName"
+                placeholder="Marie"
+                value={formData.firstName}
+                onChange={handleChange}
+                disabled={isLoading}
+                autoFocus
+                aria-invalid={!!errors.firstName}
+              />
+              <FieldError>{errors.firstName}</FieldError>
+            </Field>
 
-        <div className="relative">
-          <Input
-            label="Mot de passe"
-            id="password"
-            name="password"
-            type={showPassword ? "text" : "password"}
-            value={formData.password}
-            onChange={handleChange}
-            disabled={isLoading}
-            required
-            error={errors.password}
-          />
-          <small>
-            Minimum 12 caractères dont 1 majuscule, 1 chiffre et 1 caractère
-            spécial
-          </small>
-          <button
-            type="button"
-            className="text-sm cursor-pointer absolute right-4 top-10.5"
-            onClick={() => setShowPassword((prev) => !prev)}
-          >
-            {showPassword ? <EyeOff /> : <Eye />}
-          </button>
-        </div>
-        <div className="relative">
-          <Input
-            label="Confirmer le mot de passe"
-            id="confirmPassword"
-            name="confirmPassword"
-            type={showConfirmPassword ? "text" : "password"}
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            disabled={isLoading}
-            required
-            error={errors.confirmPassword}
-          />
-          <button
-            type="button"
-            className="text-sm cursor-pointer absolute right-4 top-10.5"
-            onClick={() => setShowConfirmPassword((prev) => !prev)}
-          >
-            {showConfirmPassword ? <EyeOff /> : <Eye />}
-          </button>
-        </div>
+            <Field data-invalid={!!errors.lastName}>
+              <FieldLabel htmlFor="lastName">Nom</FieldLabel>
+              <Input
+                id="lastName"
+                name="lastName"
+                placeholder="Dupont"
+                value={formData.lastName}
+                onChange={handleChange}
+                disabled={isLoading}
+                aria-invalid={!!errors.lastName}
+              />
+              <FieldError>{errors.lastName}</FieldError>
+            </Field>
+          </div>
 
-        <button type="submit" disabled={isLoading} className="btn my-4 mx-auto">
-          {isLoading ? "Inscription..." : "S'inscrire"}
-        </button>
+          {/* Email */}
+          <Field data-invalid={!!errors.email}>
+            <FieldLabel htmlFor="email">Adresse e-mail</FieldLabel>
+            <div className="relative">
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="vous@exemple.fr"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={isLoading}
+                aria-invalid={!!errors.email}
+                className="pr-10"
+              />
+              <Mail className="absolute right-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            </div>
+            <FieldError>{errors.email}</FieldError>
+          </Field>
+
+          {/* Password */}
+          <Field data-invalid={!!errors.password}>
+            <FieldLabel htmlFor="password">Mot de passe</FieldLabel>
+            <div className="relative">
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                disabled={isLoading}
+                aria-invalid={!!errors.password}
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-foreground"
+                aria-label={
+                  showPassword
+                    ? "Masquer le mot de passe"
+                    : "Afficher le mot de passe"
+                }
+              >
+                {showPassword ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
+              </button>
+            </div>
+            <FieldDescription>
+              Minimum 12 caractères dont 1 majuscule, 1 chiffre et 1 caractère
+              spécial
+            </FieldDescription>
+            <FieldError>{errors.password}</FieldError>
+          </Field>
+
+          {/* Confirm password */}
+          <Field data-invalid={!!errors.confirmPassword}>
+            <FieldLabel htmlFor="confirmPassword">
+              Confirmer le mot de passe
+            </FieldLabel>
+            <div className="relative">
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="••••••••••••"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                disabled={isLoading}
+                aria-invalid={!!errors.confirmPassword}
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-foreground"
+                aria-label={
+                  showConfirmPassword
+                    ? "Masquer le mot de passe"
+                    : "Afficher le mot de passe"
+                }
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
+              </button>
+            </div>
+            <FieldError>{errors.confirmPassword}</FieldError>
+          </Field>
+
+          {/* CGU */}
+          <Field data-invalid={!!errors.acceptTerms} orientation="horizontal">
+            <Checkbox
+              id="acceptTerms"
+              checked={formData.acceptTerms}
+              onCheckedChange={(checked) => {
+                setFormData((prev) => ({ ...prev, acceptTerms: !!checked }));
+                if (errors.acceptTerms) {
+                  setErrors((prev) => ({ ...prev, acceptTerms: undefined }));
+                }
+              }}
+              disabled={isLoading}
+              aria-invalid={!!errors.acceptTerms}
+            />
+            <div className="flex flex-col gap-1">
+              <FieldLabel
+                htmlFor="acceptTerms"
+                className="font-normal text-sm leading-snug"
+              >
+                J'accepte les{" "}
+                <Link
+                  to="/terms"
+                  className="text-primary-mid underline hover:text-primary"
+                >
+                  conditions générales d'utilisation
+                </Link>{" "}
+                et la{" "}
+                <Link
+                  to="/privacy"
+                  className="text-primary-mid underline hover:text-primary"
+                >
+                  politique de confidentialité
+                </Link>
+              </FieldLabel>
+              <FieldError>{errors.acceptTerms}</FieldError>
+            </div>
+          </Field>
+        </FieldGroup>
+
+        {/* Submit */}
+        <Button type="submit" disabled={isLoading} className="w-full mt-3">
+          {isLoading ? "Inscription..." : "Continuer"}
+        </Button>
       </form>
 
-      <p className="text-center">
-        Déjà un compte ?{" "}
-        <Link to="/login" className="underline font-semibold">
-          Se connecter
+      {/* Separator + login link */}
+      <div className="relative mt-10">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-muted-foreground/50" />
+        </div>
+        <div className="relative flex justify-center text-xs text-muted-foreground">
+          <span className="bg-background px-2">Déjà membre ?</span>
+        </div>
+      </div>
+
+      <p className="text-center text-sm mt-3">
+        <Link
+          to="/login"
+          className="font-medium text-foreground hover:underline"
+        >
+          Connexion
         </Link>
       </p>
     </div>
