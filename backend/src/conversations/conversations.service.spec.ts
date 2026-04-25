@@ -5,6 +5,7 @@ import { Conversation } from './entities/conversation.entity';
 import { Message } from './entities/message.entity';
 import { Establishment } from 'src/establishments/entities/establishment.entity';
 import { FilesService } from 'src/files/files.service';
+import { DocumentsService } from 'src/documents/documents.service';
 
 describe('ConversationsService', () => {
   let service: ConversationsService;
@@ -19,6 +20,10 @@ describe('ConversationsService', () => {
         {
           provide: FilesService,
           useValue: { create: jest.fn(), getPrivateFileSignedUrl: jest.fn() },
+        },
+        {
+          provide: DocumentsService,
+          useValue: { getAllDocumentUrls: jest.fn() },
         },
       ],
     }).compile();

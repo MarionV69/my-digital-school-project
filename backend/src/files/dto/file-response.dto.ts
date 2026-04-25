@@ -14,8 +14,7 @@ export class FileResponseDto {
   size: number;
 
   @ApiProperty({
-    example:
-      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/6de0c398-ea33-445b-aa55-84fe94ed3907.jpg',
+    example: 'https://bucket.s3.amazonaws.com/public/logo.jpg',
   })
   url: string;
 }

@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class EstablishmentPreviewDto {
   @ApiProperty({ example: 'Le Gourmet' })
@@ -7,16 +7,15 @@ export class EstablishmentPreviewDto {
   @ApiProperty({ example: 'Paris' })
   city: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     example: 'https://legourmetbistrot.fr',
-    required: false,
-  })
-  website?: string | null;
-
-  @ApiPropertyOptional({
-    example:
-      'https://le-bon-fournisseur-files.s3.eu-west-3.amazonaws.com/public/logo.jpg',
     nullable: true,
   })
-  logoUrl?: string | null;
+  website: string | null;
+
+  @ApiProperty({
+    example: 'https://bucket.s3.amazonaws.com/public/logo.jpg',
+    nullable: true,
+  })
+  avatarUrl: string | null;
 }

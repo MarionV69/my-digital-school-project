@@ -31,7 +31,7 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
-import { multerOptions } from '../config/multer.config';
+import { documentMulterOptions } from '../config/multer.config';
 import { DocumentCategory } from '../documents/enums/document.enum';
 import { DocumentResponseDto } from '../documents/dto/document-response.dto';
 import { DocumentsService } from './documents.service';
@@ -76,7 +76,7 @@ export class DocumentsController {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('file', multerOptions))
+  @UseInterceptors(FileInterceptor('file', documentMulterOptions))
   async upload(
     @CurrentEstablishmentUser() user: UserWithEstablishment,
     @UploadedFile(

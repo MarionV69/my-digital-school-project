@@ -4,7 +4,6 @@ import LoginPage from "../pages/auth/LoginPage";
 import HomePage from "../pages/public/HomePage";
 import NotFoundPage from "../pages/NotFoundPage";
 import CreateEstablishmentPage from "../pages/onboarding/CreateEstablishmentPage";
-import ConversationsPage from "../pages/shared/ConversationsPage";
 import StylePage from "@/pages/StylePage";
 import SupplierDetailPage from "../pages/public/SupplierDetailPage";
 import HowItWorksPage from "../pages/public/HowItWorksPage";
@@ -20,6 +19,9 @@ import SettingsPage from "@/pages/shared/SettingsPage";
 
 import PublicLayout from "../layouts/PublicLayout";
 import AppLayout from "../layouts/AppLayout";
+import ConversationsLayout from "@/pages/shared/ConversationsLayout";
+import ConversationsEmptyState from "@/pages/shared/ConversationsEmptyState";
+import ConversationDetailPage from "@/pages/shared/ConversationDetailPage";
 
 // import ProtectedRoute from "./ProtectedRoute";
 // import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
@@ -83,7 +85,14 @@ export const router = createBrowserRouter([
             children: [
               // Shared pages
               { path: "/profile", Component: ProfilePage },
-              { path: "/conversations", Component: ConversationsPage },
+              {
+                path: "/conversations",
+                Component: ConversationsLayout,
+                children: [
+                  { index: true, Component: ConversationsEmptyState },
+                  { path: ":id", Component: ConversationDetailPage },
+                ],
+              },
               { path: "/settings", Component: SettingsPage },
 
               // Restaurant routes (Establishment type must be RESTAURANT)
