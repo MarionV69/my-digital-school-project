@@ -3,16 +3,27 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { createConversation } from "../../api/conversations";
 import { Button } from "../ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { LockKeyhole } from "lucide-react";
 
 type ContactButtonProps = {
   supplierId: number;
 };
 
 function ContactButton({ supplierId }: ContactButtonProps) {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleContactClick = async () => {
+    if (!user) {
+      toast("Connectez-vous pour contacter ce fournisseur", {
+        id: "contact-login",
+        className: "text-primary border-2 border-primary-mid",
+        icon: <LockKeyhole className="size-4 text-primary-mid" />,
+      });
+      return;
+    }
     setLoading(true);
     try {
       const conversation = await createConversation(supplierId);

@@ -16,14 +16,15 @@ import ProfilePage from "../pages/shared/ProfilePage";
 import FavoritesPage from "../pages/restaurant/FavoritesPage";
 import StatisticsPage from "../pages/supplier/StatisticsPage";
 import SettingsPage from "@/pages/shared/SettingsPage";
-
-import PublicLayout from "../layouts/PublicLayout";
-import AppLayout from "../layouts/AppLayout";
 import ConversationsLayout from "@/pages/shared/ConversationsLayout";
 import ConversationsEmptyState from "@/pages/shared/ConversationsEmptyState";
 import ConversationDetailPage from "@/pages/shared/ConversationDetailPage";
 
-// import ProtectedRoute from "./ProtectedRoute";
+import PublicLayout from "../layouts/PublicLayout";
+import AppLayout from "../layouts/AppLayout";
+import AuthLayout from "@/layouts/AuthLayout";
+
+import ProtectedRoute from "./ProtectedRoute";
 // import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
 // import RestaurantRoute from "./RestaurantRoute";
 // import SupplierRoute from "./SupplierRoute";
@@ -43,8 +44,6 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", Component: HomePage },
       { path: "/suppliers/:id", Component: SupplierDetailPage },
-      { path: "/login", Component: LoginPage },
-      { path: "/register", Component: RegisterPage },
       { path: "/how-it-works", Component: HowItWorksPage },
       { path: "/legal", Component: LegalPage },
       { path: "/privacy", Component: PrivacyPage },
@@ -58,60 +57,64 @@ export const router = createBrowserRouter([
     Component: StylePage,
   },
 
-  // Protected routes (User must be authenticated)
+  // Auth and Onboarding routes with AuthLayout
   {
-    // Component: ProtectedRoute, // A DECOMMENTER LORSQUE LES ROUTES RESTAURANT ET SUPPLIER SERONT EN PLACE
+    Component: AuthLayout,
     children: [
-      // Onboarding
-      {
-        path: "/onboarding/create-establishment",
-        Component: CreateEstablishmentPage,
-      },
-      {
-        path: "/onboarding/supplier-profile",
-        Component: SupplierProfilePage,
-      },
-      {
-        path: "/onboarding/confirmation",
-        Component: ConfirmationPage,
-      },
+      { path: "/login", Component: LoginPage },
+      { path: "/register", Component: RegisterPage },
 
-      // Establishment required routes with AppLayout
+      // Onboarding with Protected routes (User must be authenticated)
       {
-        // Component: EstablishmentRequiredRoute, // A DECOMMENTER LORSQUE LES ROUTES RESTAURANT ET SUPPLIER SERONT EN PLACE
+        Component: ProtectedRoute,
         children: [
           {
-            Component: AppLayout,
+            path: "/onboarding/create-establishment",
+            Component: CreateEstablishmentPage,
+          },
+          {
+            path: "/onboarding/supplier-profile",
+            Component: SupplierProfilePage,
+          },
+          { path: "/onboarding/confirmation", Component: ConfirmationPage },
+        ],
+      },
+    ],
+  },
+
+  // Establishment required routes with AppLayout
+  {
+    // Component: EstablishmentRequiredRoute, // A DECOMMENTER LORSQUE LES ROUTES RESTAURANT ET SUPPLIER SERONT EN PLACE
+    children: [
+      {
+        Component: AppLayout,
+        children: [
+          // Shared pages
+          { path: "/profile", Component: ProfilePage },
+          {
+            path: "/conversations",
+            Component: ConversationsLayout,
             children: [
-              // Shared pages
-              { path: "/profile", Component: ProfilePage },
-              {
-                path: "/conversations",
-                Component: ConversationsLayout,
-                children: [
-                  { index: true, Component: ConversationsEmptyState },
-                  { path: ":id", Component: ConversationDetailPage },
-                ],
-              },
-              { path: "/settings", Component: SettingsPage },
-
-              // Restaurant routes (Establishment type must be RESTAURANT)
-              {
-                // Component: RestaurantRoute,  // A DECOMMENTER LORSQUE LES ROUTES RESTAURANTS SERONT EN PLACE
-                children: [
-                  { path: "/suppliers", Component: HomePage },
-                  { path: "/favorites", Component: FavoritesPage },
-                ],
-              },
-
-              // Supplier routes (Establishment type must be SUPPLIER)
-              {
-                // Component: SupplierRoute,  // A DECOMMENTER LORSQUE LES ROUTES SUPPLIERS SERONT EN PLACE
-                children: [
-                  { path: "/supplier/stats", Component: StatisticsPage },
-                ],
-              },
+              { index: true, Component: ConversationsEmptyState },
+              { path: ":id", Component: ConversationDetailPage },
             ],
+          },
+          { path: "/settings", Component: SettingsPage },
+
+          // Restaurant routes (Establishment type must be RESTAURANT)
+          {
+            // Component: RestaurantRoute,  // A DECOMMENTER LORSQUE LES ROUTES RESTAURANTS SERONT EN PLACE
+            children: [
+              { path: "/suppliers", Component: HomePage },
+              { path: "/suppliers/:id", Component: SupplierDetailPage },
+              { path: "/favorites", Component: FavoritesPage },
+            ],
+          },
+
+          // Supplier routes (Establishment type must be SUPPLIER)
+          {
+            // Component: SupplierRoute,  // A DECOMMENTER LORSQUE LES ROUTES SUPPLIERS SERONT EN PLACE
+            children: [{ path: "/supplier/stats", Component: StatisticsPage }],
           },
         ],
       },
