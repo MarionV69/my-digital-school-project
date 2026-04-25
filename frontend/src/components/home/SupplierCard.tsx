@@ -17,11 +17,11 @@ export default function SupplierCard({supplier}: SupplierCardProps) {
                     src={supplier.coverPhotoUrl}
                     alt={supplier.name}
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                <span className="absolute bottom-2 left-2 bg-black/90 text-white text-xs px-2 py-1 rounded-full z-10">
+                <span className="absolute bottom-2 left-2 bg-black/90 text-white text-sm px-2 py-1 rounded-full z-10">
                     {supplier.productCategories[0]}
                 </span>
             </div>
-            <div className="flex flex-col p-6 gap-3">
+            <div className="flex flex-col p-6 gap-3 transition-colors duration-1000 group-hover:bg-muted/40">
                 <div className="flex flex-row items-baseline">
                     <h4 className="w-full">{supplier.name}</h4>
                     <div className="flex flex-row gap-1 items-center">
