@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { ChevronLeft, ExternalLink, MessageSquare, User } from "lucide-react";
+import { ChevronLeft, MessageSquare, User } from "lucide-react";
 import toast from "react-hot-toast";
 import { getConversationMessages } from "../../api/conversations";
 import { Spinner } from "@/components/ui/spinner";
@@ -10,6 +10,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import type { ConversationsOutletContext } from "@/pages/shared/ConversationsLayout";
 import type { Message } from "@/types/conversations.types";
 import { Button } from "../ui/button";
+import OtherParticipantPreview from "./OtherParticipantPreview";
 
 type ConversationDetailProps = {
   conversationId: number;
@@ -112,13 +113,8 @@ function ConversationDetail({ conversationId }: ConversationDetailProps) {
           </p>
         </div>
 
-        {/* Recipient details overview */}
-        <button
-          className="cursor-pointer rounded-full p-1.5 transition-colors hover:bg-muted"
-          aria-label="Voir le profil"
-        >
-          <ExternalLink className="size-4 text-muted-foreground" />
-        </button>
+        {/* Other participant preview trigger */}
+        <OtherParticipantPreview conversation={conversation} />
       </header>
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
