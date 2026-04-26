@@ -8,7 +8,7 @@ import {
   isSiretValid,
 } from "@/utils/validation";
 import axios from "axios";
-import { useState, type ChangeEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import {
@@ -90,7 +90,7 @@ function CreateEstablishmentForm() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const {
       type,
@@ -200,7 +200,7 @@ function CreateEstablishmentForm() {
               <FieldLabel htmlFor="restaurant">
                 <div
                   className={cn(
-                    "flex w-36 flex-col items-center gap-2 rounded-lg border p-4 pt-8 cursor-pointer transition-colors",
+                    "flex w-40 flex-col items-center gap-2 rounded-lg border p-4 pt-8 cursor-pointer transition-colors",
                     formData.type === EstablishmentType.RESTAURANT
                       ? "border-primary bg-muted"
                       : "border-muted-foreground/30 bg-white hover:border-primary/50 hover:bg-muted/50",
@@ -232,7 +232,7 @@ function CreateEstablishmentForm() {
               <FieldLabel htmlFor="supplier">
                 <div
                   className={cn(
-                    "flex w-36 flex-col items-center gap-2 rounded-lg border p-4 pt-8 cursor-pointer transition-colors",
+                    "flex w-40 flex-col items-center gap-2 rounded-lg border p-4 pt-8 cursor-pointer transition-colors",
                     formData.type === EstablishmentType.SUPPLIER
                       ? "border-primary bg-muted"
                       : "border-muted-foreground/30 bg-white hover:border-primary/50 hover:bg-muted/50",
@@ -380,7 +380,7 @@ function CreateEstablishmentForm() {
           >
             Retour
           </Button>
-          <Button type="submit" className="flex-1" disabled={isLoading}>
+          <Button type="submit" className="flex-2" disabled={isLoading}>
             {isLoading
               ? "Création..."
               : formData.type === EstablishmentType.SUPPLIER

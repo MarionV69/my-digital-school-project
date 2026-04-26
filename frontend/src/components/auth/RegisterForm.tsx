@@ -303,11 +303,11 @@ function RegisterForm() {
               disabled={isLoading}
               aria-invalid={!!errors.acceptTerms}
             />
-            <div className="flex flex-col gap-1">
-              <FieldLabel
-                htmlFor="acceptTerms"
-                className="font-normal text-sm leading-snug"
-              >
+            <FieldLabel
+              htmlFor="acceptTerms"
+              className="font-normal text-sm leading-snug"
+            >
+              <span>
                 J'accepte les{" "}
                 <Link
                   to="/terms"
@@ -322,9 +322,9 @@ function RegisterForm() {
                 >
                   politique de confidentialité
                 </Link>
-              </FieldLabel>
-              <FieldError>{errors.acceptTerms}</FieldError>
-            </div>
+              </span>
+            </FieldLabel>
+            <FieldError>{errors.acceptTerms}</FieldError>
           </Field>
         </FieldGroup>
 
