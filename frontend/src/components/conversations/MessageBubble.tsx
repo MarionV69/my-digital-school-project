@@ -53,7 +53,7 @@ function MessageBubble({ message }: MessageBubbleProps) {
           "max-w-[70%] rounded-lg px-4 py-2",
           isMine
             ? "bg-primary text-primary-foreground rounded-tr-none"
-            : "bg-background text-foreground shadow-sm rounded-tl-none",
+            : "bg-muted md:bg-background text-foreground rounded-tl-none",
         )}
       >
         {/* Message content */}
