@@ -12,6 +12,7 @@ export type RegisterDto = {
   firstName: string;
   lastName: string;
   role: "OWNER";
+  acceptTerms: boolean;
 };
 
 export type AuthResponse = {

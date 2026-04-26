@@ -144,7 +144,6 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
           onChange={(e) => setContent(e.target.value)}
           placeholder="Écrire un message"
           disabled={sending}
-          autoFocus
           className={cn(
             "flex-1 rounded-lg bg-muted px-3 py-2 text-sm outline-none",
             "placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",

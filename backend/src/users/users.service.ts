@@ -28,7 +28,7 @@ export class UsersService {
       throw new ConflictException('Email already exists');
     }
 
-    const { password, ...userData } = createUserDto;
+    const { password, acceptTerms: _acceptTerms, ...userData } = createUserDto;
     const saltRounds =
       parseInt(this.configService.get('HASH_SALT', '10'), 10) || 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);

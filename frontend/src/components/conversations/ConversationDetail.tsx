@@ -81,7 +81,12 @@ function ConversationDetail({ conversationId }: ConversationDetailProps) {
   }
 
   return (
-    <div className={cn("flex h-full flex-col", "bg-background md:bg-muted")}>
+    <div
+      className={cn(
+        "flex h-[calc(100dvh-73px)] flex-col",
+        "bg-background md:bg-muted",
+      )}
+    >
       {/* Header */}
       <header className="flex items-center gap-3 border-b border-border bg-background px-4 py-3">
         {/* Back button — mobile only */}

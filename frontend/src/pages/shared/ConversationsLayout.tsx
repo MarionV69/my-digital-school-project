@@ -54,7 +54,7 @@ function ConversationsLayout() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-73px)] overflow-hidden">
+    <div className="flex h-[calc(100dvh-73px)] overflow-hidden">
       {/* List - hidden on mobile when detail is shown */}
       <div
         className={cn(
