@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Switch } from "../ui/switch";
 import { Link } from "react-router-dom";
 import { Separator } from "../ui/separator";
+import { useAuth } from "@/hooks/useAuth";
 
 type FiltersProps = {
     filters: filtersType;
@@ -14,6 +15,8 @@ type FiltersProps = {
 }
 
 export default function Filters({filters, onChange}: FiltersProps) {
+
+    const {user} = useAuth();
 
     // Fonction pour ajouter ou retirer une catégorie des filtres
     const CATEGORIES = [
@@ -89,13 +92,16 @@ export default function Filters({filters, onChange}: FiltersProps) {
 
     return(
         <div className="flex flex-col gap-6 w-1.5/6">
-            <Card>
-                <h4>Vous êtes fournisseur ?</h4>
-                <p className="text-muted-foreground">Référencez votre entreprise et accédez à des milliers de restaurateurs.</p>
-                <Link to="/register" className="w-full">
-                    <Button variant="outline" className="w-full">Créer mon profil</Button>
-                </Link>
-            </Card>
+            
+            {!user && (
+                <Card>
+                    <h4>Vous êtes fournisseur ?</h4>
+                    <p className="text-muted-foreground">Référencez votre entreprise et accédez à des milliers de restaurateurs.</p>
+                    <Link to="/register" className="w-full">
+                        <Button variant="outline" className="w-full">Créer mon profil</Button>
+                    </Link>
+                </Card>
+            )}
             <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-1">
                     <p className="text-muted-foreground">CATÉGORIES</p>

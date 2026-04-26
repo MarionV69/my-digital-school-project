@@ -63,15 +63,17 @@ function HomePage() {
     }
   
   return (
-    <div className="px-24 pt-12 gap-6 flex flex-col">
+    <div className="px-4 lg:px-24 pt-6 lg:pt-12 mb-24 gap-6 flex flex-col">
       <SearchBar onSearch={handleSearch} />
       <div className="w-full flex flex-row gap-12">
-        <Filters filters={filters} onChange={setFilters}></Filters>
+        <div className="hidden lg:block">
+          <Filters filters={filters} onChange={setFilters} ></Filters>
+        </div>
         <div className="flex flex-col gap-3 w-full">
           <p className="text-muted-foreground text-sm">
             {suppliers.length} fournisseur{suppliers.length > 1 ? "s" : ""} trouvé{suppliers.length > 1 ? "s" : ""}
           </p>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 items-start">
             {suppliers.map((supplier) => (
               <SupplierCard key={supplier.id} supplier={supplier} />
             ))}
