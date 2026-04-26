@@ -25,3 +25,19 @@ export function validatePassword(password: string): string | null {
   }
   return null;
 }
+
+// Returns true if the SIRET contains exactly 14 digits (spaces ignored)
+export function isSiretValid(siret: string): boolean {
+  return /^\d{14}$/.test(siret.replace(/\s/g, ""));
+}
+
+// Returns true if the postal code is valid (5 digits for France)
+export function isPostalCodeValid(postalCode: string): boolean {
+  return /^\d{5}$/.test(postalCode.replace(/\s/g, ""));
+}
+
+// Returns true if the phone number is valid for France
+export function isPhoneValid(phone: string): boolean {
+  const normalized = phone.replace(/[\s\-().]/g, "");
+  return /^(\+33|0)[1-9]\d{8}$/.test(normalized);
+}

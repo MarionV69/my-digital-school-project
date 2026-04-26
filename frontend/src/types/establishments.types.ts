@@ -12,3 +12,14 @@ export type EstablishmentPreview = {
   website: string | null;
   avatarUrl: string | null;
 };
+
+export type CreateEstablishmentDto = {
+  type: EstablishmentType;
+  legalName: string;
+  address: string;
+  postalCode: string;
+  city: string;
+  country: string;
+  siret: string;
+  phone?: string;
+};

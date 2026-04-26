@@ -8,6 +8,7 @@ import { Eye, EyeOff, Mail } from "lucide-react";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { EstablishmentType } from "@/types/establishments.types";
 
 type LoginFormErrors = {
   email?: string;
@@ -82,6 +83,8 @@ function LoginForm() {
       // Redirect based on establishment
       if (!user.establishmentId) {
         navigate("/onboarding/create-establishment");
+      } else if (user.establishmentType === EstablishmentType.RESTAURANT) {
+        navigate("/suppliers");
       } else {
         navigate("/profile");
       }
