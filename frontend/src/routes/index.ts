@@ -25,7 +25,7 @@ import AppLayout from "../layouts/AppLayout";
 import AuthLayout from "@/layouts/AuthLayout";
 
 import ProtectedRoute from "./ProtectedRoute";
-// import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
+import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
 // import RestaurantRoute from "./RestaurantRoute";
 // import SupplierRoute from "./SupplierRoute";
 
@@ -64,7 +64,7 @@ export const router = createBrowserRouter([
       { path: "/login", Component: LoginPage },
       { path: "/register", Component: RegisterPage },
 
-      // Onboarding with Protected routes (User must be authenticated)
+      // User must be authenticated
       {
         Component: ProtectedRoute,
         children: [
@@ -72,13 +72,26 @@ export const router = createBrowserRouter([
             path: "/onboarding/create-establishment",
             Component: CreateEstablishmentPage,
           },
+          // User must have an establishment
           {
-            path: "/onboarding/supplier-profile",
-            Component: SupplierProfilePage,
+            Component: EstablishmentRequiredRoute,
+            children: [
+              {
+                path: "/onboarding/supplier-profile",
+                Component: SupplierProfilePage,
+              },
+            ],
           },
-          { path: "/onboarding/confirmation", Component: ConfirmationPage },
         ],
       },
+    ],
+  },
+
+  //Confirmation - No layout, User must have an establishment
+  {
+    Component: EstablishmentRequiredRoute,
+    children: [
+      { path: "/onboarding/confirmation", Component: ConfirmationPage },
     ],
   },
 
