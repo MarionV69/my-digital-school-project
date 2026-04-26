@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -37,6 +38,16 @@ export class EstablishmentsService {
     if (currentUser.establishmentId) {
       throw new BadRequestException(
         "Vous avez déjà créé un établissement. Un utilisateur ne peut gérer qu'un seul établissement.",
+      );
+    }
+
+    // Vérification:  Le SIRET existe-t-il déjà
+    const existing = await this.establishmentRepo.findOneBy({
+      siret: dto.siret,
+    });
+    if (existing) {
+      throw new ConflictException(
+        'Un établissement avec ce SIRET existe déjà.',
       );
     }
 

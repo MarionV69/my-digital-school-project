@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Field,
   FieldContent,
@@ -135,8 +135,7 @@ function CreateEstablishmentForm() {
     }
 
     if (phone && country.toLowerCase() === "france" && !isPhoneValid(phone)) {
-      newErrors.phone =
-        "Format invalide. Exemple : 06 12 34 56 78 ou +33 6 12 34 56 78";
+      newErrors.phone = "Format invalide. Ex : 06 12 34 56 78";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -167,10 +166,11 @@ function CreateEstablishmentForm() {
         navigate("/onboarding/confirmation");
       }
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 400) {
-        setErrors({
-          general: "Une erreur est survenue. Vérifiez vos informations.",
-        });
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        setErrors({ siret: "Ce SIRET est déjà utilisé." });
+        toast.error(
+          "Ce SIRET est déjà associé à un compte. Contactez le support si nécessaire.",
+        );
       } else {
         toast.error(
           "Une erreur est survenue lors de la création de l'établissement.",
@@ -266,7 +266,7 @@ function CreateEstablishmentForm() {
           {/* Legal name */}
           <Field data-invalid={!!errors.legalName}>
             <FieldLabel htmlFor="legalName">
-              Raison sociale (nom légal)
+              Raison sociale (nom légal) *
             </FieldLabel>
             <Input
               id="legalName"
@@ -282,7 +282,7 @@ function CreateEstablishmentForm() {
 
           {/* Address */}
           <Field data-invalid={!!errors.address}>
-            <FieldLabel htmlFor="address">Adresse</FieldLabel>
+            <FieldLabel htmlFor="address">Adresse *</FieldLabel>
             <Input
               id="address"
               name="address"
@@ -298,7 +298,9 @@ function CreateEstablishmentForm() {
           {/* Postal code + City + Country */}
           <div className="grid grid-cols-3 gap-3">
             <Field data-invalid={!!errors.postalCode}>
-              <FieldLabel htmlFor="postalCode">Code postal</FieldLabel>
+              <FieldLabel htmlFor="postalCode" className="sr-only">
+                Code postal
+              </FieldLabel>
               <Input
                 id="postalCode"
                 name="postalCode"
@@ -312,7 +314,9 @@ function CreateEstablishmentForm() {
             </Field>
 
             <Field data-invalid={!!errors.city}>
-              <FieldLabel htmlFor="city">Ville</FieldLabel>
+              <FieldLabel htmlFor="city" className="sr-only">
+                Ville
+              </FieldLabel>
               <Input
                 id="city"
                 name="city"
@@ -326,7 +330,9 @@ function CreateEstablishmentForm() {
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="country">Pays</FieldLabel>
+              <FieldLabel htmlFor="country" className="sr-only">
+                Pays
+              </FieldLabel>
               <Input
                 id="country"
                 name="country"
@@ -369,26 +375,24 @@ function CreateEstablishmentForm() {
           </div>
         </FieldGroup>
 
-        {/* Actions */}
-        <div className="flex gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            className="flex-1"
-            onClick={() => navigate("/register")}
-            disabled={isLoading}
-          >
-            Retour
-          </Button>
-          <Button type="submit" className="flex-2" disabled={isLoading}>
-            {isLoading
-              ? "Création..."
-              : formData.type === EstablishmentType.SUPPLIER
-                ? "Continuer"
-                : "Créer mon compte"}
-          </Button>
-        </div>
+        {/* Submit button*/}
+        <Button type="submit" disabled={isLoading} className="mt-2">
+          {isLoading
+            ? "Création..."
+            : formData.type === EstablishmentType.SUPPLIER
+              ? "Continuer"
+              : "Créer mon compte"}
+        </Button>
       </form>
+      <p className="mt-4 text-sm">
+        Besoin de reprendre plus tard?{" "}
+        <Link to="/" className="text-primary-mid font-bold">
+          Quitter
+        </Link>{" "}
+        <span className="text-sm">
+          - vous pourrez continuer en vous connectant
+        </span>
+      </p>
     </div>
   );
 }
