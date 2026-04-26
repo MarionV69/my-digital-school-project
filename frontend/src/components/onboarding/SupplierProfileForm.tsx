@@ -122,11 +122,11 @@ function SupplierProfileForm() {
                   <SelectItem value={SupplierType.PRODUCER}>
                     Producteur
                   </SelectItem>
-                  <SelectItem value={SupplierType.WHOLESALER}>
-                    Grossiste
-                  </SelectItem>
                   <SelectItem value={SupplierType.RESELLER}>
                     Revendeur
+                  </SelectItem>
+                  <SelectItem value={SupplierType.WHOLESALER}>
+                    Grossiste
                   </SelectItem>
                 </SelectGroup>
               </SelectContent>
@@ -157,7 +157,9 @@ function SupplierProfileForm() {
                   <SelectItem value={PriceRange.MID_RANGE}>
                     Milieu de gamme
                   </SelectItem>
-                  <SelectItem value={PriceRange.PREMIUM}>Premium</SelectItem>
+                  <SelectItem value={PriceRange.PREMIUM}>
+                    Haut de gamme
+                  </SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -172,21 +174,10 @@ function SupplierProfileForm() {
           </FieldDescription>
         </FieldGroup>
 
-        {/* Actions */}
-        <div className="flex gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            className="flex-1"
-            onClick={() => navigate("/onboarding/create-establishment")}
-            disabled={isLoading}
-          >
-            Retour
-          </Button>
-          <Button type="submit" className="flex-1" disabled={isLoading}>
-            {isLoading ? "Validation..." : "Valider"}
-          </Button>
-        </div>
+        {/* Submit button */}
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Validation..." : "Valider"}
+        </Button>
       </form>
     </div>
   );

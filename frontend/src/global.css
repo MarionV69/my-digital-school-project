@@ -24,11 +24,11 @@
   --primary-mid: oklch(28% 0.09 15); /* #7a282a */
 
   /* Erreurs */
-  --destructive: oklch(0.577 0.245 27.325);
+  --destructive: #e3131c; /* #e3131c */
 
   /* Inputs */
   --input: oklch(96% 0.003 270); /* #f2f2f7 */
-  --input-border: oklch(82% 0.005 270); /* #d1d1d6 */
+  --input-border: oklch(85% 0.005 270); /* #d4d4d8 */
   --ring: oklch(65% 0.01 0); /* #9e9e9e */
   --popover: oklch(100% 0 0); /* #ffffff */
   --popover-foreground: oklch(25% 0.01 0); /* #333333 */

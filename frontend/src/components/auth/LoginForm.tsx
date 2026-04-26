@@ -189,10 +189,10 @@ function LoginForm() {
         </div>
       </div>
 
-      <p className="text-center text-sm mt-3">
+      <p className="text-center text-sm mt-2">
         <Link
           to="/register"
-          className="font-medium text-foreground hover:underline"
+          className="font-medium text-primary-mid hover:primary"
         >
           Créer un compte
         </Link>

@@ -7,7 +7,7 @@ function RegisterPage() {
       <StepHeader
         stepNumber={1}
         stepDescription="Votre compte"
-        title="Créez votre compte"
+        title="Créez un compte"
       />
       <RegisterForm />
     </div>

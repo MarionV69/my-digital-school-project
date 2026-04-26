@@ -290,40 +290,42 @@ function RegisterForm() {
           </Field>
 
           {/* CGU */}
-          <Field data-invalid={!!errors.acceptTerms} orientation="horizontal">
-            <Checkbox
-              id="acceptTerms"
-              checked={formData.acceptTerms}
-              onCheckedChange={(checked) => {
-                setFormData((prev) => ({ ...prev, acceptTerms: !!checked }));
-                if (errors.acceptTerms) {
-                  setErrors((prev) => ({ ...prev, acceptTerms: undefined }));
-                }
-              }}
-              disabled={isLoading}
-              aria-invalid={!!errors.acceptTerms}
-            />
-            <FieldLabel
-              htmlFor="acceptTerms"
-              className="font-normal text-sm leading-snug"
-            >
-              <span>
-                J'accepte les{" "}
-                <Link
-                  to="/terms"
-                  className="text-primary-mid underline hover:text-primary"
-                >
-                  conditions générales d'utilisation
-                </Link>{" "}
-                et la{" "}
-                <Link
-                  to="/privacy"
-                  className="text-primary-mid underline hover:text-primary"
-                >
-                  politique de confidentialité
-                </Link>
-              </span>
-            </FieldLabel>
+          <Field data-invalid={!!errors.acceptTerms}>
+            <div className="flex gap-4 items-center">
+              <Checkbox
+                id="acceptTerms"
+                checked={formData.acceptTerms}
+                onCheckedChange={(checked) => {
+                  setFormData((prev) => ({ ...prev, acceptTerms: !!checked }));
+                  if (errors.acceptTerms) {
+                    setErrors((prev) => ({ ...prev, acceptTerms: undefined }));
+                  }
+                }}
+                disabled={isLoading}
+                aria-invalid={!!errors.acceptTerms}
+              />
+              <FieldLabel
+                htmlFor="acceptTerms"
+                className="font-medium leading-snug"
+              >
+                <span className="text-muted-foreground/90">
+                  J'accepte les{" "}
+                  <Link
+                    to="/terms"
+                    className="text-primary-mid hover:text-primary hover:underline"
+                  >
+                    conditions générales d'utilisation
+                  </Link>{" "}
+                  et la{" "}
+                  <Link
+                    to="/privacy"
+                    className="text-primary-mid hover:text-primary hover:underline"
+                  >
+                    politique de confidentialité
+                  </Link>
+                </span>
+              </FieldLabel>
+            </div>
             <FieldError>{errors.acceptTerms}</FieldError>
           </Field>
         </FieldGroup>
@@ -339,15 +341,15 @@ function RegisterForm() {
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t border-muted-foreground/50" />
         </div>
-        <div className="relative flex justify-center text-xs text-muted-foreground">
+        <div className="relative flex justify-center text-sm text-muted-foreground">
           <span className="bg-background px-2">Déjà membre ?</span>
         </div>
       </div>
 
-      <p className="text-center text-sm mt-3">
+      <p className="text-center text-sm mt-2">
         <Link
           to="/login"
-          className="font-medium text-foreground hover:underline"
+          className="font-medium text-primary-mid hover:primary"
         >
           Connexion
         </Link>
