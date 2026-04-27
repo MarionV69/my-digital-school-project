@@ -3,10 +3,11 @@ import { Button } from "../ui/button";
 import { useState, type ChangeEvent } from "react";
 
 type SearchBarProps = {
-    onSearch: (search: string, city: string) => void
+    onSearch: (search: string, city: string) => void;
+    onFilterOpen: () => void;
 }
 
-export default function SearchBar({onSearch}: SearchBarProps) {
+export default function SearchBar({onSearch, onFilterOpen}: SearchBarProps) {
     const [search, setSearch] = useState("");
     const [city, setCity] = useState("");
 
@@ -78,7 +79,8 @@ export default function SearchBar({onSearch}: SearchBarProps) {
                     </Button>
                 </div>
             </div>
-            <button className="lg:hidden p-2" onClick={() => {}}>
+            {/* Bouton pour ouvrir les filtres sur mobile */}
+            <button className="lg:hidden p-2" onClick={onFilterOpen}>
                 <SlidersHorizontal size={18} className="text-muted-foreground" />
             </button>
         </div>

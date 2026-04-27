@@ -1,5 +1,6 @@
 
 import api from "@/api/axiosConfig";
+import FilterBottomSheet from "@/components/home/FilterBottomSheet";
 import Filters from "@/components/home/Filters";
 import SearchBar from "@/components/home/SearchBar";
 import SupplierCard from "@/components/home/SupplierCard";
@@ -21,6 +22,9 @@ function HomePage() {
     supplierTypes: [],
     isPremium: false,
   })
+
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  console.log(isFilterOpen);
 
   useEffect(() => {
       async function loadSuppliers() {
@@ -64,11 +68,17 @@ function HomePage() {
   
   return (
     <div className="px-4 lg:px-24 pt-6 lg:pt-12 mb-24 gap-6 flex flex-col">
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar onSearch={handleSearch} onFilterOpen={() => {setIsFilterOpen(true)}}/>
       <div className="w-full flex flex-row gap-12">
         <div className="hidden lg:block">
           <Filters filters={filters} onChange={setFilters} ></Filters>
         </div>
+        <FilterBottomSheet 
+          isOpen={isFilterOpen}
+          filters={filters}
+          onChange={setFilters}
+          onClose={() => setIsFilterOpen(false)}
+        ></FilterBottomSheet>
         <div className="flex flex-col gap-3 w-full">
           <p className="text-muted-foreground text-sm">
             {suppliers.length} fournisseur{suppliers.length > 1 ? "s" : ""} trouvé{suppliers.length > 1 ? "s" : ""}
