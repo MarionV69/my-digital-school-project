@@ -36,7 +36,7 @@ export default function SearchBar({onSearch, onFilterOpen}: SearchBarProps) {
             <div className="flex flex-row justify-between items-center bg-card/80 rounded-lg group transition-colors duration-1000 hover:bg-card w-full">
 
                 {/* Champ : nom du fournisseur */}
-                <div className="flex flex-row gap-2 px-4 items-center">
+                <div className="flex flex-row gap-2 px-4 items-center w-full">
                     <Search size={16} className="text-muted-foreground transition-transform duration-1000 group-hover:scale-110 hidden lg:block"></Search>
                     <input
                         type="text"
