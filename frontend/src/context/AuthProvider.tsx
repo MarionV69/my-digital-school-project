@@ -90,8 +90,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   };
 
+  // Refresh user data (used after creating establishment)
+  const refreshUser = async () => {
+    const userData = await getProfile();
+    setUser({
+      id: userData.id,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      role: userData.role,
+      establishmentId: userData.establishmentId,
+      establishmentType: userData.establishmentType,
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, register, logout, refreshUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

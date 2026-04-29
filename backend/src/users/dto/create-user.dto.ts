@@ -1,4 +1,12 @@
-import { IsEmail, IsString, MinLength, IsEnum, Matches } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  MinLength,
+  IsEnum,
+  Matches,
+  IsBoolean,
+  Equals,
+} from 'class-validator';
 import { UserRole } from '../enums/user-role.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -32,4 +40,11 @@ export class CreateUserDto {
   @ApiProperty({ enum: UserRole, example: UserRole.OWNER })
   @IsEnum(UserRole)
   role: UserRole;
+
+  @ApiProperty({ example: true })
+  @IsBoolean()
+  @Equals(true, {
+    message: "Vous devez accepter les conditions d'utilisation.",
+  })
+  acceptTerms: boolean;
 }

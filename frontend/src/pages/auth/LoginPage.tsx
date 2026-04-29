@@ -2,8 +2,8 @@ import LoginForm from "../../components/auth/LoginForm";
 
 function LoginPage() {
   return (
-    <div className="text-brand-dark max-w-md mx-auto p-5 bg-white rounded-lg shadow-lg mt-6">
-      <h1 className="text-4xl my-6 text-center">Bienvenue</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold text-foreground">Connexion</h1>
       <LoginForm />
     </div>
   );

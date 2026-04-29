@@ -36,10 +36,10 @@ createRoot(document.getElementById("root")!).render(
             style: {
               background: "#fefefe",
               color: "#3e1013",
-              border: "2px solid #e21734",
+              border: "2px solid #e3131c",
             },
             iconTheme: {
-              primary: "#e21734",
+              primary: "#e3131c",
               secondary: "#fff",
             },
           },
