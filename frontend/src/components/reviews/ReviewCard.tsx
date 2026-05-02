@@ -78,15 +78,15 @@ export default function ReviewCard({
 
   return (
     <div className="flex flex-col gap-2 p-4 rounded-lg border-2 border-muted">
-      {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex flex-col gap-1">
           <span className="text-sm font-semibold text-foreground">
             {review.reviewer.name}
           </span>
-          <StarRating value={review.rating} size="sm" />
+          <p className="text-sm text-foreground">{review.comment}</p>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-col items-end gap-1 shrink-0 mt-1">
+          <StarRating value={review.rating} size="sm" />
           <span className="text-xs text-muted-foreground">
             {formatDate(review.createdAt)}
           </span>
@@ -101,9 +101,6 @@ export default function ReviewCard({
           )}
         </div>
       </div>
-
-      {/* Comment */}
-      <p className="text-sm text-foreground">{review.comment}</p>
 
       {/* Reply */}
       {review.reply && !showReplyForm && (
