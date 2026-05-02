@@ -50,11 +50,8 @@ api.interceptors.response.use(
               window.location.replace("/login");
             }
           } else {
-            // Not logged in
-            toast.error(
-              "Veuillez vous connecter pour utiliser cette fonctionnalité.",
-              { id: "login-required" },
-            );
+            // No token + 401 : user navigated back after logout
+            window.location.replace("/");
           }
         }
         break;

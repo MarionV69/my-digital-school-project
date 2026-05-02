@@ -116,9 +116,6 @@ export class ReviewsService {
         'This review is not about your establishment',
       );
     }
-    if (review.reply) {
-      throw new ConflictException('You have already replied to this review');
-    }
 
     review.reply = dto.reply;
     review.repliedAt = new Date();
