@@ -1,45 +1,31 @@
-import { useState } from "react";
 import RatingDistributionBar from "./RatingDistributionBar";
 import ReviewCard from "./ReviewCard";
-import type {
-  ReviewResponse,
-  SupplierReviewsResponse,
-} from "@/types/reviews.types";
+import type { SupplierReviewsResponse } from "@/types/reviews.types";
 
 type ReviewsSummaryProps = {
   data: SupplierReviewsResponse;
   supplierId: number;
-  onDelete?: (reviewId: number) => void;
+  reviewsTitle?: string;
+  action?: React.ReactNode;
+  onDelete?: () => void;
   onReply?: (reviewId: number, reply: string) => void;
 };
 
 export default function ReviewsSummary({
   data,
   supplierId,
+  reviewsTitle,
+  action,
   onDelete,
   onReply,
 }: ReviewsSummaryProps) {
-  const [reviews, setReviews] = useState<ReviewResponse[]>(data.reviews);
-
-  const distribution = reviews.reduce(
+  const distribution = data.reviews.reduce(
     (acc, r) => {
       acc[r.rating as 1 | 2 | 3 | 4 | 5]++;
       return acc;
     },
     { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } as Record<1 | 2 | 3 | 4 | 5, number>,
   );
-
-  const handleDelete = (reviewId: number) => {
-    setReviews((prev) => prev.filter((r) => r.id !== reviewId));
-    onDelete?.(reviewId);
-  };
-
-  const handleReply = (reviewId: number, reply: string) => {
-    setReviews((prev) =>
-      prev.map((r) => (r.id === reviewId ? { ...r, reply } : r)),
-    );
-    onReply?.(reviewId, reply);
-  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -49,19 +35,28 @@ export default function ReviewsSummary({
         distribution={distribution}
       />
 
-      <div className="flex flex-col">
-        {reviews.length === 0 ? (
+      {/* Reviews list header */}
+      {(reviewsTitle || action) && (
+        <div className="flex items-center justify-between my-2">
+          {reviewsTitle && <h3>{reviewsTitle}</h3>}
+          {action && action}
+        </div>
+      )}
+
+      {/* Reviews list */}
+      <div className="flex flex-col gap-3">
+        {data.reviews.length === 0 ? (
           <p className="py-4 text-sm text-muted-foreground">
             Aucun avis pour le moment.
           </p>
         ) : (
-          reviews.map((review) => (
+          data.reviews.map((review) => (
             <ReviewCard
               key={review.id}
               review={review}
               supplierId={supplierId}
-              onDelete={onDelete ? handleDelete : undefined}
-              onReply={onReply ? handleReply : undefined}
+              onDelete={onDelete}
+              onReply={onReply}
             />
           ))
         )}

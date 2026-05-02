@@ -13,7 +13,7 @@ import { Spinner } from "../ui/spinner";
 type ReviewCardProps = {
   review: ReviewResponse;
   supplierId: number;
-  onDelete?: (reviewId: number) => void;
+  onDelete?: () => void;
   onReply?: (reviewId: number, reply: string) => void;
 };
 
@@ -46,7 +46,7 @@ export default function ReviewCard({
     try {
       await deleteReview(review.id);
       toast.success("Avis supprimé");
-      onDelete?.(review.id);
+      onDelete?.();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
         toast.error("Cet avis n'existe plus.");
@@ -77,7 +77,7 @@ export default function ReviewCard({
   };
 
   return (
-    <div className="flex flex-col gap-2 py-4 border-b border-border last:border-0">
+    <div className="flex flex-col gap-2 p-4 rounded-lg border-2 border-muted">
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex flex-col gap-1">
@@ -102,28 +102,31 @@ export default function ReviewCard({
         </div>
       </div>
 
-      {/* Commentaire */}
+      {/* Comment */}
       <p className="text-sm text-foreground">{review.comment}</p>
 
-      {/* Reply existante */}
-      {review.reply && (
-        <div className="ml-4 rounded-lg bg-muted px-3 py-2 text-sm text-muted-foreground border-l-2 border-primary">
+      {/* Reply */}
+      {review.reply && !showReplyForm && (
+        <div className="ml-4 rounded-lg bg-muted px-4 py-2 text-sm text-muted-foreground">
           <span className="font-medium text-foreground">
-            Réponse du fournisseur ·{" "}
+            {isReviewedSupplier ? "Ma réponse : " : "Réponse du fournisseur : "}
           </span>
           {review.reply}
         </div>
       )}
 
-      {/* Bouton répondre — supplier concerné, pas encore de reply */}
-      {isReviewedSupplier && !review.reply && onReply && (
+      {/* Reply button (for reviewed supplier) */}
+      {isReviewedSupplier && onReply && (
         <>
           {!showReplyForm ? (
             <button
-              onClick={() => setShowReplyForm(true)}
-              className="self-start text-xs text-primary-mid hover:underline cursor-pointer"
+              onClick={() => {
+                setReplyContent(review.reply ?? "");
+                setShowReplyForm(true);
+              }}
+              className="self-start ml-4 text-sm font-semibold text-primary-mid hover:underline cursor-pointer"
             >
-              Répondre
+              {review.reply ? "Modifier la réponse" : "Répondre"}
             </button>
           ) : (
             <div className="flex flex-col gap-2 ml-4">

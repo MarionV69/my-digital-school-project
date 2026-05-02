@@ -13,9 +13,11 @@ export default function RatingDistributionBar({
 
   return (
     <div className="flex gap-4 rounded-lg bg-muted p-4">
-      {/* Note globale */}
+      {/* Global rating */}
       <div className="flex flex-col items-center justify-center gap-1 pr-4 border-r border-border">
-        <span className="text-4xl font-bold text-foreground">{average}</span>
+        <span className="text-4xl font-semibold text-foreground">
+          {average}
+        </span>
         <div className="flex gap-0.5">
           {[1, 2, 3, 4, 5].map((star) => (
             <svg
@@ -34,14 +36,14 @@ export default function RatingDistributionBar({
         <span className="text-xs text-muted-foreground">{count} avis</span>
       </div>
 
-      {/* Barres */}
+      {/* Distribution bars */}
       <div className="flex flex-1 flex-col justify-center gap-1">
         {([5, 4, 3, 2, 1] as const).map((star) => (
           <div key={star} className="flex items-center gap-2">
             <span className="w-2 text-right text-xs text-muted-foreground">
               {star}
             </span>
-            <div className="h-1.5 flex-1 rounded-full bg-border">
+            <div className="h-1.5 flex-1 rounded-full bg-muted-foreground/20">
               <div
                 className="h-1.5 rounded-full bg-yellow-400 transition-all"
                 style={{ width: `${(distribution[star] / total) * 100}%` }}

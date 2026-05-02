@@ -11,12 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 import StarRating from "./StarRating";
 import { createReview } from "@/api/reviews";
-import type { ReviewResponse } from "@/types/reviews.types";
 import { Spinner } from "../ui/spinner";
 
 type CreateReviewModalProps = {
   supplierId: number;
-  onCreated: (review: ReviewResponse) => void;
+  onCreated: () => void;
 };
 
 export default function CreateReviewModal({
@@ -40,9 +39,9 @@ export default function CreateReviewModal({
 
     setSubmitting(true);
     try {
-      const review = await createReview({ supplierId, rating, comment });
+      await createReview({ supplierId, rating, comment });
       toast.success("Avis publié !");
-      onCreated(review);
+      onCreated();
       setOpen(false);
       setRating(0);
       setComment("");
@@ -74,9 +73,11 @@ export default function CreateReviewModal({
       </Button>
 
       <Dialog open={open} onOpenChange={handleOpenChange}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md border border-primary-mid">
           <DialogHeader>
-            <DialogTitle>Laisser un avis</DialogTitle>
+            <DialogTitle className="text-xl text-primary-mid font-semibold">
+              Laisser un avis
+            </DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-4 py-2">
@@ -93,7 +94,7 @@ export default function CreateReviewModal({
               />
             </div>
 
-            {/* Commentaire */}
+            {/* Comment */}
             <div className="flex flex-col gap-1.5">
               <span className="text-sm font-medium text-foreground">
                 Commentaire *
