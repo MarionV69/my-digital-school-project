@@ -3,7 +3,7 @@ import type {
   ReplyReviewDto,
   ReviewResponse,
   SupplierReviewsResponse,
-} from "@/types/reviews";
+} from "@/types/reviews.types";
 import { api } from "./axiosConfig";
 
 export const createReview = async (
