@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { EstablishmentType } from "@/types/establishments.types";
 import type { ReviewResponse } from "@/types/reviews.types";
 import axios from "axios";
+import { Spinner } from "../ui/spinner";
 
 type ReviewCardProps = {
   review: ReviewResponse;
@@ -139,7 +140,7 @@ export default function ReviewCard({
                   onClick={handleReply}
                   disabled={submitting || !replyContent.trim()}
                 >
-                  {submitting ? "Envoi..." : "Publier"}
+                  {submitting ? <Spinner className="size-4" /> : "Publier"}
                 </Button>
                 <Button
                   size="sm"
