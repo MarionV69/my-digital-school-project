@@ -18,3 +18,9 @@ export type CreateSupplierAttributesDto = {
   supplierType: SupplierType;
   priceRange: PriceRange;
 };
+
+export type SupplierStatsDto = {
+  favoriteCount: number;
+  averageRating: number;
+  reviewCount: number;
+};
