@@ -21,7 +21,7 @@ export default function SupplierHeader({supplier, isFavorite, onFavoriteToggle}:
     }
 
     return(
-        <div className="px-4 lg:px-24 pt-6 lg:pt-12 mb-24 gap-6 flex flex-col">
+        <div className="gap-2 flex flex-col">
             <div className="flex flex-row justify-between">
                 <div className="flex flex-row gap-6 items-center">
                     <h3>{supplier.name}</h3>

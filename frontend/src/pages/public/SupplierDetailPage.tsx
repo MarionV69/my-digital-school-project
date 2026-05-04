@@ -1,6 +1,9 @@
 import api from "@/api/axiosConfig";
+import ReviewsSection from "@/components/reviews/ReviewsSection";
 import AboutSection from "@/components/supplier-details/AboutSection";
+import ContactCard from "@/components/supplier-details/ContactCard";
 import CoverPhoto from "@/components/supplier-details/CoverPhoto";
+import InfoSection from "@/components/supplier-details/InfoSection";
 import SupplierHeader from "@/components/supplier-details/SupplierHeader";
 import { Spinner } from "@/components/ui/spinner";
 import { useFavorites } from "@/hooks/useFavorites";
@@ -42,19 +45,25 @@ function SupplierDetailPage() {
       {error && <p className="text-destructive">{error}</p>}
 
       {supplier && (
-        <>
+        <div className="gap-6">
           <CoverPhoto supplier={supplier}/>
-          <SupplierHeader 
-            supplier={supplier}
-            isFavorite={favorites.some((fav) => fav.targetId === supplier.id)}
-            onFavoriteToggle={() => handleFavoriteToggle(supplier.id)}
-          />
-          <AboutSection supplier={supplier} />
-          {/* Composant ReviewSection à intégrer ici */}
-          {/* <ReviewsSection supplierId={supplier.id} /> */}
-          {/* Bouton de contact du fournisseur à intégrer ici */}
-          {/* <ContactButton supplierId={supplier.id} /> */}
-        </>
+          <div className="flex flex-col px-4 lg:px-24 lg:pt-12 mb-24 gap-6">
+            <SupplierHeader 
+              supplier={supplier}
+              isFavorite={favorites.some((fav) => fav.targetId === supplier.id)}
+              onFavoriteToggle={() => handleFavoriteToggle(supplier.id)}
+            />
+            <hr className="w-full border-t border-border"/>
+            <div className="w-full flex flex-row gap-8 items-start">
+              <div className="w-full flex flex-col gap-2">
+                <AboutSection supplier={supplier} />
+                <InfoSection supplier={supplier} />
+                <ReviewsSection supplierId={supplier.id} />
+              </div>
+              <ContactCard supplier={supplier}/>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
