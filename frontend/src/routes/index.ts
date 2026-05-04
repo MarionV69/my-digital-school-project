@@ -27,7 +27,7 @@ import AuthLayout from "@/layouts/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
 // import RestaurantRoute from "./RestaurantRoute";
-// import SupplierRoute from "./SupplierRoute";
+import SupplierRoute from "./SupplierRoute";
 
 /**
  * Route Configuration
@@ -126,7 +126,7 @@ export const router = createBrowserRouter([
 
           // Supplier routes (Establishment type must be SUPPLIER)
           {
-            // Component: SupplierRoute,  // A DECOMMENTER LORSQUE LES ROUTES SUPPLIERS SERONT EN PLACE
+            Component: SupplierRoute,
             children: [{ path: "/supplier/stats", Component: StatisticsPage }],
           },
         ],

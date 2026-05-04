@@ -33,14 +33,13 @@ function SupplierDetailPage() {
 
   return (
     <div>
-
       {loading && (
         <div className="flex flex-row w-full items-center justify-center">
           <Spinner />
         </div>
-      )};
+      )}
 
-      {error && <p className="text-destructive">{error}</p>};
+      {error && <p className="text-destructive">{error}</p>}
 
       {supplier && (
         <>
@@ -50,12 +49,13 @@ function SupplierDetailPage() {
             isFavorite={favorites.some((fav) => fav.targetId === supplier.id)}
             onFavoriteToggle={() => handleFavoriteToggle(supplier.id)}
           />
-          <AboutSection 
-            supplier={supplier}
-          />
-
+          <AboutSection supplier={supplier} />
+          {/* Composant ReviewSection à intégrer ici */}
+          {/* <ReviewsSection supplierId={supplier.id} /> */}
+          {/* Bouton de contact du fournisseur à intégrer ici */}
+          {/* <ContactButton supplierId={supplier.id} /> */}
         </>
-      )};
+      )}
     </div>
   );
 }
