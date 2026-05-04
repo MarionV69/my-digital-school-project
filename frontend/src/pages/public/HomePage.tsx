@@ -35,7 +35,7 @@ function HomePage() {
   }
 
   return (
-    <div className="px-4 lg:px-24 pt-6 lg:pt-12 mb-24 gap-6 flex flex-col">
+    <div className="px-4 py-8 lg:py-12 lg:px-24 gap-6 flex flex-col">
       <SearchBar onSearch={handleSearch} onFilterOpen={() => {setIsFilterOpen(true)}}/>
       <div className="w-full flex flex-row gap-12">
         <div className="hidden lg:block">

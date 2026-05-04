@@ -6,7 +6,7 @@ type CoverPhotoProps = {
 
 export default function CoverPhoto({supplier}: CoverPhotoProps) {
     return(
-        <div className="w-full h-96">
+        <div className="w-full h-48 lg:h-96 relative">
           <img
             src={supplier.coverPhotoUrl}
             alt={supplier.name}

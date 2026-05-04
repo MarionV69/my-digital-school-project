@@ -25,7 +25,7 @@ export default function SupplierCard({supplier, isFavorite, onFavoriteToggle}: S
             <div className="flex flex-col border-1 border-card/80 rounded-lg cursor-pointer group transition-colors duration-1000 hover:border-card h-full hover:bg-muted/40">
                 <div className="h-48 overflow-hidden rounded-t-lg relative">
                     <button 
-                        className="absolute top-2 right-2 bg-white/90 p-2 rounded-full z-10 group/heart"
+                        className="absolute top-2 right-2 bg-white/90 p-2 rounded-full z-10 cursor-pointer group/heart transition-color duration-300 hover:bg-white"
                         onClick={handleClick}
                         >
                         <Heart 

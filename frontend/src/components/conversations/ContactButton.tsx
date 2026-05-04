@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { createConversation } from "../../api/conversations";
 import { Button } from "../ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { LockKeyhole } from "lucide-react";
+import { LockKeyhole, MessageCircle } from "lucide-react";
 
 type ContactButtonProps = {
   supplierId: number;
@@ -38,7 +38,8 @@ function ContactButton({ supplierId }: ContactButtonProps) {
 
   return (
     <Button onClick={handleContactClick} disabled={loading}>
-      {loading ? "Chargement..." : "Contacter le fournisseur"}
+      <span className="hidden lg:inline">{loading ? "Chargement..." : "Contacter le fournisseur"}</span>
+      <MessageCircle className="lg:hidden w-4 h-4"></MessageCircle>
     </Button>
   );
 }

@@ -8,12 +8,12 @@ type SupplierProps = {
 
 export default function InfoSection({supplier}: SupplierProps) {
     return(
-    <Accordion type="single" collapsible className="mb-2">
+    <Accordion type="single" collapsible>
       <AccordionItem value="about">
         <AccordionTrigger>
           Informations pratiques
         </AccordionTrigger>
-        <AccordionContent className="p-6 flex flex-row gap-2 items-start h-auto">
+        <AccordionContent className="p-6 flex  flex-col lg:flex-row gap-2 items-start h-auto">
             {supplier.minimumOrderAmount 
                 && (
                     <Card className="w-full">

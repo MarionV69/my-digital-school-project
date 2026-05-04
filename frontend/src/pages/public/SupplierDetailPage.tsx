@@ -47,14 +47,14 @@ function SupplierDetailPage() {
       {supplier && (
         <div className="gap-6">
           <CoverPhoto supplier={supplier}/>
-          <div className="flex flex-col px-4 lg:px-24 lg:pt-12 mb-24 gap-6">
+          <div className="flex flex-col py-8 px-4 lg:py-12 lg:px-24 gap-6">
             <SupplierHeader 
               supplier={supplier}
               isFavorite={favorites.some((fav) => fav.targetId === supplier.id)}
               onFavoriteToggle={() => handleFavoriteToggle(supplier.id)}
             />
             <hr className="w-full border-t border-border"/>
-            <div className="w-full flex flex-row gap-8 items-start">
+            <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
               <div className="w-full flex flex-col gap-2">
                 <AboutSection supplier={supplier} />
                 <InfoSection supplier={supplier} />
