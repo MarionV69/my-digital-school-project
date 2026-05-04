@@ -1,13 +1,25 @@
 import type { supplierDetails } from "@/types/supplierDetails.type"
 import { Heart, MapPin, Star } from "lucide-react"
-import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
+import { useState } from "react"
+import ContactButton from "../conversations/ContactButton"
 
 type SupplierHeaderProps = {
-    supplier: supplierDetails
+    supplier: supplierDetails, 
+    isFavorite: boolean,
+    onFavoriteToggle: () => void,
 }
 
-export default function SupplierHeader({supplier}: SupplierHeaderProps) {
+export default function SupplierHeader({supplier, isFavorite, onFavoriteToggle}: SupplierHeaderProps) {
+    const [isAnimating, setIsAnimating] = useState(false);
+
+    function handleClickFavorite(e: React.MouseEvent) {
+        e.preventDefault();
+        setIsAnimating(true);
+        setTimeout(() => setIsAnimating(false), 300);
+        onFavoriteToggle();
+    }
+
     return(
         <div className="px-4 lg:px-24 pt-6 lg:pt-12 mb-24 gap-6 flex flex-col">
             <div className="flex flex-row justify-between">
@@ -19,12 +31,10 @@ export default function SupplierHeader({supplier}: SupplierHeaderProps) {
                         </span>
                     ))}
                 </div>
-                <div className="flex flex-row gap-1">
-                    <Button>
-                        Contacter
-                    </Button>
-                    <button className="border-1 border-border p-2 rounded-full group/heart">
-                        <Heart size={18} className="text-primary group-hover/heart:fill-primary" />
+                <div className="flex flex-row gap-1 items-center">
+                    <ContactButton supplierId={supplier.id} />
+                    <button onClick={handleClickFavorite} className="border-muted border-1 p-2 rounded-full w-full h-max items-center justify-center group/heart">
+                        <Heart size={18} className={`transition-transform duration-150 ${isAnimating ? "scale-125" : "scale-100"} ${!isFavorite ? "text-primary group-hover/heart:fill-primary" : "text-primary fill-primary"}`} />
                     </button>
                 </div>
             </div>
@@ -40,7 +50,7 @@ export default function SupplierHeader({supplier}: SupplierHeaderProps) {
                 <div className="flex flex-row gap-1 items-center">
                     <Star size={16} className="text-yellow-400 fill-yellow-400" />
                     <p>{supplier.averageRating}</p>
-                    <p className="text-muted-foreground text-xs">{`(${supplier.reviewsCount})`}</p>
+                    <p className="text-muted-foreground text-xs">{`(${supplier.reviewsCount} avis)`}</p>
                 </div>
             </div>
             <div className="flex flex-rox gap-2">

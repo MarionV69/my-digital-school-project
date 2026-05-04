@@ -1,11 +1,11 @@
-import type { supplierType } from "@/types/supplier"
+import type { Supplier } from "@/types/supplier"
 import { BadgeCheck, Heart, MapPin, Star } from "lucide-react"
 import { Badge } from "../ui/badge"
 import { Link } from "react-router-dom"
 import { useState } from "react"
 
 type SupplierCardProps = {
-    supplier: supplierType,
+    supplier: Supplier,
     isFavorite: boolean,
     onFavoriteToggle: () => void;
 }
@@ -31,7 +31,7 @@ export default function SupplierCard({supplier, isFavorite, onFavoriteToggle}: S
                         <Heart 
                             size={18} 
                             className={`transition-transform duration-150 ${isAnimating ? "scale-125" : "scale-100"} ${!isFavorite ? "text-primary group-hover/heart:fill-primary" : "text-primary fill-primary"}`}
-                             />
+                        />
                     </button>
                     <img 
                         src={supplier.coverPhotoUrl}

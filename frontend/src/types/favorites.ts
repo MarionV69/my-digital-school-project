@@ -1,4 +1,4 @@
 export interface favoritesType {
-    favoriteId: number;
+    id: number;
     targetId: number;
 }
