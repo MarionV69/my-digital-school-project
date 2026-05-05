@@ -1,73 +1,41 @@
-
-import api from "@/api/axiosConfig";
 import FilterBottomSheet from "@/components/home/FilterBottomSheet";
 import Filters from "@/components/home/Filters";
 import SearchBar from "@/components/home/SearchBar";
 import SupplierCard from "@/components/home/SupplierCard";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { useFavorites } from "@/hooks/useFavorites";
+import { useSuppliers } from "@/hooks/useSuppliers";
 import type { filtersType } from "@/types/filters";
-import type { supplierType } from "@/types/supplier";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+const LIMIT = 9;
 
 function HomePage() {
-
   const [search, setSearch] = useState("");
   const [city, setCity] = useState("");
-
-  const [suppliers, setSuppliers] = useState<supplierType[]>([]);
-
+  const [page, setPage] = useState(0);
   const [filters, setFilters] = useState<filtersType>({
     productCategories: [],
     labels: [],
     minRating: 0,
     supplierTypes: [],
     isPremium: false,
-  })
+  });
+  const { suppliers, error, loading } = useSuppliers(search, city, filters);
+  const paginateSuppliers = suppliers.slice(page * LIMIT, (page + 1) * LIMIT);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
-  console.log(isFilterOpen);
+  const { favorites, handleFavoriteToggle } = useFavorites();
 
-  useEffect(() => {
-      async function loadSuppliers() {
-          const params: Record<string, string | number | boolean | string[]> = {};
+  // Quand la SearchBar soumet
+  function handleSearch(search: string, city: string) {
+    setSearch(search);
+    setCity(city);
+  }
 
-          if (search) params.search = search;
-          if (city) params.city = city;
-          if (filters.productCategories.length > 0) params.productCategories = filters.productCategories;
-          if (filters.labels.length > 0) params.labels = filters.labels;
-          if (filters.minRating > 0) params.minRating = filters.minRating;
-          if (filters.isPremium) params.isPremium = filters.isPremium;
-          if (filters.supplierTypes.length > 0) params.supplierTypes = filters.supplierTypes;
-
-          try {
-              const response = await api.get('/suppliers', { 
-                params, 
-                paramsSerializer: (params) => {
-                  return Object.entries(params)
-                      .map(([key, value]) => {
-                          if (Array.isArray(value)) {
-                              return value.map(v => `${key}=${encodeURIComponent(v)}`).join('&');
-                          }
-                          return `${key}=${encodeURIComponent(value)}`;
-                      })
-                      .join('&');
-                  } 
-              });
-              setSuppliers(response.data);
-          } catch (error) {
-              console.error("Erreur :", error);
-          }
-      }
-      loadSuppliers();
-  }, [search, city, filters]); 
-
-    // Quand la SearchBar soumet
-    function handleSearch(search: string, city: string) {
-      setSearch(search);
-      setCity(city);
-    }
-  
   return (
-    <div className="px-4 lg:px-24 pt-6 lg:pt-12 mb-24 gap-6 flex flex-col">
+    <div className="px-4 py-8 lg:py-12 lg:px-24 gap-6 flex flex-col">
       <SearchBar onSearch={handleSearch} onFilterOpen={() => {setIsFilterOpen(true)}}/>
       <div className="w-full flex flex-row gap-12">
         <div className="hidden lg:block">
@@ -83,10 +51,37 @@ function HomePage() {
           <p className="text-muted-foreground text-sm">
             {suppliers.length} fournisseur{suppliers.length > 1 ? "s" : ""} trouvé{suppliers.length > 1 ? "s" : ""}
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 items-start">
-            {suppliers.map((supplier) => (
-              <SupplierCard key={supplier.id} supplier={supplier} />
-            ))}
+          {loading ? (
+              <div className="flex flex-row w-full items-center justify-center">
+                <Spinner />
+              </div>
+            ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 items-start ">
+              {paginateSuppliers.map((supplier) => (
+                <SupplierCard 
+                  key={supplier.id} 
+                  supplier={supplier} 
+                  isFavorite={favorites.some((fav) => fav.targetId === supplier.id)}
+                  onFavoriteToggle={() => handleFavoriteToggle(supplier.id)}
+                />
+              ))}
+              {error && <p className="text-destructive">{error}</p>}
+            </div>
+            )}
+          <div className="flex flex-row justify-center items-center gap-2">
+            <Button 
+              variant="outline"
+              onClick={() => setPage(page - 1)}
+              disabled={page===0}
+            >
+              Précédent
+            </Button>
+            <Button
+              onClick={() => setPage(page + 1)}
+              disabled={(page + 1) * LIMIT >= suppliers.length}
+            >
+              Suivant
+            </Button>
           </div>
         </div>
       </div>

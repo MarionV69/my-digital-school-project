@@ -1,4 +1,4 @@
-export interface supplierType {
+export interface Supplier {
     id: number;
     name: string;
     city: string;
