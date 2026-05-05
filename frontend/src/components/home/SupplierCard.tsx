@@ -22,7 +22,7 @@ export default function SupplierCard({supplier, isFavorite, onFavoriteToggle}: S
 
     return (
         <Link to={`/suppliers/${supplier.id}`}>
-            <div className="flex flex-col border-1 border-card/80 rounded-lg cursor-pointer group transition-colors duration-1000 hover:border-card h-full hover:bg-muted/40">
+            <div className="flex flex-col border-1 border-card/80 rounded-lg cursor-pointer group transition-colors h-full duration-1000 hover:border-card hover:bg-muted/40">
                 <div className="h-48 overflow-hidden rounded-t-lg relative">
                     <button 
                         className="absolute top-2 right-2 bg-white/90 p-2 rounded-full z-10 cursor-pointer group/heart transition-color duration-300 hover:bg-white"

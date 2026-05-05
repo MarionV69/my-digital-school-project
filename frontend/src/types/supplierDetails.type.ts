@@ -13,7 +13,6 @@ interface Review {
     createdAt: string;
 }
 
-
 export interface supplierDetails {
     id: number;
     name: string;

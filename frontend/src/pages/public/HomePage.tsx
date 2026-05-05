@@ -53,10 +53,10 @@ function HomePage() {
           </p>
           {loading ? (
               <div className="flex flex-row w-full items-center justify-center">
-                <Spinner />
+                <Spinner className="size-6 text-muted-foreground" />
               </div>
             ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 items-start ">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 items-stretch ">
               {paginateSuppliers.map((supplier) => (
                 <SupplierCard 
                   key={supplier.id} 

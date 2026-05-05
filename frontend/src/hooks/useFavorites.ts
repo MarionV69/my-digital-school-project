@@ -1,10 +1,10 @@
 import api from "@/api/axiosConfig";
-import type { favoritesType } from "@/types/favorites";
+import type { FavoritesSimple } from "@/types/favorites";
 import { useEffect, useState } from "react";
 import { useAuth } from "./useAuth";
 
 export function useFavorites() {
-    const [favorites, setFavorites] = useState<favoritesType[]>([]);
+    const [favorites, setFavorites] = useState<FavoritesSimple[]>([]);
     const { user } = useAuth();
     const establishmentId = user?.establishmentId;
 
