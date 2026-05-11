@@ -20,9 +20,11 @@ export default function SupplierExtras({supplierEditionValues, supplierSetEditio
         supplierEditionValues={supplierEditionValues}
         patchSupplier={patchSupplier}
       />
-      <LabelsSection />
+      <LabelsSection 
+        supplierEditionValues={supplierEditionValues}
+        patchSupplier={patchSupplier}
+      />
       <DeliverySection />
-      <LabelsSection />
       <VisibilitySection />
     </>
   );

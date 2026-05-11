@@ -20,8 +20,8 @@ export class SupplierListItemDto {
   @ApiProperty({ example: true, default: false })
   isPremium: boolean;
 
-  @ApiPropertyOptional({ example: ['Bio', 'AOP'] })
-  labels?: string[];
+  @ApiPropertyOptional({ example: [1, 2] })
+  labels?: number[];
 
   @ApiPropertyOptional({ example: [1, 2] })
   productCategories?: number[];

@@ -60,7 +60,8 @@ export default function useSupplier() {
         ...response.data,
         productCategories: response.data.productCategories.map(
           (cat: {id: number}) => cat.id,
-        )
+        ),
+        labels: response.data.labels.map((label: {id: number}) => label.id),
       };
       setApiValues(normalizedResponseData);
       setEditionValues(normalizedResponseData);
