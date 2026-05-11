@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useSuppliers } from "@/hooks/useSuppliers";
-import type { filtersType } from "@/types/filters";
+import type { filtersType } from "@/types/filters.types";
 import { useState } from "react";
 
 const LIMIT = 9;
@@ -36,12 +36,17 @@ function HomePage() {
 
   return (
     <div className="px-4 py-8 lg:py-12 lg:px-24 gap-6 flex flex-col">
-      <SearchBar onSearch={handleSearch} onFilterOpen={() => {setIsFilterOpen(true)}}/>
+      <SearchBar
+        onSearch={handleSearch}
+        onFilterOpen={() => {
+          setIsFilterOpen(true);
+        }}
+      />
       <div className="w-full flex flex-row gap-12">
         <div className="hidden lg:block">
-          <Filters filters={filters} onChange={setFilters} ></Filters>
+          <Filters filters={filters} onChange={setFilters}></Filters>
         </div>
-        <FilterBottomSheet 
+        <FilterBottomSheet
           isOpen={isFilterOpen}
           filters={filters}
           onChange={setFilters}
@@ -49,30 +54,33 @@ function HomePage() {
         ></FilterBottomSheet>
         <div className="flex flex-col gap-3 w-full">
           <p className="text-muted-foreground text-sm">
-            {suppliers.length} fournisseur{suppliers.length > 1 ? "s" : ""} trouvé{suppliers.length > 1 ? "s" : ""}
+            {suppliers.length} fournisseur{suppliers.length > 1 ? "s" : ""}{" "}
+            trouvé{suppliers.length > 1 ? "s" : ""}
           </p>
           {loading ? (
-              <div className="flex flex-row w-full items-center justify-center">
-                <Spinner className="size-6 text-muted-foreground" />
-              </div>
-            ) : (
+            <div className="flex flex-row w-full items-center justify-center">
+              <Spinner className="size-6 text-muted-foreground" />
+            </div>
+          ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 items-stretch ">
               {paginateSuppliers.map((supplier) => (
-                <SupplierCard 
-                  key={supplier.id} 
-                  supplier={supplier} 
-                  isFavorite={favorites.some((fav) => fav.targetId === supplier.id)}
+                <SupplierCard
+                  key={supplier.id}
+                  supplier={supplier}
+                  isFavorite={favorites.some(
+                    (fav) => fav.targetId === supplier.id,
+                  )}
                   onFavoriteToggle={() => handleFavoriteToggle(supplier.id)}
                 />
               ))}
               {error && <p className="text-destructive">{error}</p>}
             </div>
-            )}
+          )}
           <div className="flex flex-row justify-center items-center gap-2">
-            <Button 
+            <Button
               variant="outline"
               onClick={() => setPage(page - 1)}
-              disabled={page===0}
+              disabled={page === 0}
             >
               Précédent
             </Button>

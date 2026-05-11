@@ -1,4 +1,4 @@
-import type { FieldErrorsType, ProfileValuesType } from "@/types/profile";
+import type { FieldErrorsType, ProfileValuesType } from "@/types/profile.types";
 import type { Dispatch, SetStateAction } from "react";
 import {
   Accordion,
@@ -80,7 +80,6 @@ export default function SocialSection({
                     {fieldErrors.tradeName}
                   </p>
                 )}
-                
               </div>
             </div>
           </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateSupplierAttributesDto } from './dto/create-supplier-attributes.dto';
 import { UpdateSupplierAttributesDto } from './dto/update-supplier-attributes.dto';
 import { In, Repository } from 'typeorm';
@@ -162,7 +163,7 @@ export class SuppliersService {
             isPremium: supplier.isPremium,
             labels: supplier.labels.map((label) => label.name),
             productCategories: supplier.productCategories.map(
-              (ProductCategory) => ProductCategory.name,
+              (ProductCategory) => ProductCategory.id,
             ),
             logoUrl,
             coverPhotoUrl,
@@ -225,8 +226,10 @@ export class SuppliersService {
       isPremium: supplier.isPremium,
       labels: supplier.labels.map((label) => label.name),
       productCategories: supplier.productCategories.map(
-        (ProductCategory) => ProductCategory.name,
+        (ProductCategory) => ProductCategory.id,
       ),
+      supplierType: supplier.supplierType,
+      isVisible: supplier.isVisible,
       description: supplier.supplier.description,
       deliveryRadiusKm: supplier.deliveryRadiusKm,
       deliveryInformation: supplier.deliveryInformation,
@@ -314,7 +317,8 @@ export class SuppliersService {
         : [];
     }
 
-    Object.assign(supplierAttributes, dto);
+    const { productCategories, labels, ...otherAttributes } = dto;
+    Object.assign(supplierAttributes, otherAttributes);
     return await this.supplierRepository.save(supplierAttributes);
   }
 

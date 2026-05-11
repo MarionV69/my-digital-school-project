@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { Input } from "../ui/input";
-import type { FieldErrorsType, ProfileValuesType } from "@/types/profile";
+import type { FieldErrorsType, ProfileValuesType } from "@/types/profile.types";
 import { Textarea } from "../ui/textarea";
 
 type CommonInfoSectionType = {
@@ -14,7 +14,7 @@ type CommonInfoSectionType = {
   setEditionValues: Dispatch<SetStateAction<ProfileValuesType>>;
   apiValues: ProfileValuesType;
   patchEstablishment: (fieldName: string, value: string) => Promise<void>;
-  fieldErrors: FieldErrorsType,
+  fieldErrors: FieldErrorsType;
 };
 
 export default function CommonInfoSection({
@@ -22,7 +22,7 @@ export default function CommonInfoSection({
   setEditionValues,
   apiValues,
   patchEstablishment,
-  fieldErrors
+  fieldErrors,
 }: CommonInfoSectionType) {
   return (
     <Accordion type="single" collapsible>
@@ -51,12 +51,19 @@ export default function CommonInfoSection({
                     }
                     onBlur={() => {
                       if (editionValues.legalName !== apiValues.legalName) {
-                        patchEstablishment("legalName", editionValues.legalName);
+                        patchEstablishment(
+                          "legalName",
+                          editionValues.legalName,
+                        );
                       }
                     }}
                     required
                   />
-                  {fieldErrors.legalName && <p className="text-destructive text-xs">{fieldErrors.legalName}</p>}
+                  {fieldErrors.legalName && (
+                    <p className="text-destructive text-xs">
+                      {fieldErrors.legalName}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Nom commercial</p>
@@ -70,12 +77,19 @@ export default function CommonInfoSection({
                     }
                     onBlur={() => {
                       if (editionValues.tradeName !== apiValues.tradeName) {
-                        patchEstablishment('tradeName', editionValues.tradeName);
+                        patchEstablishment(
+                          "tradeName",
+                          editionValues.tradeName,
+                        );
                       }
                     }}
                     placeholder="Le Bouchon Lyonnais"
                   />
-                  {fieldErrors.tradeName && <p className="text-destructive text-xs">{fieldErrors.tradeName}</p>}
+                  {fieldErrors.tradeName && (
+                    <p className="text-destructive text-xs">
+                      {fieldErrors.tradeName}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="flex flex-row gap-2">
@@ -91,12 +105,16 @@ export default function CommonInfoSection({
                     }
                     onBlur={() => {
                       if (editionValues.siret !== apiValues.siret) {
-                        patchEstablishment('siret', editionValues.siret);
+                        patchEstablishment("siret", editionValues.siret);
                       }
                     }}
                     required
                   />
-                  {fieldErrors.siret && <p className="text-destructive text-xs">{fieldErrors.siret}</p>}
+                  {fieldErrors.siret && (
+                    <p className="text-destructive text-xs">
+                      {fieldErrors.siret}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Numéro de TVA</p>
@@ -110,12 +128,19 @@ export default function CommonInfoSection({
                     }
                     onBlur={() => {
                       if (editionValues.vatNumber !== apiValues.vatNumber) {
-                        patchEstablishment('vatNumber', editionValues.vatNumber);
+                        patchEstablishment(
+                          "vatNumber",
+                          editionValues.vatNumber,
+                        );
                       }
                     }}
                     placeholder="FR 12 345678901"
                   />
-                  {fieldErrors.vatNumber && <p className="text-destructive text-xs">{fieldErrors.vatNumber}</p>}
+                  {fieldErrors.vatNumber && (
+                    <p className="text-destructive text-xs">
+                      {fieldErrors.vatNumber}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -136,12 +161,16 @@ export default function CommonInfoSection({
                     }
                     onBlur={() => {
                       if (editionValues.phone !== apiValues.phone) {
-                        patchEstablishment('phone', editionValues.phone);
+                        patchEstablishment("phone", editionValues.phone);
                       }
                     }}
                     placeholder="06 12 34 56 78"
                   />
-                  {fieldErrors.phone && <p className="text-destructive text-xs">{fieldErrors.phone}</p>}
+                  {fieldErrors.phone && (
+                    <p className="text-destructive text-xs">
+                      {fieldErrors.phone}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Site web</p>
@@ -155,12 +184,16 @@ export default function CommonInfoSection({
                     }
                     onBlur={() => {
                       if (editionValues.website !== apiValues.website) {
-                        patchEstablishment('website', editionValues.website);
+                        patchEstablishment("website", editionValues.website);
                       }
                     }}
                     placeholder="https://monrestaurant.fr"
                   />
-                  {fieldErrors.website && <p className="text-destructive text-xs">{fieldErrors.website}</p>}
+                  {fieldErrors.website && (
+                    <p className="text-destructive text-xs">
+                      {fieldErrors.website}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -180,12 +213,16 @@ export default function CommonInfoSection({
                   }
                   onBlur={() => {
                     if (editionValues.address !== apiValues.address) {
-                      patchEstablishment('address', editionValues.address);
+                      patchEstablishment("address", editionValues.address);
                     }
                   }}
                   required
                 />
-                {fieldErrors.address && <p className="text-destructive text-xs">{fieldErrors.address}</p>}
+                {fieldErrors.address && (
+                  <p className="text-destructive text-xs">
+                    {fieldErrors.address}
+                  </p>
+                )}
               </div>
               <div className="flex flex-row gap-2">
                 <div className="flex flex-col gap-0.5 w-full">
@@ -200,12 +237,19 @@ export default function CommonInfoSection({
                     }
                     onBlur={() => {
                       if (editionValues.postalCode !== apiValues.postalCode) {
-                        patchEstablishment('postalCode', editionValues.postalCode);
+                        patchEstablishment(
+                          "postalCode",
+                          editionValues.postalCode,
+                        );
                       }
                     }}
                     required
                   />
-                  {fieldErrors.postalCode && <p className="text-destructive text-xs">{fieldErrors.postalCode}</p>}
+                  {fieldErrors.postalCode && (
+                    <p className="text-destructive text-xs">
+                      {fieldErrors.postalCode}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Ville *</p>
@@ -219,12 +263,16 @@ export default function CommonInfoSection({
                     }
                     onBlur={() => {
                       if (editionValues.city !== apiValues.city) {
-                        patchEstablishment('city', editionValues.city);
+                        patchEstablishment("city", editionValues.city);
                       }
                     }}
                     required
                   />
-                  {fieldErrors.city && <p className="text-destructive text-xs">{fieldErrors.city}</p>}
+                  {fieldErrors.city && (
+                    <p className="text-destructive text-xs">
+                      {fieldErrors.city}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Pays *</p>
@@ -238,12 +286,16 @@ export default function CommonInfoSection({
                     }
                     onBlur={() => {
                       if (editionValues.country !== apiValues.country) {
-                        patchEstablishment('country', editionValues.country);
+                        patchEstablishment("country", editionValues.country);
                       }
                     }}
                     required
                   />
-                  {fieldErrors.country && <p className="text-destructive text-xs">{fieldErrors.country}</p>}
+                  {fieldErrors.country && (
+                    <p className="text-destructive text-xs">
+                      {fieldErrors.country}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -263,12 +315,19 @@ export default function CommonInfoSection({
                   }
                   onBlur={() => {
                     if (editionValues.description !== apiValues.description) {
-                      patchEstablishment('description', editionValues.description);
+                      patchEstablishment(
+                        "description",
+                        editionValues.description,
+                      );
                     }
                   }}
                   placeholder="Décrivez votre activité, vos valeurs, etc."
                 />
-                {fieldErrors.description && <p className="text-destructive text-xs">{fieldErrors.description}</p>}
+                {fieldErrors.description && (
+                  <p className="text-destructive text-xs">
+                    {fieldErrors.description}
+                  </p>
+                )}
               </div>
             </div>
           </div>

@@ -23,8 +23,8 @@ export class SupplierListItemDto {
   @ApiPropertyOptional({ example: ['Bio', 'AOP'] })
   labels?: string[];
 
-  @ApiPropertyOptional({ example: ['Viandes', 'Poissons'] })
-  productCategories?: string[];
+  @ApiPropertyOptional({ example: [1, 2] })
+  productCategories?: number[];
 
   @ApiPropertyOptional({
     example:
