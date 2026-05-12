@@ -56,15 +56,8 @@ export default function useSupplier() {
       const response = await api.patch(`/suppliers/${supplierId}`, {
         [fieldName]: value,
       });
-      const normalizedResponseData = {
-        ...response.data,
-        productCategories: response.data.productCategories.map(
-          (cat: {id: number}) => cat.id,
-        ),
-        labels: response.data.labels.map((label: {id: number}) => label.id),
-      };
-      setApiValues(normalizedResponseData);
-      setEditionValues(normalizedResponseData);
+      setApiValues(response.data);
+      setEditionValues(response.data);
     } catch (e) {
       const axiosError = e as AxiosError<{ message: string[] }>;
       setFieldErrors((prev) => ({

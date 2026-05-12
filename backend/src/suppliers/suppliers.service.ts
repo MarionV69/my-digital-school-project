@@ -161,9 +161,9 @@ export class SuppliersService {
             city: supplier.supplier.city,
             priceRange: supplier.priceRange,
             isPremium: supplier.isPremium,
-            labels: supplier.labels.map((label) => label.id),
+            labels: supplier.labels.map((label) => label.name),
             productCategories: supplier.productCategories.map(
-              (ProductCategory) => ProductCategory.id,
+              (ProductCategory) => ProductCategory.name,
             ),
             logoUrl,
             coverPhotoUrl,
@@ -285,7 +285,7 @@ export class SuppliersService {
     id: number,
     dto: UpdateSupplierAttributesDto,
     currentUser: AuthenticatedUser,
-  ): Promise<SupplierAttributes> {
+  ): Promise<SupplierDetailDto> {
     const supplierAttributes = await this.supplierRepository.findOne({
       where: { supplierId: id },
       relations: ['labels', 'productCategories'],
@@ -318,8 +318,8 @@ export class SuppliersService {
     }
 
     const { productCategories, labels, ...otherAttributes } = dto;
-    Object.assign(supplierAttributes, otherAttributes);
-    return await this.supplierRepository.save(supplierAttributes);
+    await this.supplierRepository.save(supplierAttributes);
+    return this.findOne(id);
   }
 
   // Méthode pour supprimer un fournisseur

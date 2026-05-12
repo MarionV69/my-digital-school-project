@@ -6,11 +6,13 @@ import ContactButton from "../conversations/ContactButton"
 
 type SupplierHeaderProps = {
     supplier: supplierDetails, 
+    categories: { id: number; name: string }[];
+    allLabels: { id: number; name: string; description: string }[];
     isFavorite: boolean,
     onFavoriteToggle: () => void,
 }
 
-export default function SupplierHeader({supplier, isFavorite, onFavoriteToggle}: SupplierHeaderProps) {
+export default function SupplierHeader({supplier, categories, allLabels, isFavorite, onFavoriteToggle}: SupplierHeaderProps) {
     const [isAnimating, setIsAnimating] = useState(false);
 
     function handleClickFavorite(e: React.MouseEvent) {
@@ -31,9 +33,9 @@ export default function SupplierHeader({supplier, isFavorite, onFavoriteToggle}:
             <div className="flex flex-row gap-8 items-start justify-between">
                 <div className="flex flex-col lg:flex-row gap-2 lg:gap-6 items-start lg:items-center">
                     <h3>{supplier.name}</h3>
-                    {supplier.productCategories.map((c) => (
-                        <span className="bg-black/90 text-white text-sm px-2 py-1 rounded-full">
-                        {c}
+                    {supplier.productCategories.map((id) => (
+                        <span key={id} className="bg-black/90 text-white text-sm px-2 py-1 rounded-full">
+                            {categories.find(c => c.id === id)?.name ?? id}
                         </span>
                     ))}
                 </div>
@@ -52,14 +54,9 @@ export default function SupplierHeader({supplier, isFavorite, onFavoriteToggle}:
                 <div className="flex flex-row gap-1 items-center">
                     <div className="flex flex-row">
                         <Euro size={12}></Euro>
-                        {supplier.priceRange !== "ECONOMIC" && (
-                            <Euro size={12}></Euro>
-                        )}
-                        {supplier.priceRange === "PREMIUM" && (
-                            <Euro size={12}></Euro>
-                        )}
+                        {supplier.priceRange !== "ECONOMIC" && <Euro size={12}></Euro>}
+                        {supplier.priceRange === "PREMIUM" && <Euro size={12}></Euro>}
                     </div>
-                    
                     <p className="text-muted-foreground">{priceRangeLabel[supplier.priceRange]}</p>
                 </div>
                 <div className="flex flex-row gap-1 items-center">
@@ -68,15 +65,11 @@ export default function SupplierHeader({supplier, isFavorite, onFavoriteToggle}:
                     <p className="text-muted-foreground text-xs">{`(${supplier.reviewsCount} avis)`}</p>
                 </div>
             </div>
-            <div className="flex flex-rox gap-2">
-                {supplier.labels.map((l) => (
-                    <Badge>{l}</Badge>
+            <div className="flex flex-row gap-2">
+                {supplier.labels.map((id) => (
+                    <Badge key={id}>{allLabels.find(l => l.id === id)?.name ?? id}</Badge>
                 ))}
             </div>
-            
         </div>
     )
 }
-
-
-

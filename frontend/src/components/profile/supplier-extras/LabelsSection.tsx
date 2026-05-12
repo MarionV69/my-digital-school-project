@@ -1,29 +1,42 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import useLabels from "@/hooks/useLabels";
 import type { ProfilSupplierValuesType } from "@/types/profile.types";
 
-    type LabelsProps = {
-        supplierEditionValues: ProfilSupplierValuesType,
-        patchSupplier: (fieldName: string, value: string | string[] | number | number[] | boolean | null) => Promise<void>,
+type LabelsProps = {
+  supplierEditionValues: ProfilSupplierValuesType;
+  patchSupplier: (
+    fieldName: string,
+    value: string | string[] | number | number[] | boolean | null,
+  ) => Promise<void>;
+};
+
+export default function LabelsSection({
+  supplierEditionValues,
+  patchSupplier,
+}: LabelsProps) {
+  const { labels, loading, error } = useLabels();
+  const labelsIds = supplierEditionValues.labels as number[];
+
+  function handleClickLabel(label: { id: number }) {
+    if (labelsIds.includes(label.id)) {
+      patchSupplier(
+        "labels",
+        labelsIds.filter((c) => c !== label.id),
+      );
+    } else {
+      patchSupplier("labels", [...labelsIds, label.id]);
     }
+  }
 
-export default function LabelsSection({ supplierEditionValues, patchSupplier} : LabelsProps) {
-
-    const { labels, loading, error } = useLabels();
-    const labelsIds = supplierEditionValues.labels as number[];
-
-    function handleClickLabel(label: {id: number}) {
-        if (labelsIds.includes(label.id)) {
-            patchSupplier("labels", labelsIds.filter((c) => c !== label.id));
-        } else {
-            patchSupplier("labels", [...labelsIds, label.id]);
-        }
-    };
-
-    return(
-        <Accordion type="single" collapsible>
+  return (
+    <Accordion type="single" collapsible>
       <AccordionItem value="labels">
         <AccordionTrigger className="flex flex-row w-full gap-8 items-center">
           <p>Labels</p>
@@ -61,5 +74,5 @@ export default function LabelsSection({ supplierEditionValues, patchSupplier} : 
         </AccordionContent>
       </AccordionItem>
     </Accordion>
-    );
+  );
 }

@@ -5,10 +5,9 @@ import { FileResponseDto } from 'src/files/dto/file-response.dto';
 import { SupplierType } from '../enums/supplier-type.enum';
 
 export class SupplierDetailDto extends SupplierListItemDto {
-
   @ApiPropertyOptional({
     enum: SupplierType,
-    example: SupplierType.PRODUCER
+    example: SupplierType.PRODUCER,
   })
   supplierType: SupplierType;
 
@@ -71,4 +70,5 @@ export class SupplierDetailDto extends SupplierListItemDto {
     example: false,
   })
   isVisible: boolean;
+
 }
