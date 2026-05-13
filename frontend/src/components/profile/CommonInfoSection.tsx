@@ -68,7 +68,7 @@ export default function CommonInfoSection({
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Nom commercial</p>
                   <Input
-                    value={editionValues.tradeName}
+                    value={editionValues.tradeName || ""}
                     onChange={(e) =>
                       setEditionValues({
                         ...editionValues,
@@ -119,7 +119,7 @@ export default function CommonInfoSection({
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Numéro de TVA</p>
                   <Input
-                    value={editionValues.vatNumber}
+                    value={editionValues.vatNumber || ""}
                     onChange={(e) =>
                       setEditionValues({
                         ...editionValues,
@@ -152,7 +152,7 @@ export default function CommonInfoSection({
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Téléphone</p>
                   <Input
-                    value={editionValues.phone}
+                    value={editionValues.phone || ""}
                     onChange={(e) =>
                       setEditionValues({
                         ...editionValues,
@@ -175,7 +175,7 @@ export default function CommonInfoSection({
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Site web</p>
                   <Input
-                    value={editionValues.website}
+                    value={editionValues.website || ""}
                     onChange={(e) =>
                       setEditionValues({
                         ...editionValues,
@@ -306,7 +306,7 @@ export default function CommonInfoSection({
               <div className="flex flex-col gap-0.5 w-full">
                 <p>Description</p>
                 <Textarea
-                  value={editionValues.description}
+                  value={editionValues.description || ""}
                   onChange={(e) =>
                     setEditionValues({
                       ...editionValues,

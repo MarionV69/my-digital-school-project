@@ -18,19 +18,19 @@ export const initialValues = {
 export type ProfileValuesType = typeof initialValues;
 
 export const initialErrors = {
-    legalName: null,
-    tradeName: null,
-    siret: null,
-    vatNumber: null,
-    phone: null,
-    website: null,
-    address: null,
-    postalCode: null,
-    city: null,
-    country: null,
-    description: null,
-    facebook: null,
-    instagram: null,
+    legalName: null as string | null,
+    tradeName: null as string | null,
+    siret: null as string | null,
+    vatNumber: null as string | null,
+    phone: null as string | null,
+    website: null as string | null,
+    address: null as string | null,
+    postalCode: null as string | null,
+    city: null as string | null,
+    country: null as string | null,
+    description: null as string | null,
+    facebook: null as string | null,
+    instagram: null as string | null,
 };
 
 export type FieldErrorsType = typeof initialErrors;
@@ -42,24 +42,24 @@ export const initialSuppliersValues = {
     supplierType: '',
     priceRange: '',
     isPremium: false,
-    deliveryRadiusKm: null,
+    deliveryRadiusKm: null as number | null,
     deliveryInformation: '',
-    minimumOrderAmount: null,
+    minimumOrderAmount: null as number | null,
     isVisible: false,
 };
 
 export type ProfilSupplierValuesType = typeof initialSuppliersValues;
 
 export const initialSuppliersErrors = {
-    productCategories: null,
-    labels: null,
-    supplierType: null,
-    priceRange: null,
-    isPremium: null,
-    deliveryRadiusKm: null,
-    deliveryInformation: null,
-    minimumOrderAmount: null,
-    isVisible: null,
+    productCategories: null as string | null,
+    labels: null as string | null,
+    supplierType: null as string | null,
+    priceRange: null as string | null,
+    isPremium: null as boolean | null,
+    deliveryRadiusKm: null as number | null,
+    deliveryInformation: null as string | null,
+    minimumOrderAmount: null as number | null,
+    isVisible: null as boolean | null,
 };
 
 export type SupplierFieldErrorsType = typeof initialSuppliersErrors;

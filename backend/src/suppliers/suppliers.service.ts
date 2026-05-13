@@ -286,6 +286,7 @@ export class SuppliersService {
     dto: UpdateSupplierAttributesDto,
     currentUser: AuthenticatedUser,
   ): Promise<SupplierDetailDto> {
+    console.log('dto reçu:', dto);
     const supplierAttributes = await this.supplierRepository.findOne({
       where: { supplierId: id },
       relations: ['labels', 'productCategories'],
@@ -318,6 +319,13 @@ export class SuppliersService {
     }
 
     const { productCategories, labels, ...otherAttributes } = dto;
+    const filteredAttributes = Object.fromEntries(
+      Object.entries(otherAttributes).filter(
+        ([_, value]) => value !== undefined,
+      ),
+    );
+    Object.assign(supplierAttributes, filteredAttributes);
+    console.log('données à sauvegarder:', supplierAttributes.deliveryRadiusKm);
     await this.supplierRepository.save(supplierAttributes);
     return this.findOne(id);
   }

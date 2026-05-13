@@ -38,7 +38,7 @@ export default function SocialSection({
               <div className="flex flex-col gap-0.5 w-full">
                 <p>Instagram</p>
                 <Input
-                  value={editionValues.instagram}
+                  value={editionValues.instagram || ""}
                   onChange={(e) =>
                     setEditionValues({
                       ...editionValues,
@@ -61,7 +61,7 @@ export default function SocialSection({
               <div className="flex flex-col gap-0.5 w-full">
                 <p>Facebook</p>
                 <Input
-                  value={editionValues.facebook}
+                  value={editionValues.facebook || ""}
                   onChange={(e) =>
                     setEditionValues({
                       ...editionValues,
