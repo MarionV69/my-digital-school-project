@@ -8,6 +8,7 @@ import {
 import { Input } from "../ui/input";
 import type { FieldErrorsType, ProfileValuesType } from "@/types/profile.types";
 import { Textarea } from "../ui/textarea";
+import PeopleFillIcon from "@/assets/icons/people-fill.svg";
 
 type CommonInfoSectionType = {
   editionValues: ProfileValuesType;
@@ -28,7 +29,11 @@ export default function CommonInfoSection({
     <Accordion type="single" collapsible>
       <AccordionItem value="common-informations">
         <AccordionTrigger className="flex flex-row w-full gap-8 items-center">
-          <p>Informations générales</p>
+          <div className="flex flex-row gap-2 items-center">
+            <img className="size-4 opacity-70" src={PeopleFillIcon} />
+            <p>Informations générales</p> 
+          </div>
+
           <span className="bg-black/50 text-white text-xs font-light px-2 py-1 rounded-full">
             Recommandé
           </span>

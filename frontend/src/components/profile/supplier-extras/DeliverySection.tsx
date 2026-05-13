@@ -15,6 +15,7 @@ import type {
   SupplierFieldErrorsType,
 } from "@/types/profile.types";
 import type { Dispatch, SetStateAction } from "react";
+import TruckIcon from "@/assets/icons/truck.svg";
 
 type DeliverySectionType = {
   supplierEditionValues: ProfilSupplierValuesType;
@@ -38,7 +39,10 @@ export default function DeliverySection({
     <Accordion type="single" collapsible>
       <AccordionItem value="delivery">
         <AccordionTrigger className="flex flex-row w-full gap-8 items-center">
-          <p>Conditions de livraisons</p>
+        <div className="flex flex-row gap-2 items-center">
+            <img className="size-4 opacity-70" src={TruckIcon} />
+            <p>Conditions de livraisons</p>
+          </div>
           <span className="bg-black/10 text-muted-foreground text-xs font-light px-2 py-1 rounded-full">
             Optionnel
           </span>

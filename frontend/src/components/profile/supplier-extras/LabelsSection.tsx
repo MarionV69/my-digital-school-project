@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import useLabels from "@/hooks/useLabels";
 import type { ProfilSupplierValuesType } from "@/types/profile.types";
+import ShieldIcon from "@/assets/icons/shield.svg";
 
 type LabelsProps = {
   supplierEditionValues: ProfilSupplierValuesType;
@@ -39,7 +40,10 @@ export default function LabelsSection({
     <Accordion type="single" collapsible>
       <AccordionItem value="labels">
         <AccordionTrigger className="flex flex-row w-full gap-8 items-center">
-          <p>Labels</p>
+          <div className="flex flex-row gap-2 items-center">
+            <img className="size-4 opacity-70" src={ShieldIcon} />
+            <p>Labels</p>
+          </div>
           <span className="bg-black/50 text-white text-xs font-light px-2 py-1 rounded-full">
             Recommandé
           </span>

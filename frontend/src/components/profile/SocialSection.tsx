@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { Input } from "../ui/input";
+import ShareIcon from "@/assets/icons/share.svg";
 
 type SocialSectionType = {
   editionValues: ProfileValuesType;
@@ -27,7 +28,10 @@ export default function SocialSection({
     <Accordion type="single" collapsible>
       <AccordionItem value="social-media">
         <AccordionTrigger className="flex flex-row w-full gap-8 items-center">
-          <p>Réseaux sociaux</p>
+          <div className="flex flex-row gap-2 items-center">
+            <img className="size-4 opacity-70" src={ShareIcon} />
+            <p>Réseaux sociaux</p>
+          </div>
           <span className="bg-black/10 text-muted-foreground text-xs font-light px-2 py-1 rounded-full">
             Optionnel
           </span>

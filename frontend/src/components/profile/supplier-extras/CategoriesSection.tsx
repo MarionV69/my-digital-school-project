@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import useCategories from "@/hooks/useCategories";
 import type { ProfilSupplierValuesType } from "@/types/profile.types";
+import SlidersIcon from "@/assets/icons/sliders3.svg";
 
 type CategoriesSectionProps = {
   supplierEditionValues: ProfilSupplierValuesType;
@@ -43,7 +44,10 @@ export default function CategoriesSection({
     <Accordion type="single" collapsible>
       <AccordionItem value="categories">
         <AccordionTrigger className="flex flex-row w-full gap-8 items-center">
-          <p>Catégories de produits</p>
+          <div className="flex flex-row gap-2 items-center">
+            <img className="size-4 opacity-70" src={SlidersIcon} />
+            <p>Catégories de produits</p>
+          </div>
           <span className="bg-black/50 text-white text-xs font-light px-2 py-1 rounded-full">
             Recommandé
           </span>
