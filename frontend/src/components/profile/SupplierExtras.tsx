@@ -31,7 +31,10 @@ export default function SupplierExtras({supplierEditionValues, supplierSetEditio
         patchSupplier={patchSupplier}
         supplierFieldErrors={supplierFieldErrors}
       />
-      <VisibilitySection />
+      <VisibilitySection
+        supplierEditionValues={supplierEditionValues}
+        patchSupplier={patchSupplier} 
+      />
     </>
   );
 }
