@@ -33,7 +33,7 @@ export class UpdateSupplierAttributesDto {
   })
   @IsString()
   @IsOptional()
-  deliveryInformations?: string;
+  deliveryInformation?: string;
 
   @ApiPropertyOptional({ example: 50.0, required: false })
   @IsNumber()

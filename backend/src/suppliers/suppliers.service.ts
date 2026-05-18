@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateSupplierAttributesDto } from './dto/create-supplier-attributes.dto';
 import { UpdateSupplierAttributesDto } from './dto/update-supplier-attributes.dto';
 import { In, Repository } from 'typeorm';
@@ -223,10 +224,12 @@ export class SuppliersService {
       postalCode: supplier.supplier.postalCode,
       priceRange: supplier.priceRange,
       isPremium: supplier.isPremium,
-      labels: supplier.labels.map((label) => label.name),
+      labels: supplier.labels.map((label) => label.id),
       productCategories: supplier.productCategories.map(
-        (ProductCategory) => ProductCategory.name,
+        (ProductCategory) => ProductCategory.id,
       ),
+      supplierType: supplier.supplierType,
+      isVisible: supplier.isVisible,
       description: supplier.supplier.description,
       deliveryRadiusKm: supplier.deliveryRadiusKm,
       deliveryInformation: supplier.deliveryInformation,
@@ -282,7 +285,8 @@ export class SuppliersService {
     id: number,
     dto: UpdateSupplierAttributesDto,
     currentUser: AuthenticatedUser,
-  ): Promise<SupplierAttributes> {
+  ): Promise<SupplierDetailDto> {
+    console.log('dto reçu:', dto);
     const supplierAttributes = await this.supplierRepository.findOne({
       where: { supplierId: id },
       relations: ['labels', 'productCategories'],
@@ -314,8 +318,16 @@ export class SuppliersService {
         : [];
     }
 
-    Object.assign(supplierAttributes, dto);
-    return await this.supplierRepository.save(supplierAttributes);
+    const { productCategories, labels, ...otherAttributes } = dto;
+    const filteredAttributes = Object.fromEntries(
+      Object.entries(otherAttributes).filter(
+        ([_, value]) => value !== undefined,
+      ),
+    );
+    Object.assign(supplierAttributes, filteredAttributes);
+    console.log('données à sauvegarder:', supplierAttributes.deliveryRadiusKm);
+    await this.supplierRepository.save(supplierAttributes);
+    return this.findOne(id);
   }
 
   // Méthode pour supprimer un fournisseur

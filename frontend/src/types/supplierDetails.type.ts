@@ -1,4 +1,4 @@
-interface Catalog {
+export interface Catalog {
     id: number;
     originalFilename: string;
     mimeType: string;
@@ -20,8 +20,8 @@ export interface supplierDetails {
     postalCode: string;
     priceRange: string;
     isPremium: boolean;
-    labels: string[];
-    productCategories: string[];
+    labels: number[];
+    productCategories: number[];
     logoUrl?: string;
     coverPhotoUrl?: string;
     reviewsCount: number;

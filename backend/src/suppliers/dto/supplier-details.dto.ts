@@ -2,8 +2,15 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { SupplierListItemDto } from './supplier-list-item.dto';
 import { ReviewDto } from './review.dto';
 import { FileResponseDto } from 'src/files/dto/file-response.dto';
+import { SupplierType } from '../enums/supplier-type.enum';
 
 export class SupplierDetailDto extends SupplierListItemDto {
+  @ApiPropertyOptional({
+    enum: SupplierType,
+    example: SupplierType.PRODUCER,
+  })
+  supplierType: SupplierType;
+
   @ApiPropertyOptional({
     example:
       'Nous proposons des produits de terroir de qualité et rémunérons nos producteurs à leur juste valeur.',
@@ -58,4 +65,10 @@ export class SupplierDetailDto extends SupplierListItemDto {
     ],
   })
   reviews: ReviewDto[];
+
+  @ApiPropertyOptional({
+    example: false,
+  })
+  isVisible: boolean;
+
 }
