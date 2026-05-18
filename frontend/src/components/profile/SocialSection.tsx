@@ -30,7 +30,7 @@ export default function SocialSection({
         <AccordionTrigger className="flex flex-row w-full gap-8 items-center">
           <div className="flex flex-row gap-2 items-center">
             <img className="size-4 opacity-70" src={ShareIcon} />
-            <p>Réseaux sociaux</p>
+            <p>Réseaux</p>
           </div>
           <span className="bg-black/10 text-muted-foreground text-xs font-light px-2 py-1 rounded-full">
             Optionnel
@@ -38,7 +38,7 @@ export default function SocialSection({
         </AccordionTrigger>
         <AccordionContent className="p-6 h-auto">
           <div className="flex flex-col gap-1">
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-col md:flex-row gap-2">
               <div className="flex flex-col gap-0.5 w-full">
                 <p>Instagram</p>
                 <Input

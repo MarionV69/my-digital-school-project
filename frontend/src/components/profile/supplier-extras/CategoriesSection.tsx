@@ -46,7 +46,7 @@ export default function CategoriesSection({
         <AccordionTrigger className="flex flex-row w-full gap-8 items-center">
           <div className="flex flex-row gap-2 items-center">
             <img className="size-4 opacity-70" src={SlidersIcon} />
-            <p>Catégories de produits</p>
+            <p>Produits</p>
           </div>
           <span className="bg-black/50 text-white text-xs font-light px-2 py-1 rounded-full">
             Recommandé
@@ -55,7 +55,7 @@ export default function CategoriesSection({
         <AccordionContent className="p-6 h-auto">
           <div className="flex flex-col gap-2">
             <p className="text-muted-foreground">Plusieurs choix possibles</p>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-wrap gap-2">
               {loading ? (
                 <div className="flex flex-row w-full items-center justify-center">
                   <Spinner className="size-6 text-muted-foreground" />
@@ -68,9 +68,16 @@ export default function CategoriesSection({
                   return (
                     <Badge
                       key={category.id}
-                      className={isSelected ? "bg-primary text-white" : ""}
+                      className={
+                        isSelected
+                          ? "bg-primary text-white cursor-pointer"
+                          : "cursor-pointer"
+                      }
                     >
-                      <button onClick={() => handleClickCategory(category)}>
+                      <button
+                        className="cursor-pointer"
+                        onClick={() => handleClickCategory(category)}
+                      >
                         {category.name}
                       </button>
                     </Badge>

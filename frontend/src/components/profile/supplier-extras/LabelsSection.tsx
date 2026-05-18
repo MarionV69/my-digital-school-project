@@ -51,7 +51,7 @@ export default function LabelsSection({
         <AccordionContent className="p-6 h-auto">
           <div className="flex flex-col gap-2">
             <p className="text-muted-foreground">Plusieurs choix possibles</p>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-wrap gap-2">
               {loading ? (
                 <div className="flex flex-row w-full items-center justify-center">
                   <Spinner className="size-6 text-muted-foreground" />
@@ -64,9 +64,16 @@ export default function LabelsSection({
                   return (
                     <Badge
                       key={label.id}
-                      className={isSelected ? "bg-primary text-white" : ""}
+                      className={
+                        isSelected
+                          ? "bg-primary text-white cursor-pointer"
+                          : "cursor-pointer"
+                      }
                     >
-                      <button onClick={() => handleClickLabel(label)}>
+                      <button
+                        className="cursor-pointer"
+                        onClick={() => handleClickLabel(label)}
+                      >
                         {label.name}
                       </button>
                     </Badge>

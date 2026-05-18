@@ -28,10 +28,10 @@ export default function CommonInfoSection({
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="common-informations">
-        <AccordionTrigger className="flex flex-row w-full gap-8 items-center">
+        <AccordionTrigger className="flex lg:flex-row w-full gap-8 items-center">
           <div className="flex flex-row gap-2 items-center">
             <img className="size-4 opacity-70" src={PeopleFillIcon} />
-            <p>Informations générales</p> 
+            <p>Générale</p> 
           </div>
 
           <span className="bg-black/50 text-white text-xs font-light px-2 py-1 rounded-full">
@@ -41,9 +41,9 @@ export default function CommonInfoSection({
         <AccordionContent className="p-6 h-auto">
           <div className="flex flex-col gap-4">
             {/* Identité */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2 md:gap-1">
               <p className="text-muted-foreground">IDENTITÉ</p>
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-col md:flex-row gap-2">
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Raison sociale (nom légal) *</p>
                   <Input
@@ -97,7 +97,7 @@ export default function CommonInfoSection({
                   )}
                 </div>
               </div>
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-col md:flex-row gap-2">
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>SIRET *</p>
                   <Input
@@ -151,9 +151,9 @@ export default function CommonInfoSection({
             </div>
 
             {/* Coordonées */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2 md:gap-1">
               <p className="text-muted-foreground">COORDONÉES</p>
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-col md:flex-row gap-2">
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Téléphone</p>
                   <Input
@@ -204,7 +204,7 @@ export default function CommonInfoSection({
             </div>
 
             {/* Adresse */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2 md:gap-1">
               <p className="text-muted-foreground">ADRESSE</p>
               <div className="flex flex-col gap-0.5 w-full">
                 <p>Adresse *</p>
@@ -229,7 +229,7 @@ export default function CommonInfoSection({
                   </p>
                 )}
               </div>
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-col md:flex-row gap-2">
                 <div className="flex flex-col gap-0.5 w-full">
                   <p>Code postal *</p>
                   <Input
@@ -306,7 +306,7 @@ export default function CommonInfoSection({
             </div>
 
             {/* Description */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2 md:gap-1">
               <p className="text-muted-foreground">PRÉSENTATION</p>
               <div className="flex flex-col gap-0.5 w-full">
                 <p>Description</p>

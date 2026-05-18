@@ -1,4 +1,3 @@
-import SupplierProfileForm from "@/components/onboarding/SupplierProfileForm";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Progress } from "@/components/ui/progress";
 import type {
@@ -51,7 +50,7 @@ export default function ProfileProgress({
     <Field className="w-full">
         <FieldLabel htmlFor="progress-upload" className="flex flex-row w-full justify-between">
             <span></span>
-            <p className="text-muted-foreground">{rate}%</p>
+            <p className="text-sm font-light text-muted-foreground">{rate}%</p>
         </FieldLabel>
         <Progress value={rate} id="progress-upload" />
     </Field>

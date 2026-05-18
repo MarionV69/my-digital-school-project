@@ -36,8 +36,8 @@ export default function ProfilePage() {
       <div className="flex flex-col">
         <h3>Mon établissement</h3>
         {type === "SUPPLIER" && (
-          <div className="flex flex-col -space-y-4 ">
-            <p className="text-muted-foreground">
+          <div className="flex flex-col -space-y-5.5 ">
+            <p className="text-muted-foreground max-w-10/12 lg:w-full">
               Complétez votre profil afin d'attirer des propsects.
             </p>
             <ProfileProgress
