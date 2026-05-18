@@ -11,7 +11,7 @@ function ConfirmationPage() {
     if (user?.establishmentType === EstablishmentType.SUPPLIER) {
       navigate("/profile");
     } else {
-      navigate("/suppliers");
+      navigate("/");
     }
   };
 

@@ -23,31 +23,34 @@ import ConversationDetailPage from "@/pages/shared/ConversationDetailPage";
 import PublicLayout from "../layouts/PublicLayout";
 import AppLayout from "../layouts/AppLayout";
 import AuthLayout from "@/layouts/AuthLayout";
+import AdaptativeLayout from "@/layouts/AdaptativeLayout";
 
 import ProtectedRoute from "./ProtectedRoute";
 import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
-// import RestaurantRoute from "./RestaurantRoute";
+import RestaurantRoute from "./RestaurantRoute";
 import SupplierRoute from "./SupplierRoute";
-
-/**
- * Route Configuration
- *
- * DEV NOTE: Auth guards are temporarily disabled for faster development.
- * Remember to uncomment ProtectedRoute, EstablishmentRequiredRoute, RestaurantRoute, and SupplierRoute
- * before deploying to production!
- */
 
 export const router = createBrowserRouter([
   // Public routes with PublicLayout
   {
     Component: PublicLayout,
     children: [
-      { path: "/", Component: HomePage },
-      { path: "/suppliers/:id", Component: SupplierDetailPage },
       { path: "/how-it-works", Component: HowItWorksPage },
       { path: "/legal", Component: LegalPage },
       { path: "/privacy", Component: PrivacyPage },
       { path: "/terms", Component: TermsPage },
+    ],
+  },
+
+  // Routes with AdaptativeLayout:
+  // - Authenticated restaurants => AppLayout
+  // - Visitors (unauthenticated) => PublicLayout
+  // - Authenticated suppliers => redirected to /profile
+  {
+    Component: AdaptativeLayout,
+    children: [
+      { path: "/", Component: HomePage },
+      { path: "/suppliers/:id", Component: SupplierDetailPage },
     ],
   },
 
@@ -97,7 +100,7 @@ export const router = createBrowserRouter([
 
   // Establishment required routes with AppLayout
   {
-    // Component: EstablishmentRequiredRoute, // A DECOMMENTER LORSQUE LES ROUTES RESTAURANT ET SUPPLIER SERONT EN PLACE
+    Component: EstablishmentRequiredRoute,
     children: [
       {
         Component: AppLayout,
@@ -116,12 +119,8 @@ export const router = createBrowserRouter([
 
           // Restaurant routes (Establishment type must be RESTAURANT)
           {
-            // Component: RestaurantRoute,  // A DECOMMENTER LORSQUE LES ROUTES RESTAURANTS SERONT EN PLACE
-            children: [
-              { path: "/suppliers", Component: HomePage },
-              { path: "/suppliers/:id", Component: SupplierDetailPage },
-              { path: "/favorites", Component: FavoritesPage },
-            ],
+            Component: RestaurantRoute,
+            children: [{ path: "/favorites", Component: FavoritesPage }],
           },
 
           // Supplier routes (Establishment type must be SUPPLIER)

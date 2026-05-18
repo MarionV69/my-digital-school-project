@@ -119,13 +119,13 @@ function AppLayout() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           {/* Desktop logo + nav links */}
           <div className="hidden items-center gap-24 md:flex md:items-end">
-            <Link to="/" className="shrink-0">
+            <Link to={isRestaurant ? "/" : "/profile"} className="shrink-0">
               <img src="/logo.svg" alt="Le Bon Fournisseur" className="h-10" />
             </Link>
             <nav className="flex items-center gap-8">
               {isRestaurant && (
                 <>
-                  <NavItem to="/suppliers">Fournisseurs</NavItem>
+                  <NavItem to="/">Fournisseurs</NavItem>
                   <NavItem to="/favorites">Mes favoris</NavItem>
                 </>
               )}
@@ -228,7 +228,7 @@ function AppLayout() {
               {isRestaurant && (
                 <>
                   <MobileNavItem
-                    to="/suppliers"
+                    to="/"
                     icon={<Search className="size-4" />}
                     onClick={() => setMobileMenuOpen(false)}
                   >

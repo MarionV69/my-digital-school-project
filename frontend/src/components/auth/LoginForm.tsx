@@ -84,7 +84,7 @@ function LoginForm() {
       if (!user.establishmentId) {
         navigate("/onboarding/create-establishment");
       } else if (user.establishmentType === EstablishmentType.RESTAURANT) {
-        navigate("/suppliers");
+        navigate("/");
       } else {
         navigate("/profile");
       }
