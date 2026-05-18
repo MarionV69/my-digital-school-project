@@ -1,4 +1,4 @@
-interface Catalog {
+export interface Catalog {
     id: number;
     originalFilename: string;
     mimeType: string;

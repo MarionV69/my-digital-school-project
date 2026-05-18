@@ -1,3 +1,5 @@
+import type { Catalog } from "./supplierDetails.type";
+
 // Types pour les établissements
 export const initialValues = {
     legalName: '',
@@ -46,6 +48,10 @@ export const initialSuppliersValues = {
     deliveryInformation: '',
     minimumOrderAmount: null as number | null,
     isVisible: false,
+    logoUrl: null as string | null,
+    coverPhotoUrl: null as string | null,
+    galleryPhotos: [] as string[],
+    catalogs: [] as Catalog[],
 };
 
 export type ProfilSupplierValuesType = typeof initialSuppliersValues;

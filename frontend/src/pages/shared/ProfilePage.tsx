@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Spinner } from "@/components/ui/spinner";
 import useEstablishment from "@/hooks/useEstablishment";
 import useSupplier from "@/hooks/useSupplier";
+import ProfileProgress from "@/components/profile/supplier-extras/ProfileProgress";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -35,9 +36,15 @@ export default function ProfilePage() {
       <div className="flex flex-col">
         <h3>Mon établissement</h3>
         {type === "SUPPLIER" && (
-          <p className="text-muted-foreground">
-            Complétez votre profil afin d'attirer des propsects.
-          </p>
+          <div className="flex flex-col -space-y-4 ">
+            <p className="text-muted-foreground">
+              Complétez votre profil afin d'attirer des propsects.
+            </p>
+            <ProfileProgress
+              editionValues={editionValues}
+              supplierEditionValues={supplierEditionValues}
+            />
+          </div>
         )}
       </div>
       <div className="flex flex-col gap-2">
