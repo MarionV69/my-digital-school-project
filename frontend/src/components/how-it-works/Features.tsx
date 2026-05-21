@@ -1,12 +1,19 @@
 import fruitsBg from "@/assets/images/fruits.jpg";
-import { Check, FileText, Heart, MapPin, MessageSquare, Star } from "lucide-react";
+import {
+  Check,
+  FileText,
+  Heart,
+  MapPin,
+  MessageSquare,
+  Star,
+} from "lucide-react";
 import { Badge } from "../ui/badge";
 
 export default function Features() {
   return (
-    <section className="flex flex-col gap-16 px-4 py-8 lg:py-12 lg:px-72">
+    <section className="flex flex-col gap-8 px-4 py-8 lg:py-12 lg:px-24 items-center">
       {/* Section Restaurateurs */}
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-col md:flex-row md:w-10/12 gap-8 lg:items-center justify-between">
         <div className="flex flex-col gap-2">
           <p className="text-muted-foreground font-light text-sm">
             POUR LES RESTAURATEURS
@@ -34,7 +41,7 @@ export default function Features() {
             </li>
           </ul>
         </div>
-        <div className="flex flex-col w-96 border-1 border-card/80 rounded-lg cursor-pointer group transition-colors h-full duration-1000 hover:border-card hover:bg-muted/40">
+        <div className="flex flex-col md:w-96 border-1 border-card/80 rounded-lg cursor-pointer group transition-colors h-full duration-1000 hover:border-card hover:bg-muted/40">
           <div className="h-48 overflow-hidden rounded-t-lg relative">
             <button className="absolute top-2 right-2 bg-white/90 p-2 rounded-full z-10 cursor-pointer group/heart transition-color duration-300 hover:bg-white">
               <Heart
@@ -75,10 +82,10 @@ export default function Features() {
       <div className="w-full h-px bg-border" />
 
       {/* Section Fournisseurs */}
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-col md:flex-row md:w-10/12 gap-8 items-center justify-between">
         <div className="flex flex-row">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="flex flex-col gap-1 rounded-lg bg-muted p-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="flex flex-col gap-1 rounded-lg bg-muted p-4">
               <Heart className="size-5 text-primary-mid fill-primary-mid" />
               <span className="text-xs uppercase tracking-wide text-muted-foreground">
                 Mis en favoris
@@ -86,7 +93,7 @@ export default function Features() {
               <span className="text-4xl font-semibold text-foreground">87</span>
             </div>
 
-            <div className="flex flex-col gap-1 rounded-lg bg-muted p-6">
+            <div className="flex flex-col gap-1 rounded-lg bg-muted p-4">
               <Star className="size-5 text-yellow-400 fill-yellow-400" />
               <span className="text-xs uppercase tracking-wide text-muted-foreground">
                 Note moyenne
@@ -101,7 +108,7 @@ export default function Features() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-1 rounded-lg bg-muted p-6">
+            <div className="flex flex-col gap-1 rounded-lg bg-muted p-4">
               <MessageSquare className="size-5 text-muted-foreground/80 fill-muted-foreground/80" />
               <span className="text-xs uppercase tracking-wide text-muted-foreground">
                 Avis reçus
@@ -138,7 +145,7 @@ export default function Features() {
       <div className="w-full h-px bg-border" />
 
       {/* Section Restaurateurs */}
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-col md:flex-row md:w-10/12 gap-8 items-center justify-between">
         <div className="flex flex-col gap-2">
           <p className="text-muted-foreground font-light text-sm">
             MESSAGERIE INTÉGRÉE
@@ -196,7 +203,7 @@ export default function Features() {
               <div className="mt-2 space-y-1.5">
                 <button className="flex items-center gap-2 rounded px-2 py-1.5 text-left hover:bg-muted/80 text-foreground transition-colors">
                   <FileText className="size-4 shrink-0" />
-                  <span className="truncate text-sm">besoins_hebdo.pdf</span>
+                  <span className="text-sm">tarifs.pdf</span>
                   <span className="shrink-0 text-xs opacity-70">(142 Ko)</span>
                 </button>
               </div>

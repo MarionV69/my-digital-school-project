@@ -111,6 +111,8 @@
     font-family: var(--font-body);
     font-weight: 400;
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1 {
