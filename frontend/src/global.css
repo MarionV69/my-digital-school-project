@@ -2,6 +2,24 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Déclaration des polices */
+@font-face {
+  font-family: "Grift";
+  src: url("/fonts/grift-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Déclaration des polices */
+@font-face {
+  font-family: "Grift";
+  src: url("/fonts/grift-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Définition des variables */
 :root {
   /* Général */
@@ -43,8 +61,8 @@
 /* Déclaration des tokens de design à Tailwind v4 */
 @theme {
   /* Font */
-  --font-heading: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-heading: "Grift", Helvetica, Arial, sans-serif;
+  --font-body: "Grift", -apple-system, sans-serif;
 }
 
 @theme inline {
@@ -103,19 +121,19 @@
 
   h2 {
     font-family: var(--font-heading);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1.875rem;
   }
 
   h3 {
     font-family: var(--font-heading);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1.5rem;
   }
 
   h4 {
       font-family: var(--font-heading);
-      font-weight: 600;
+      font-weight: 700;
       font-size: 1rem;
   }
 
