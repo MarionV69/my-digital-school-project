@@ -3,6 +3,7 @@ import ReviewsSection from "@/components/reviews/ReviewsSection";
 import AboutSection from "@/components/supplier-details/AboutSection";
 import ContactCard from "@/components/supplier-details/ContactCard";
 import CoverPhoto from "@/components/supplier-details/CoverPhoto";
+import FilesSection from "@/components/supplier-details/FilesSection";
 import GallerySection from "@/components/supplier-details/GallerySection";
 import InfoSection from "@/components/supplier-details/InfoSection";
 import SupplierHeader from "@/components/supplier-details/SupplierHeader";
@@ -69,6 +70,9 @@ function SupplierDetailPage() {
                 <ReviewsSection supplierId={supplier.id} />
                 {supplier.galleryPhotos.length > 0 && (
                   <GallerySection supplier={supplier} />
+                )}
+                {supplier.catalogs.length > 0 && (
+                  <FilesSection supplier={supplier} />
                 )}
               </div>
               <ContactCard supplier={supplier} />
