@@ -83,7 +83,7 @@ export default function ProfilePage() {
           </div>
         ) : (
           <>
-            {supplierError ? (
+            {supplierError && type === "SUPPLIER" ? (
               <p className="text-destructive">{supplierError}</p>
             ) : (
               type === "SUPPLIER" && (
