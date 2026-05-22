@@ -11,9 +11,9 @@ export default function FilesSection({ supplier }: FilesSectionType) {
     <Accordion type="single" collapsible>
       <AccordionItem value="files">
         <AccordionTrigger>Documents</AccordionTrigger>
-        <AccordionContent className="p-6 flex flex-col gap-3">
+        <AccordionContent className="p-6 flex flex-col gap-3 h-auto">
           {supplier.catalogs.map((catalog) => (
-            <a key={catalog.id} href={catalog.url} target="_blank" rel="noreferrer" className="no-underline">
+            <a key={catalog.id} href={catalog.url} target="_blank" rel="noreferrer" className="![text-decoration:none]">
               <div className="flex items-center gap-3 p-3 rounded-md border border-border hover:bg-muted transition-colors cursor-pointer">
                 <span className="text-sm font-medium flex-1">{catalog.originalFilename}</span>
                 <span className="text-xs text-muted-foreground">
