@@ -88,7 +88,7 @@ function DocumentsSection() {
                       />
                     </div>
                   ) : (
-                    <label className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-input-border bg-muted/30 p-8 cursor-pointer hover:bg-muted/50 transition-colors">
+                    <label className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-input-border bg-muted/30 h-36 cursor-pointer hover:bg-muted/50 transition-colors">
                       <ImageIcon className="size-6 text-muted-foreground" />
                       <p className="text-sm text-muted-foreground">
                         Ajouter un logo
@@ -138,7 +138,7 @@ function DocumentsSection() {
                       onDeleteSuccess={fetchDocuments}
                     />
                   ) : (
-                    <label className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-input-border bg-muted/30 p-8 cursor-pointer hover:bg-muted/50 transition-colors">
+                    <label className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-input-border bg-muted/30 h-36 cursor-pointer hover:bg-muted/50 transition-colors">
                       <ImageIcon className="size-6 text-muted-foreground" />
                       <p className="text-sm text-muted-foreground">
                         Ajouter une photo de couverture
