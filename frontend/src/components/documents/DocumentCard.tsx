@@ -39,7 +39,7 @@ function DocumentCard({
   // Image card
   if (document.file.mimeType.startsWith("image/")) {
     return (
-      <div className="relative rounded-lg overflow-hidden">
+      <div className="relative rounded-lg overflow-hidden width-fit">
         <ImageWithLoader
           src={document.file.url}
           alt={document.file.originalFilename}

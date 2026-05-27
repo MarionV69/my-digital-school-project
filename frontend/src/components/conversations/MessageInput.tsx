@@ -138,14 +138,14 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
           accept={UPLOAD_CONFIG.ACCEPTED_MIME_TYPES}
         />
 
-        {/* Text input */}
+        {/* Message textarea */}
         <Textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              handleSubmit(e as any);
+              handleSubmit(e);
             }
           }}
           placeholder="Écrire un message"

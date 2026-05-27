@@ -70,7 +70,7 @@ function DocumentsSection() {
           ) : (
             <div className="flex flex-col gap-8">
               {/* Logo + Cover photo */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
                 {/* Logo */}
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
@@ -80,11 +80,13 @@ function DocumentsSection() {
                     </p>
                   </div>
                   {documents.LOGO[0] ? (
-                    <DocumentCard
-                      document={documents.LOGO[0]}
-                      onDeleteSuccess={fetchDocuments}
-                      imageFit="contain"
-                    />
+                    <div className="flex items-center justify-center h-36">
+                      <DocumentCard
+                        document={documents.LOGO[0]}
+                        onDeleteSuccess={fetchDocuments}
+                        imageFit="contain"
+                      />
+                    </div>
                   ) : (
                     <label className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-input-border bg-muted/30 p-8 cursor-pointer hover:bg-muted/50 transition-colors">
                       <ImageIcon className="size-6 text-muted-foreground" />
