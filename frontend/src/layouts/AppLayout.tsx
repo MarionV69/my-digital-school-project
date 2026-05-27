@@ -131,7 +131,7 @@ function AppLayout() {
               )}
               {isSupplier && (
                 <>
-                  <NavItem to="/profile">Ma fiche</NavItem>
+                  <NavItem to="/profile">Mon établissement</NavItem>
                   <NavItem to="/supplier/stats">Mes statistiques</NavItem>
                 </>
               )}
@@ -250,7 +250,7 @@ function AppLayout() {
                     icon={<LayoutGrid className="size-4" />}
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Ma fiche
+                    Mon établissement
                   </MobileNavItem>
                   <MobileNavItem
                     to="/supplier/stats"
