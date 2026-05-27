@@ -6,6 +6,7 @@ import type { Message } from "../../types/conversations.types";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { UPLOAD_CONFIG } from "@/config/upload.config";
+import { Textarea } from "../ui/textarea";
 
 type PendingFile = {
   id: string;
@@ -138,15 +139,21 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
         />
 
         {/* Text input */}
-        <input
-          type="text"
+        <Textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit(e as any);
+            }
+          }}
           placeholder="Écrire un message"
           disabled={sending}
           className={cn(
-            "flex-1 rounded-lg bg-muted px-3 py-2 text-sm outline-none",
+            "flex-1 min-h-0 max-h-32 resize-none border-none rounded-lg bg-muted px-3 py-2 text-sm outline-none",
             "placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+            "focus-visible:ring-0 focus-visible:border-none",
           )}
         />
 
