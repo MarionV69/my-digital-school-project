@@ -6,6 +6,7 @@ import { Spinner } from "@/components/ui/spinner";
 import useEstablishment from "@/hooks/useEstablishment";
 import useSupplier from "@/hooks/useSupplier";
 import ProfileProgress from "@/components/profile/supplier-extras/ProfileProgress";
+import DocumentsSection from "@/components/documents/DocumentsSection";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -32,7 +33,7 @@ export default function ProfilePage() {
   } = useSupplier();
 
   return (
-    <div className="px-4 py-8 lg:py-12 lg:px-24 gap-6 flex flex-col">
+    <div className="px-4 lg:px-8 py-8 lg:py-12 gap-6 flex flex-col max-w-7xl mx-auto w-full">
       <div className="flex flex-col">
         <h3>Mon établissement</h3>
         {type === "SUPPLIER" && (
@@ -72,7 +73,7 @@ export default function ProfilePage() {
                   patchEstablishment={patchEstablishment}
                   fieldErrors={fieldErrors}
                 />
-                {/* Documents à ajouter */}
+                <DocumentsSection />
               </>
             )}
           </div>
