@@ -4,9 +4,15 @@ type ImageWithLoaderProps = {
   src: string;
   alt: string;
   className?: string;
+  objectFit?: "cover" | "contain";
 };
 
-function ImageWithLoader({ src, alt, className = "" }: ImageWithLoaderProps) {
+function ImageWithLoader({
+  src,
+  alt,
+  className = "",
+  objectFit = "cover",
+}: ImageWithLoaderProps) {
   const [loaded, setLoaded] = useState(false);
 
   return (
@@ -19,7 +25,7 @@ function ImageWithLoader({ src, alt, className = "" }: ImageWithLoaderProps) {
         alt={alt}
         loading="lazy"
         onLoad={() => setLoaded(true)}
-        className={`w-full h-full object-cover rounded-lg transition-opacity duration-300 ease-in-out${
+        className={`w-full h-full ${objectFit === "contain" ? "object-contain" : "object-cover"} rounded-lg transition-opacity duration-300 ease-in-out${
           loaded ? "opacity-100" : "opacity-0"
         }`}
       />
