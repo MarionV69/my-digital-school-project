@@ -89,7 +89,7 @@ export class DocumentsService {
     const documents = await this.documentsRepository.find({
       where: { establishmentId },
       relations: ['file'],
-      order: { createdAt: 'DESC' },
+      order: { createdAt: 'ASC' },
     });
 
     const grouped: GroupedDocumentsResponseDto = {
