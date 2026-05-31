@@ -41,7 +41,7 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
 
       // Send remaining attachments one by one
       if (pendingFiles.length > 1) {
-        for (const pendingFile of pendingFiles) {
+        for (const pendingFile of pendingFiles.slice(1)) {
           const attachment = await sendAttachment(
             conversationId,
             message.id,
