@@ -1,21 +1,23 @@
 import { useCallback, useEffect, useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useOutletContext, useParams } from "react-router-dom";
 import { MessageSquare } from "lucide-react";
 import type { Conversation } from "../../types/conversations.types";
 import { Spinner } from "@/components/ui/spinner";
 import ConversationItem from "../../components/conversations/ConversationItem";
 import { getConversations } from "@/api/conversations";
-import { useUnread } from "@/hooks/useUnread";
 import { cn } from "@/lib/utils";
+import type { AppLayoutOutletContext } from "@/layouts/AppLayout";
 
 export type ConversationsOutletContext = {
   conversations: Conversation[];
+  refreshConversations: () => Promise<void>;
   refreshTotalUnreadCount: () => Promise<void>;
 };
 
 function ConversationsLayout() {
   const { id } = useParams();
-  const { totalUnreadCount, refreshTotalUnreadCount } = useUnread();
+  const { totalUnreadCount, refreshTotalUnreadCount } =
+    useOutletContext<AppLayoutOutletContext>();
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -83,7 +85,13 @@ function ConversationsLayout() {
 
       {/* Detail — Outlet */}
       <div className={cn("flex-1 flex-col", id ? "flex" : "hidden md:flex")}>
-        <Outlet context={{ conversations, refreshTotalUnreadCount }} />
+        <Outlet
+          context={{
+            conversations,
+            refreshConversations: fetchConversations,
+            refreshTotalUnreadCount,
+          }}
+        />
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ function ConversationItem({
 }: ConversationItemProps) {
   // Format date relative
   const formatRelativeTime = (date: Date | null): string => {
-    if (!date) return "Jamais";
+    if (!date) return "";
 
     const now = new Date();
     const messageDate = new Date(date);

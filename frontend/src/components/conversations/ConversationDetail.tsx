@@ -1,16 +1,14 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { ChevronLeft, MessageSquare, User } from "lucide-react";
-import toast from "react-hot-toast";
-import { getConversationMessages } from "../../api/conversations";
 import { Spinner } from "@/components/ui/spinner";
 import MessageBubble from "../../components/conversations/MessageBubble";
 import MessageInput from "../../components/conversations/MessageInput";
 import { cn } from "@/lib/utils";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import type { ConversationsOutletContext } from "@/pages/shared/ConversationsLayout";
-import type { Message } from "@/types/conversations.types";
 import { Button } from "../ui/button";
 import OtherParticipantPreview from "./OtherParticipantPreview";
+import useConversationMessages from "@/hooks/useConversationMessages";
 
 type ConversationDetailProps = {
   conversationId: number;
@@ -18,45 +16,21 @@ type ConversationDetailProps = {
 
 function ConversationDetail({ conversationId }: ConversationDetailProps) {
   const navigate = useNavigate();
-  const { conversations, refreshTotalUnreadCount } =
+  const { conversations, refreshConversations, refreshTotalUnreadCount } =
     useOutletContext<ConversationsOutletContext>();
 
   const conversation = conversations.find((c) => c.id === conversationId);
-
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Fetch messages
+  const { messages, loading, handleMessageSent } = useConversationMessages(
+    conversationId,
+    conversation?.unreadCount,
+    refreshTotalUnreadCount,
+    refreshConversations,
+  );
+
   useEffect(() => {
-    setLoading(true);
-
-    const fetchMessages = async () => {
-      try {
-        const data = await getConversationMessages(conversationId);
-        setMessages(data);
-        await refreshTotalUnreadCount();
-      } catch (error) {
-        console.error("Error fetching messages:", error);
-        toast.error("Erreur lors du chargement des messages");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMessages();
-  }, [conversationId, refreshTotalUnreadCount]);
-
-  const handleMessageSent = (message: Message) => {
-    setMessages((prev) => [...prev, message]);
-  };
-
-  // Scroll to bottom when messages change
-  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
   }, [messages]);
 
   if (loading) {

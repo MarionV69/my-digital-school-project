@@ -20,6 +20,11 @@ import { cn } from "../lib/utils";
 import { getUnreadCount } from "@/api/conversations";
 import { usePolling } from "@/hooks/usePolling";
 
+export type AppLayoutOutletContext = {
+  totalUnreadCount: number;
+  refreshTotalUnreadCount: () => Promise<void>;
+};
+
 function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
   return (
     <NavLink
