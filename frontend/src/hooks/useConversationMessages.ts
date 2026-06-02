@@ -1,6 +1,6 @@
 import { getConversationMessages } from "@/api/conversations";
 import type { Message } from "@/types/conversations.types";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 function useConversationMessages(
@@ -11,18 +11,8 @@ function useConversationMessages(
 ) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
-  const prevUnreadCount = useRef<number>(0);
 
   useEffect(() => {
-    const currentUnread = unreadCount ?? 0;
-    const hasNewMessages = currentUnread > prevUnreadCount.current;
-    prevUnreadCount.current = currentUnread;
-
-    // Si ce n'est pas le fetch initial et qu'il n'y a pas de nouveaux messages → rien à faire
-    if (messages.length > 0 && !hasNewMessages) return;
-
-    setLoading(messages.length === 0); // spinner uniquement au fetch initial
-
     const fetchMessages = async () => {
       try {
         const data = await getConversationMessages(conversationId);
@@ -37,8 +27,7 @@ function useConversationMessages(
     };
 
     fetchMessages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationId, unreadCount]);
+  }, [conversationId, unreadCount, onRefresh, onRefreshConversations]);
 
   const handleMessageSent = (message: Message) => {
     setMessages((prev) => [...prev, message]);

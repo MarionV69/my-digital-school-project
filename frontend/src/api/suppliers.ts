@@ -1,3 +1,4 @@
+import type { Supplier } from "@/types/supplier";
 import type {
   CreateSupplierAttributesDto,
   SupplierStatsDto,
@@ -16,5 +17,10 @@ export const getSupplierStats = async (
   const response = await api.get<SupplierStatsDto>(
     `/suppliers/${supplierId}/stats`,
   );
+  return response.data;
+};
+
+export const getSuppliers = async (): Promise<Supplier[]> => {
+  const response = await api.get<Supplier[]>("/suppliers");
   return response.data;
 };
