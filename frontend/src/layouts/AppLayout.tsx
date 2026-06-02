@@ -111,7 +111,7 @@ function AppLayout() {
   }, []);
 
   // Poll unread count every 30 seconds)
-  usePolling(fetchUnreadCount, 30_000);
+  usePolling(fetchUnreadCount, 10_000);
 
   function handleLogout() {
     logout();
