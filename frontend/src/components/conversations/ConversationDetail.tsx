@@ -63,10 +63,10 @@ function ConversationDetail({ conversationId }: ConversationDetailProps) {
     >
       {/* Header */}
       <header className="flex items-center gap-3 border-b border-border bg-background px-4 py-3">
-        {/* Back button — mobile only */}
+        {/* Back button - hidden from md */}
         <button
           onClick={() => navigate("/conversations")}
-          className="cursor-pointer rounded-full p-1.5 transition-colors hover:bg-muted sm:hidden"
+          className="cursor-pointer rounded-full p-1.5 transition-colors hover:bg-muted md:hidden"
           aria-label="Retour aux conversations"
         >
           <ChevronLeft className="size-5 text-foreground" />
