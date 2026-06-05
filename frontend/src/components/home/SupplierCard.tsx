@@ -32,7 +32,7 @@ export default function SupplierCard({supplier, isFavorite, onFavoriteToggle}: S
                             size={18} 
                             className={`transition-transform duration-150 ${isAnimating ? "scale-125" : "scale-100"} ${!isFavorite ? "text-primary group-hover/heart:fill-primary" : "text-primary fill-primary"}`}
                         />
-                    </button>
+                    </button>  
                     <img 
                         src={supplier.coverPhotoUrl}
                         alt={supplier.name}
