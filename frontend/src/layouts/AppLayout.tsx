@@ -20,6 +20,11 @@ import { cn } from "../lib/utils";
 import { getUnreadCount } from "@/api/conversations";
 import { usePolling } from "@/hooks/usePolling";
 
+export type AppLayoutOutletContext = {
+  totalUnreadCount: number;
+  refreshTotalUnreadCount: () => Promise<void>;
+};
+
 function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
   return (
     <NavLink
@@ -106,7 +111,7 @@ function AppLayout() {
   }, []);
 
   // Poll unread count every 30 seconds)
-  usePolling(fetchUnreadCount, 30_000);
+  usePolling(fetchUnreadCount, 10_000);
 
   function handleLogout() {
     logout();
@@ -131,7 +136,7 @@ function AppLayout() {
               )}
               {isSupplier && (
                 <>
-                  <NavItem to="/profile">Ma fiche</NavItem>
+                  <NavItem to="/profile">Mon établissement</NavItem>
                   <NavItem to="/supplier/stats">Mes statistiques</NavItem>
                 </>
               )}
@@ -250,7 +255,7 @@ function AppLayout() {
                     icon={<LayoutGrid className="size-4" />}
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Ma fiche
+                    Mon établissement
                   </MobileNavItem>
                   <MobileNavItem
                     to="/supplier/stats"

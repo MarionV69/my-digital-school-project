@@ -50,12 +50,21 @@ async function bootstrap() {
       .addTag('reviews', 'Reviews and ratings')
       .build(),
   );
-  SwaggerModule.setup('docs', app, document);
+  if (process.env.NODE_ENV !== 'production') {
+    SwaggerModule.setup('docs', app, document);
+  }
 
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}`);
-  console.log(`Reverse proxy (Nginx): http://localhost:8888`);
-  console.log(`API documentation available at: http://localhost:8888/api/docs`);
+
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`Backend is running on: http://localhost:${port}`);
+    console.log(
+      `API documentation available at: http://localhost:${port}/docs`,
+    );
+    console.log(`PHPMyAdmin (via Docker): http://localhost:8080`);
+    console.log(`Frontend: http://localhost:5173`);
+    console.log(`Reverse proxy (Nginx): http://localhost:8888`);
+  }
 }
 void bootstrap();

@@ -66,8 +66,8 @@ export default function StatisticsPage() {
   }
 
   return (
-    <div className="px-4 lg:px-24 py-8 flex flex-col gap-8">
-      <h2>Mes statistiques</h2>
+    <div className="px-4 lg:px-8 py-8 lg:py-12 flex flex-col gap-8 max-w-7xl mx-auto w-full">
+      <h3>Mes statistiques</h3>
 
       {/* Stats cards */}
       {stats && (
