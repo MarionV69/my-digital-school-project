@@ -54,7 +54,7 @@ export default function useEstablishment() {
       const error = e as AxiosError<{ message: string[] }>;
       setFieldErrors((prev) => ({
         ...prev,
-        [fieldName]: error.response?.data.message.join(', ') ?? null,
+        [fieldName]: error.response?.data.message.join(", ") ?? null,
       }));
       setEditionValues((prev) => ({
         ...prev,
