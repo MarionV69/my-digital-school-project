@@ -109,8 +109,8 @@ export class SuppliersService {
       );
     }
 
-    if (filters.priceRange) {
-      query.andWhere('supplier.priceRange = :priceRange', {
+    if (filters.priceRange && filters.priceRange.length > 0) {
+      query.andWhere('supplier.priceRange IN (:...priceRange)', {
         priceRange: filters.priceRange,
       });
     }

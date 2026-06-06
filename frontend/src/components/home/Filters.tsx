@@ -67,20 +67,24 @@ export default function Filters({ filters, onChange }: FiltersProps) {
     { label: "Toutes les notes", value: 0 },
   ];
 
-  // Fonction pour ajouter ou retirer un type des filtres
-  const TYPES = ["Grossistes", "Producteurs", "Revendeurs"];
+  // Fonction pour ajouter ou retirer une tranche prix des filtres
+  const PRICE_RANGE = [
+    {label: "Économique", value: "ECONOMIC"},
+    {label: "Milieu de gamme", value: "MID_RANGE"},
+    {label: "Premium", value: "PREMIUM"}
+  ];
 
-  function handleChangeType(supplierType: string, checked: boolean) {
+  function handleChangePriceRange(priceRange: string, checked: boolean) {
     if (checked) {
       onChange({
         ...filters,
-        supplierTypes: [...filters.supplierTypes, supplierType],
+        priceRange: [...filters.priceRange, priceRange],
       });
     } else {
       onChange({
         ...filters,
-        supplierTypes: [
-          ...filters.supplierTypes.filter((t) => t !== supplierType),
+        priceRange: [
+          ...filters.priceRange.filter((p) => p !== priceRange),
         ],
       });
     }
@@ -92,7 +96,7 @@ export default function Filters({ filters, onChange }: FiltersProps) {
       productCategories: [],
       labels: [],
       minRating: 0,
-      supplierTypes: [],
+      priceRange: [],
       isPremium: false,
     });
   }
@@ -179,22 +183,22 @@ export default function Filters({ filters, onChange }: FiltersProps) {
         </div>
         <Separator />
         <div className="flex flex-col gap-1">
-          <p className="text-muted-foreground">TYPE</p>
-          {TYPES.map((supplierType) => (
-            <Field key={supplierType} orientation="horizontal">
+          <p className="text-muted-foreground">PRIX</p>
+          {PRICE_RANGE.map(({label, value}) => (
+            <Field key={value} orientation="horizontal">
               <Checkbox
-                checked={filters.supplierTypes.includes(supplierType)}
+                checked={filters.priceRange.includes(value)}
                 onCheckedChange={(checked) =>
-                  handleChangeType(supplierType, checked as boolean)
+                  handleChangePriceRange(value, checked as boolean)
                 }
-                id={supplierType}
-                name={supplierType}
+                id={value}
+                name={value}
               />
               <FieldLabel
-                htmlFor={supplierType}
+                htmlFor={value}
                 className="font-normal text-sm"
               >
-                {supplierType}
+                {label}
               </FieldLabel>
             </Field>
           ))}

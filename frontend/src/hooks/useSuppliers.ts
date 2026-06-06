@@ -26,8 +26,8 @@ export function useSuppliers(
       if (filters.labels.length > 0) params.labels = filters.labels;
       if (filters.minRating > 0) params.minRating = filters.minRating;
       if (filters.isPremium) params.isPremium = filters.isPremium;
-      if (filters.supplierTypes.length > 0)
-        params.supplierTypes = filters.supplierTypes;
+      if (filters.priceRange.length > 0)
+        params.priceRange = filters.priceRange;
 
       try {
         const response = await api.get<Supplier[]>("/suppliers", {
