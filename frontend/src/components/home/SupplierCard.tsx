@@ -59,7 +59,7 @@ export default function SupplierCard({supplier, isFavorite, onFavoriteToggle}: S
                     </div>
                     <div className="flex flex-wrap gap-0.5 items-center">
                         {supplier.labels.map((label) => (
-                            <Badge key={supplier.id}>{label}</Badge>
+                            <Badge key={label}>{label}</Badge>
                         ))}
                     </div>
                 </div>
