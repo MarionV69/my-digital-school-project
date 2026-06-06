@@ -34,8 +34,10 @@ export class FilterDto {
 
   @ApiPropertyOptional({ example: 'ECONOMIC', enum: PriceRange })
   @IsOptional()
-  @IsEnum(PriceRange)
-  priceRange?: PriceRange;
+  @IsArray()
+  @IsEnum(PriceRange, { each: true })
+  @Transform(({ value }): string[] => (Array.isArray(value) ? value : [value]))
+  priceRange?: string[];
 
   @ApiPropertyOptional({ example: 'true', default: 'false' })
   @IsBoolean()

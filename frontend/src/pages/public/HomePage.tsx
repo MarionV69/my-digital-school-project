@@ -19,8 +19,8 @@ function HomePage() {
     productCategories: [],
     labels: [],
     minRating: 0,
-    supplierTypes: [],
     isPremium: false,
+    priceRange: [],
   });
   const { suppliers, error, loading } = useSuppliers(search, city, filters);
   const paginateSuppliers = suppliers.slice(page * LIMIT, (page + 1) * LIMIT);
