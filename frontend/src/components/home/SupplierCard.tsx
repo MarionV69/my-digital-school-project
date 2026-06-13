@@ -62,7 +62,7 @@ export default function SupplierCard({
             </div>
             <div className="flex flex-row gap-1 items-center">
               <Star size={16} className="text-yellow-400 fill-yellow-400" />
-              <p>{supplier.averageRating}</p>
+              <p>{Math.round(supplier.averageRating * 10) / 10}</p>
               <p className="text-muted-foreground text-xs">
                 ({supplier.reviewsCount})
               </p>

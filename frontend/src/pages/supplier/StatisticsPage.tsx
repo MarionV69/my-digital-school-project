@@ -90,7 +90,7 @@ export default function StatisticsPage() {
             {stats.averageRating > 0 ? (
               <div className="flex items-center gap-2">
                 <span className="text-4xl font-semibold text-foreground">
-                  {stats.averageRating}
+                  {Math.round(stats.averageRating * 10) / 10}
                 </span>
                 <span className="text-lg font-semibold text-muted-foreground/80">
                   /5
