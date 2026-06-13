@@ -4,15 +4,14 @@ function AuthLayout() {
   return (
     <div className="min-h-screen bg-primary md:grid md:grid-cols-2">
       {/* Left panel - desktop only */}
-      <div className="hidden md:flex flex-col p-20">
+      <div className="hidden md:flex flex-col p-20 items-center justify-center">
         <Link to="/">
           <img
             src="/logo-light.svg"
             alt="Le Bon Fournisseur"
-            className="h-16"
+            className="h-26"
           />
         </Link>
-        <p className="mt-2 text-primary-foreground">La marketplace des pros</p>
       </div>
 
       {/* Right panel - form */}
@@ -22,9 +21,6 @@ function AuthLayout() {
           <Link to="/">
             <img src="/logo.svg" alt="Le Bon Fournisseur" className="h-12" />
           </Link>
-          <p className="mt-1 text-primary font-semibold pb-2">
-            La marketplace des pros
-          </p>
         </div>
 
         <Outlet />

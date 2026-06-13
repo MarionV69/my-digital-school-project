@@ -29,9 +29,15 @@ function ConversationDetail({ conversationId }: ConversationDetailProps) {
     refreshConversations,
   );
 
+  const isFirstLoad = useRef(true);
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (loading) return;
+    messagesEndRef.current?.scrollIntoView({
+      behavior: isFirstLoad.current ? "instant" : "smooth",
+    });
+    isFirstLoad.current = false;
+  }, [messages, loading]);
 
   if (loading) {
     return (
