@@ -10,7 +10,7 @@ export function useFavorites() {
 
   // Fonction permettant de récupérer les favoris d'un établissement
   useEffect(() => {
-    if (!user) return;
+    if (!establishmentId) return;
     async function getFavorites() {
       try {
         const response = await api.get(
@@ -33,7 +33,7 @@ export function useFavorites() {
 
   // Fonction permettant d'ajouter ou de retirer un favoris
   async function handleFavoriteToggle(supplierId: number) {
-    if (!user) return;
+    if (!establishmentId) return;
     try {
       if (favorites.some((fav) => fav.targetId === supplierId)) {
         const favorite = favorites.find((fav) => fav.targetId === supplierId);

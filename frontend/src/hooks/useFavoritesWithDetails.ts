@@ -48,7 +48,7 @@ export default function useFavoritesWithDetails() {
 
   // Fonction permettant d'ajouter ou de retirer un favoris
   async function handleFavoriteToggle(supplierId: number) {
-    if (!user) return;
+    if (!establishmentId) return;
     try {
       if (favorites.some((fav) => fav.target.id === supplierId)) {
         const favorite = favorites.find((fav) => fav.target.id === supplierId);

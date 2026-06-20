@@ -10,11 +10,10 @@ async function bootstrap() {
 
   // CORS configuration
   app.enableCors({
-    origin: [
-      process.env.FRONTEND_URL || 'http://localhost:5173',
-      'http://localhost:8081',
-    ],
-    credentials: true, // to add if cookies
+    origin:
+      process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : true, // Allow all origins in development
+
+    // credentials: true, // to add if cookies
   });
 
   // Global validation pipe

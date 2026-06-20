@@ -224,7 +224,7 @@ export class SuppliersService {
       postalCode: supplier.supplier.postalCode,
       priceRange: supplier.priceRange,
       isPremium: supplier.isPremium,
-      labels: supplier.labels.map((label) => label.name),
+      labels: supplier.labels.map((label) => label.id),
       productCategories: supplier.productCategories.map(
         (ProductCategory) => ProductCategory.id,
       ),

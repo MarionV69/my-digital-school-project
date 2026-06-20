@@ -6,6 +6,7 @@ import { useState } from "react";
 import ImageWithLoader from "@/components/common/ImageWithLoader";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
+import { formatFileSize } from "@/utils/format";
 
 type DocumentCardProps = {
   document: DocumentItem;
@@ -91,7 +92,7 @@ function DocumentCard({
           {document.file.originalFilename}
         </p>
         <p className="text-xs text-muted-foreground">
-          PDF · {(document.file.size / (1024 * 1024)).toFixed(1)} Mo
+          PDF · {formatFileSize(document.file.size)}
         </p>
       </div>
       <a

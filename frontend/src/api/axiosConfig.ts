@@ -50,7 +50,7 @@ api.interceptors.response.use(
               window.location.replace("/login");
             }
           } else {
-            // No token + 401 : user navigated back after logout
+            // No token + 401
             window.location.replace("/");
           }
         }
