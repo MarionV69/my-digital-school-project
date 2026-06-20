@@ -26,10 +26,10 @@ function DocumentUploadButton({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file size (20MB max)
-    const maxSize = 20 * 1024 * 1024;
+    // Validate file size (15MB max)
+    const maxSize = 15 * 1024 * 1024;
     if (file.size > maxSize) {
-      toast.error("Le fichier est trop volumineux (20 Mo max).");
+      toast.error("Le fichier est trop volumineux (15 Mo max).");
       e.target.value = "";
       return;
     }
