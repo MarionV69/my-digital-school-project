@@ -1,4 +1,4 @@
-import fruitsBg from "@/assets/images/fruits.jpg";
+import fruitsBg from "@/assets/images/fruits.webp";
 import {
   Check,
   FileText,

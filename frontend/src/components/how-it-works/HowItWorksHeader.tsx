@@ -1,4 +1,4 @@
-import arbreBg from "@/assets/images/arbre.jpg";
+import arbreBg from "@/assets/images/arbre.webp";
 import { Badge } from "../ui/badge";
 
 export default function HowItWorksHeader() {

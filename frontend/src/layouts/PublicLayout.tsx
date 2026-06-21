@@ -79,6 +79,15 @@ function PublicLayout() {
       <main>
         <Outlet />
       </main>
+      <footer className="border-t border-border">
+        <div className="mx-auto max-w-7xl px-6 py-6">
+          <div className="flex justify-center gap-8 text-sm text-center text-muted-foreground">
+            <Link to="/terms">CGU</Link>
+            <Link to="/privacy">Politique de confidentialité</Link>
+            <Link to="/legal">Mentions légales</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
