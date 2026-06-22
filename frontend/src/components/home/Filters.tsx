@@ -101,6 +101,15 @@ export default function Filters({ filters, onChange }: FiltersProps) {
     });
   }
 
+  function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // enlève les accents
+    .replace(/[^a-z0-9]+/g, '-')      // remplace tout caractère non alphanumérique par un tiret
+    .replace(/(^-|-$)/g, '');         // enlève les tirets en début/fin
+}
+
   return (
     <div className="flex flex-col gap-6 w-1.5/6">
       {!user && (
@@ -129,6 +138,7 @@ export default function Filters({ filters, onChange }: FiltersProps) {
                 }
                 id={category}
                 name={category}
+                data-testid={`filter-category-${slugify(category)}`}
               />
               <FieldLabel htmlFor={category} className="font-normal text-sm">
                 {category}
