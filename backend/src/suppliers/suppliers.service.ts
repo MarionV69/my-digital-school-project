@@ -21,6 +21,7 @@ import { Review } from 'src/reviews/entities/review.entity';
 import { SupplierStatsDto } from './dto/supplier-stats.dto';
 import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
 import { DocumentsService } from 'src/documents/documents.service';
+import { sortAndFilterByRating } from './utils/sort-and-filter-by-rating.util';
 
 @Injectable()
 export class SuppliersService {
@@ -134,52 +135,43 @@ export class SuppliersService {
     // Transformation des entités en ListItemDto
     const suppliers = await query.getMany();
 
-    return (
-      suppliers
-        .map((supplier) => {
-          // Extraction du logo et de l'image de couverture
-          const { logoUrl, coverPhotoUrl } =
-            this.documentsService.getAllDocumentUrls(
-              supplier.supplier.documents || [],
-            );
+    const mapped = suppliers.map((supplier) => {
+      // Extraction du logo et de l'image de couverture
+      const { logoUrl, coverPhotoUrl } =
+        this.documentsService.getAllDocumentUrls(
+          supplier.supplier.documents || [],
+        );
 
-          // Calcul du nombre de reviews et de la note moyenne à partir des reviews
-          const reviewsCount = supplier.supplier.reviewsReceived?.length || 0;
-          const averageRating =
-            reviewsCount > 0
-              ? supplier.supplier.reviewsReceived.reduce(
-                  (sum, review) => sum + review.rating,
-                  0,
-                ) / reviewsCount
-              : 0;
+      // Calcul du nombre de reviews et de la note moyenne à partir des reviews
+      const reviewsCount = supplier.supplier.reviewsReceived?.length || 0;
+      const averageRating =
+        reviewsCount > 0
+          ? supplier.supplier.reviewsReceived.reduce(
+              (sum, review) => sum + review.rating,
+              0,
+            ) / reviewsCount
+          : 0;
 
-          return {
-            id: supplier.supplierId,
-            type: supplier.supplierType,
-            name: supplier.supplier.legalName,
-            postalCode: supplier.supplier.postalCode,
-            city: supplier.supplier.city,
-            priceRange: supplier.priceRange,
-            isPremium: supplier.isPremium,
-            labels: supplier.labels.map((label) => label.name),
-            productCategories: supplier.productCategories.map(
-              (ProductCategory) => ProductCategory.name,
-            ),
-            logoUrl,
-            coverPhotoUrl,
-            reviewsCount,
-            averageRating,
-          };
-        })
+      return {
+        id: supplier.supplierId,
+        type: supplier.supplierType,
+        name: supplier.supplier.legalName,
+        postalCode: supplier.supplier.postalCode,
+        city: supplier.supplier.city,
+        priceRange: supplier.priceRange,
+        isPremium: supplier.isPremium,
+        labels: supplier.labels.map((label) => label.name),
+        productCategories: supplier.productCategories.map(
+          (ProductCategory) => ProductCategory.name,
+        ),
+        logoUrl,
+        coverPhotoUrl,
+        reviewsCount,
+        averageRating,
+      };
+    });
 
-        // Trier les fournisseurs en fonction de leurs notes moyennes (du plus élevé au plus bas)
-        .sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0))
-
-        // Filtrer les fournisseurs en fonction de la note minimale si elle est définie
-        .filter(
-          (supplier) => supplier.averageRating >= (filters.minRating ?? 0),
-        )
-    );
+    return sortAndFilterByRating(mapped, filters.minRating);
   }
 
   // Récupérer un fournisseur grâce à son id

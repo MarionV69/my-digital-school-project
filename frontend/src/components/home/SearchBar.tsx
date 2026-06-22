@@ -44,6 +44,7 @@ export default function SearchBar({onSearch, onFilterOpen}: SearchBarProps) {
                         value={search}
                         onChange={handleQueryChange}
                         onKeyDown={handleKeyDown}
+                        data-testid="search-name-input"
                         className="text-card-foreground placeholder-muted-foreground outline-none w-full">
                     </input>
                 </div>
@@ -62,6 +63,7 @@ export default function SearchBar({onSearch, onFilterOpen}: SearchBarProps) {
                             onChange={handleLocationChange}
                             onKeyDown={handleKeyDown}
                             placeholder="Ville"
+                            data-testid="search-city-input"
                             className="text-card-foreground placeholder-muted-foreground  outline-none w-12 lg:w-auto">
                         </input>
                     </div>
@@ -69,7 +71,8 @@ export default function SearchBar({onSearch, onFilterOpen}: SearchBarProps) {
                     {/* Boutton Rechercher */}
                     <Button 
                         className="hidden lg:flex rounded-l-none"
-                        onClick={onSubmit}>
+                        onClick={onSubmit}
+                        data-testid="search-submit-button">
                         Rechercher
                     </Button>
                     <Button

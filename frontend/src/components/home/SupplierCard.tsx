@@ -31,7 +31,7 @@ export default function SupplierCard({
   };
 
   return (
-    <Link to={`/suppliers/${supplier.id}`}>
+    <Link to={`/suppliers/${supplier.id}`} data-testid="supplier-card">
       <div className="flex flex-col border-1 border-card/80 rounded-lg cursor-pointer group transition-colors h-full duration-1000 hover:border-card hover:bg-muted/40">
         <div className="h-48 overflow-hidden rounded-t-lg relative">
           <button
