@@ -80,16 +80,21 @@ function PublicLayout() {
         <Outlet />
       </main>
       <footer className="border-t border-border">
-        <div className="mx-auto max-w-7xl px-6 py-6">
-          <div className="flex justify-center gap-8 text-sm text-center text-muted-foreground">
-            <Link to="/terms">CGU</Link>
-            <Link to="/privacy">Politique de confidentialité</Link>
-            <Link to="/legal">Mentions légales</Link>
+        <div className="mx-auto max-w-7xl px-2 sm:px-6 py-6">
+          <div className="flex justify-center gap-4 sm:gap-6 text-sm text-center text-muted-foreground transition-colors duration-200">
+            <Link to="/terms" className="hover:text-card-foreground">
+              CGU
+            </Link>
+            <Link to="/privacy" className="hover:text-card-foreground">
+              Politique de confidentialité
+            </Link>
+            <Link to="/legal" className="hover:text-card-foreground">
+              Mentions légales
+            </Link>
           </div>
         </div>
       </footer>
     </div>
   );
 }
-
 export default PublicLayout;
