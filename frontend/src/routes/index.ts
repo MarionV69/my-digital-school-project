@@ -29,110 +29,118 @@ import ProtectedRoute from "./ProtectedRoute";
 import EstablishmentRequiredRoute from "./EstablishmentRequiredRoute";
 import RestaurantRoute from "./RestaurantRoute";
 import SupplierRoute from "./SupplierRoute";
+import RootLayout from "@/layouts/RootLayout";
 
 export const router = createBrowserRouter([
-  // Public routes with PublicLayout
   {
-    Component: PublicLayout,
+    Component: RootLayout,
     children: [
-      { path: "/how-it-works", Component: HowItWorksPage },
-      { path: "/legal", Component: LegalPage },
-      { path: "/privacy", Component: PrivacyPage },
-      { path: "/terms", Component: TermsPage },
-    ],
-  },
-
-  // Routes with AdaptativeLayout:
-  // - Authenticated restaurants => AppLayout
-  // - Visitors (unauthenticated) => PublicLayout
-  // - Authenticated suppliers => redirected to /profile
-  {
-    Component: AdaptativeLayout,
-    children: [
-      { path: "/", Component: HomePage },
-      { path: "/suppliers/:id", Component: SupplierDetailPage },
-    ],
-  },
-
-  // Style guide (dev only)
-  {
-    path: "/style",
-    Component: StylePage,
-  },
-
-  // Auth and Onboarding routes with AuthLayout
-  {
-    Component: AuthLayout,
-    children: [
-      { path: "/login", Component: LoginPage },
-      { path: "/register", Component: RegisterPage },
-
-      // User must be authenticated
+      // Public routes with PublicLayout
       {
-        Component: ProtectedRoute,
+        Component: PublicLayout,
         children: [
+          { path: "/how-it-works", Component: HowItWorksPage },
+          { path: "/legal", Component: LegalPage },
+          { path: "/privacy", Component: PrivacyPage },
+          { path: "/terms", Component: TermsPage },
+        ],
+      },
+
+      // Routes with AdaptativeLayout:
+      // - Authenticated restaurants => AppLayout
+      // - Visitors (unauthenticated) => PublicLayout
+      // - Authenticated suppliers => redirected to /profile
+      {
+        Component: AdaptativeLayout,
+        children: [
+          { path: "/", Component: HomePage },
+          { path: "/suppliers/:id", Component: SupplierDetailPage },
+        ],
+      },
+
+      // Style guide (dev only)
+      {
+        path: "/style",
+        Component: StylePage,
+      },
+
+      // Auth and Onboarding routes with AuthLayout
+      {
+        Component: AuthLayout,
+        children: [
+          { path: "/login", Component: LoginPage },
+          { path: "/register", Component: RegisterPage },
+
+          // User must be authenticated
           {
-            path: "/onboarding/create-establishment",
-            Component: CreateEstablishmentPage,
-          },
-          // User must have an establishment
-          {
-            Component: EstablishmentRequiredRoute,
+            Component: ProtectedRoute,
             children: [
               {
-                path: "/onboarding/supplier-profile",
-                Component: SupplierProfilePage,
+                path: "/onboarding/create-establishment",
+                Component: CreateEstablishmentPage,
+              },
+              // User must have an establishment
+              {
+                Component: EstablishmentRequiredRoute,
+                children: [
+                  {
+                    path: "/onboarding/supplier-profile",
+                    Component: SupplierProfilePage,
+                  },
+                ],
               },
             ],
           },
         ],
       },
-    ],
-  },
 
-  //Confirmation - No layout, User must have an establishment
-  {
-    Component: EstablishmentRequiredRoute,
-    children: [
-      { path: "/onboarding/confirmation", Component: ConfirmationPage },
-    ],
-  },
-
-  // Establishment required routes with AppLayout
-  {
-    Component: EstablishmentRequiredRoute,
-    children: [
+      //Confirmation - No layout, User must have an establishment
       {
-        Component: AppLayout,
+        Component: EstablishmentRequiredRoute,
         children: [
-          // Shared pages
-          { path: "/profile", Component: ProfilePage },
+          { path: "/onboarding/confirmation", Component: ConfirmationPage },
+        ],
+      },
+
+      // Establishment required routes with AppLayout
+      {
+        Component: EstablishmentRequiredRoute,
+        children: [
           {
-            path: "/conversations",
-            Component: ConversationsLayout,
+            Component: AppLayout,
             children: [
-              { index: true, Component: ConversationsEmptyState },
-              { path: ":id", Component: ConversationDetailPage },
+              // Shared pages
+              { path: "/profile", Component: ProfilePage },
+              {
+                path: "/conversations",
+                Component: ConversationsLayout,
+                children: [
+                  { index: true, Component: ConversationsEmptyState },
+                  { path: ":id", Component: ConversationDetailPage },
+                ],
+              },
+              { path: "/settings", Component: SettingsPage },
+
+              // Restaurant routes (Establishment type must be RESTAURANT)
+              {
+                Component: RestaurantRoute,
+                children: [{ path: "/favorites", Component: FavoritesPage }],
+              },
+
+              // Supplier routes (Establishment type must be SUPPLIER)
+              {
+                Component: SupplierRoute,
+                children: [
+                  { path: "/supplier/stats", Component: StatisticsPage },
+                ],
+              },
             ],
-          },
-          { path: "/settings", Component: SettingsPage },
-
-          // Restaurant routes (Establishment type must be RESTAURANT)
-          {
-            Component: RestaurantRoute,
-            children: [{ path: "/favorites", Component: FavoritesPage }],
-          },
-
-          // Supplier routes (Establishment type must be SUPPLIER)
-          {
-            Component: SupplierRoute,
-            children: [{ path: "/supplier/stats", Component: StatisticsPage }],
           },
         ],
       },
+
+      // Catch-all route for 404 Not Found
+      { path: "*", Component: NotFoundPage },
     ],
   },
-
-  // Catch-all route for 404 Not Found
-  { path: "*", Component: NotFoundPage },
 ]);

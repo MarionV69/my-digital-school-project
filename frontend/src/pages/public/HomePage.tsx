@@ -79,13 +79,19 @@ function HomePage() {
           <div className="flex flex-row justify-center items-center gap-2">
             <Button
               variant="outline"
-              onClick={() => setPage(page - 1)}
+              onClick={() => {
+                setPage(page - 1);
+                window.scrollTo(0, 0);
+              }}
               disabled={page === 0}
             >
               Précédent
             </Button>
             <Button
-              onClick={() => setPage(page + 1)}
+              onClick={() => {
+                setPage(page + 1);
+                window.scrollTo(0, 0);
+              }}
               disabled={(page + 1) * LIMIT >= suppliers.length}
             >
               Suivant
