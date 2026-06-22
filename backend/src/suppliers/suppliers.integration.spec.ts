@@ -13,6 +13,10 @@ import { Favorite } from 'src/favorites/entities/favorite.entity';
 import { Review } from 'src/reviews/entities/review.entity';
 import { DocumentsService } from 'src/documents/documents.service';
 
+type MockRepository = {
+  createQueryBuilder: jest.Mock;
+};
+
 describe('GET /suppliers (integration)', () => {
   let app: INestApplication;
 
@@ -88,7 +92,9 @@ describe('GET /suppliers (integration)', () => {
       andWhere: jest.fn().mockReturnThis(),
       getMany: jest.fn().mockResolvedValue([]),
     };
-    const repository = app.get(getRepositoryToken(SupplierAttributes));
+    const repository = app.get<MockRepository>(
+      getRepositoryToken(SupplierAttributes),
+    );
     repository.createQueryBuilder = jest.fn().mockReturnValue(mockQueryBuilder);
     // -- Act --
     const response = await request(app.getHttpServer()).get(
