@@ -52,11 +52,11 @@ export default function SupplierCard({
             {supplier.productCategories[0]}
           </span>
         </div>
-        <div className="flex flex-col p-6 gap-3">
+        <div className="flex flex-col p-4 gap-3">
           <div className="flex flex-row items-baseline gap-4">
             <div className="flex items-center gap-0.5">
               {supplier.isPremium && (
-                <BadgeCheck size={16} className="text-primary" />
+                <BadgeCheck size={14} className="text-primary" />
               )}
               <h4 className="w-full">{supplier.name}</h4>
             </div>
