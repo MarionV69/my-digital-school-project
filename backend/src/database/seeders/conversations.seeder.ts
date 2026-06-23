@@ -60,6 +60,12 @@ export async function seedConversations(dataSource: DataSource): Promise<void> {
           await messageRepo.save(message);
         }
       }
+
+      // Mettre à jour lastMessageAt avec la date du dernier message
+      const lastMessage = convData.messages[convData.messages.length - 1];
+      await conversationRepo.update(conversation.id, {
+        lastMessageAt: lastMessage.sentAt,
+      });
     }
   }
 }
