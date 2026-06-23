@@ -149,6 +149,7 @@ function MessageInput({ conversationId, onMessageSent }: MessageInputProps) {
             }
           }}
           placeholder="Écrire un message"
+          aria-label="Écrire un message"
           disabled={sending}
           className={cn(
             "flex-1 min-h-0 max-h-32 resize-none border-none rounded-lg bg-muted px-3 py-2 text-sm outline-none",
