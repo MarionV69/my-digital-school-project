@@ -8,94 +8,28 @@ import { FilesService } from 'src/files/files.service';
 import { DocumentsService } from 'src/documents/documents.service';
 import { EstablishmentType } from 'src/establishments/enums/establishment-type.enum';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { Document as EstablishmentDocument } from 'src/documents/entities/document.entity';
-import { StoredFile } from 'src/files/entities/stored-file.entity';
-import { DocumentCategory } from 'src/documents/enums/document.enum';
+import {
+  RESTAURANT_ID,
+  SUPPLIER_ID,
+  CONVERSATION_ID,
+  MESSAGE_CONTENT,
+  LOGO_URL,
+  SIGNED_URL,
+  mockStoredFile,
+  mockConversation,
+  mockSupplierEstablishment,
+  mockConversationWithRelations,
+} from './test/conversations.fixtures';
+import {
+  mockConversationsRepository,
+  mockMessagesRepository,
+  mockEstablishmentsRepository,
+  mockFilesService,
+  mockDocumentsService,
+} from './test/conversations.mocks';
 
 describe('ConversationsService', () => {
   let service: ConversationsService;
-
-  // Fixtures
-  const RESTAURANT_ID = 3;
-  const SUPPLIER_ID = 5;
-  const CONVERSATION_ID = 1;
-  const MESSAGE_CONTENT = 'Hello';
-  const LOGO_URL = 'https://bucket.s3.amazonaws.com/public/logo.jpg';
-  const SIGNED_URL =
-    'https://bucket.s3.amazonaws.com/private/doc.pdf?X-Amz-Signature=abc';
-
-  const mockStoredFile: StoredFile = {
-    id: 7,
-    path: 'public/logo.jpg',
-    originalFilename: 'logo.jpg',
-    mimeType: 'image/jpeg',
-    size: 2048,
-    uploadedAt: new Date(),
-    documents: [],
-    messages: [],
-  };
-
-  const mockDocument: EstablishmentDocument = {
-    id: 1,
-    establishmentId: SUPPLIER_ID,
-    fileId: mockStoredFile.id,
-    category: DocumentCategory.LOGO,
-    createdAt: new Date(),
-    file: mockStoredFile,
-    establishment: {} as Establishment,
-  };
-
-  const mockConversation: Partial<Conversation> = {
-    id: CONVERSATION_ID,
-    restaurantId: RESTAURANT_ID,
-    supplierId: SUPPLIER_ID,
-  };
-
-  const mockSupplierEstablishment: Partial<Establishment> = {
-    id: SUPPLIER_ID,
-    tradeName: 'Fruits Bio',
-    legalName: 'Fruits Bio SARL',
-    documents: [mockDocument],
-  };
-
-  const mockConversationWithRelations: Partial<Conversation> = {
-    ...mockConversation,
-    supplier: mockSupplierEstablishment as Establishment,
-    lastMessageAt: null,
-  };
-
-  // Mocks for repositories and services
-  const mockConversationsRepository = {
-    findOne: jest.fn(),
-    create: jest.fn(),
-    save: jest.fn(),
-    find: jest.fn(),
-    update: jest.fn(),
-    createQueryBuilder: jest.fn(),
-  };
-
-  const mockMessagesRepository = {
-    findOne: jest.fn(),
-    create: jest.fn(),
-    save: jest.fn(),
-    find: jest.fn(),
-    update: jest.fn(),
-    createQueryBuilder: jest.fn(),
-  };
-
-  const mockEstablishmentsRepository = {
-    findOne: jest.fn(),
-  };
-
-  const mockFilesService = {
-    create: jest.fn(),
-    getPrivateFileSignedUrl: jest.fn(),
-    getPublicFileUrl: jest.fn(),
-  };
-
-  const mockDocumentsService = {
-    getAllDocumentUrls: jest.fn(),
-  };
 
   // Setup
   beforeEach(async () => {
@@ -342,6 +276,132 @@ describe('ConversationsService', () => {
     });
   });
 
+  // sendAttachment
+  describe('sendAttachment', () => {
+    test('should throw NotFoundException when message does not exist', async () => {
+      // Arrange
+      const mockFile = {
+        originalname: 'doc.pdf',
+        mimetype: 'application/pdf',
+        size: 1024,
+        buffer: Buffer.from(''),
+      } as Express.Multer.File;
+      mockMessagesRepository.findOne.mockResolvedValue(null);
+
+      // Act
+      const act = () =>
+        service.sendAttachment(
+          CONVERSATION_ID,
+          1,
+          RESTAURANT_ID,
+          EstablishmentType.RESTAURANT,
+          mockFile,
+        );
+
+      // Assert
+      await expect(act()).rejects.toThrow(NotFoundException);
+    });
+
+    test('should throw ForbiddenException when message does not belong to conversation', async () => {
+      // Arrange
+      const mockFile = {
+        originalname: 'doc.pdf',
+        mimetype: 'application/pdf',
+        size: 1024,
+        buffer: Buffer.from(''),
+      } as Express.Multer.File;
+      const messageFromOtherConversation = {
+        id: 1,
+        conversationId: 999,
+        conversation: { ...mockConversation, id: 999 },
+        files: [],
+      };
+      mockMessagesRepository.findOne.mockResolvedValue(
+        messageFromOtherConversation,
+      );
+
+      // Act
+      const act = () =>
+        service.sendAttachment(
+          CONVERSATION_ID,
+          1,
+          RESTAURANT_ID,
+          EstablishmentType.RESTAURANT,
+          mockFile,
+        );
+
+      // Assert
+      await expect(act()).rejects.toThrow(ForbiddenException);
+    });
+
+    test('should throw ForbiddenException when establishment is not a participant', async () => {
+      // Arrange
+      const outsiderEstablishmentId = 99;
+      const mockFile = {
+        originalname: 'doc.pdf',
+        mimetype: 'application/pdf',
+        size: 1024,
+        buffer: Buffer.from(''),
+      } as Express.Multer.File;
+      const message = {
+        id: 1,
+        conversationId: CONVERSATION_ID,
+        conversation: mockConversation,
+        files: [],
+      };
+      mockMessagesRepository.findOne.mockResolvedValue(message);
+
+      // Act
+      const act = () =>
+        service.sendAttachment(
+          CONVERSATION_ID,
+          1,
+          outsiderEstablishmentId,
+          EstablishmentType.RESTAURANT,
+          mockFile,
+        );
+
+      // Assert
+      await expect(act()).rejects.toThrow(ForbiddenException);
+    });
+
+    test('should upload attachment and return attachment response', async () => {
+      // Arrange
+      const mockFile = {
+        originalname: 'doc.pdf',
+        mimetype: 'application/pdf',
+        size: 1024,
+        buffer: Buffer.from(''),
+      } as Express.Multer.File;
+      const message = {
+        id: 1,
+        conversationId: CONVERSATION_ID,
+        conversation: mockConversation,
+        files: [],
+      };
+      mockMessagesRepository.findOne.mockResolvedValue(message);
+      mockFilesService.create.mockResolvedValue(mockStoredFile);
+      mockMessagesRepository.save.mockResolvedValue(undefined);
+
+      // Act
+      const result = await service.sendAttachment(
+        CONVERSATION_ID,
+        1,
+        RESTAURANT_ID,
+        EstablishmentType.RESTAURANT,
+        mockFile,
+      );
+
+      // Assert
+      expect(mockFilesService.create).toHaveBeenCalledWith(mockFile, 'private');
+      expect(mockMessagesRepository.save).toHaveBeenCalled();
+      expect(result.originalFilename).toBe(mockStoredFile.originalFilename);
+      expect(result.endpoint).toBe(
+        `/conversations/${CONVERSATION_ID}/messages/1/attachments/${mockStoredFile.id}`,
+      );
+    });
+  });
+
   // getConversationMessages
   describe('getConversationMessages', () => {
     test('should throw NotFoundException when conversation does not exist', async () => {
@@ -508,6 +568,28 @@ describe('ConversationsService', () => {
       // Assert
       expect(result).toEqual({ count: 0 });
     });
+
+    test('should return the total unread count for a supplier', async () => {
+      // Arrange
+      const mockQueryBuilder = {
+        innerJoin: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        getCount: jest.fn().mockResolvedValue(5),
+      };
+      mockMessagesRepository.createQueryBuilder.mockReturnValue(
+        mockQueryBuilder,
+      );
+
+      // Act
+      const result = await service.getTotalUnreadCount(
+        SUPPLIER_ID,
+        EstablishmentType.SUPPLIER,
+      );
+
+      // Assert
+      expect(result).toEqual({ count: 5 });
+    });
   });
 
   // getConversations
@@ -600,6 +682,89 @@ describe('ConversationsService', () => {
       // Assert
       expect(result[0].unreadCount).toBe(0);
       expect(result[0].otherParticipant.avatarUrl).toBeNull();
+    });
+
+    test('should not expose internal establishment fields in otherParticipant', async () => {
+      // Arrange
+      const mockQueryBuilder = {
+        select: jest.fn().mockReturnThis(),
+        addSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        groupBy: jest.fn().mockReturnThis(),
+        getRawMany: jest.fn().mockResolvedValue([]),
+      };
+      mockConversationsRepository.find.mockResolvedValue([
+        mockConversationWithRelations,
+      ]);
+      mockMessagesRepository.createQueryBuilder.mockReturnValue(
+        mockQueryBuilder,
+      );
+      mockDocumentsService.getAllDocumentUrls.mockReturnValue({
+        logoUrl: null,
+        coverPhotoUrl: null,
+        catalogs: [],
+        galleryPhotos: [],
+      });
+
+      // Act
+      const result = await service.getConversations(
+        RESTAURANT_ID,
+        EstablishmentType.RESTAURANT,
+      );
+
+      // Assert
+      expect(result[0].otherParticipant).not.toHaveProperty('siret');
+      expect(result[0].otherParticipant).not.toHaveProperty('vatNumber');
+    });
+
+    test('should return conversations for a supplier with restaurant as otherParticipant', async () => {
+      // Arrange
+      const mockRestaurantEstablishment: Partial<Establishment> = {
+        id: RESTAURANT_ID,
+        tradeName: 'Le Gourmet',
+        legalName: 'Le Gourmet SARL',
+        documents: [],
+      };
+      const mockConversationWithRestaurant: Partial<Conversation> = {
+        ...mockConversation,
+        restaurant: mockRestaurantEstablishment as Establishment,
+        lastMessageAt: null,
+      };
+      const mockQueryBuilder = {
+        select: jest.fn().mockReturnThis(),
+        addSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        groupBy: jest.fn().mockReturnThis(),
+        getRawMany: jest.fn().mockResolvedValue([]),
+      };
+      mockConversationsRepository.find.mockResolvedValue([
+        mockConversationWithRestaurant,
+      ]);
+      mockMessagesRepository.createQueryBuilder.mockReturnValue(
+        mockQueryBuilder,
+      );
+      mockDocumentsService.getAllDocumentUrls.mockReturnValue({
+        logoUrl: null,
+        coverPhotoUrl: null,
+        catalogs: [],
+        galleryPhotos: [],
+      });
+
+      // Act
+      const result = await service.getConversations(
+        SUPPLIER_ID,
+        EstablishmentType.SUPPLIER,
+      );
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0].otherParticipant.id).toBe(RESTAURANT_ID);
+      expect(result[0].otherParticipant.name).toBe(
+        mockRestaurantEstablishment.tradeName,
+      );
+      expect(result[0].unreadCount).toBe(0);
     });
   });
 
