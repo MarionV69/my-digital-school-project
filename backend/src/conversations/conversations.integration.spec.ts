@@ -40,9 +40,11 @@ import {
   mockDocumentsService,
 } from './test/conversations.mocks';
 import { MessageAttachmentResponseDto } from './dto/message-attachments-response.dto';
+import { Server } from 'http';
 
 describe('Conversations API (integration)', () => {
   let app: INestApplication;
+  let server: Server;
 
   // Setup
   beforeEach(async () => {
@@ -100,6 +102,8 @@ describe('Conversations API (integration)', () => {
     );
 
     await app.init();
+
+    server = app.getHttpServer() as Server;
   });
 
   afterEach(async () => {
@@ -118,7 +122,7 @@ describe('Conversations API (integration)', () => {
       mockConversationsRepository.save.mockResolvedValue(mockConversation);
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post('/conversations')
         .send({ supplierId: SUPPLIER_ID });
 
@@ -138,7 +142,7 @@ describe('Conversations API (integration)', () => {
       mockEstablishmentsRepository.findOne.mockResolvedValue(null);
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post('/conversations')
         .send({ supplierId: nonExistentSupplierId });
 
@@ -151,7 +155,7 @@ describe('Conversations API (integration)', () => {
       const bodyWithoutSupplierId = {};
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post('/conversations')
         .send(bodyWithoutSupplierId);
 
@@ -164,7 +168,7 @@ describe('Conversations API (integration)', () => {
       const bodyWithInvalidSupplierId = { supplierId: 'invalid' };
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post('/conversations')
         .send(bodyWithInvalidSupplierId);
 
@@ -188,7 +192,7 @@ describe('Conversations API (integration)', () => {
       mockMessagesRepository.save.mockResolvedValue(undefined);
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post(`/conversations/${CONVERSATION_ID}/messages/1/attachments`)
         .attach('attachment', Buffer.from('fake file content'), 'doc.pdf');
 
@@ -209,7 +213,7 @@ describe('Conversations API (integration)', () => {
       mockMessagesRepository.findOne.mockResolvedValue(null);
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post(`/conversations/${CONVERSATION_ID}/messages/999/attachments`)
         .attach('attachment', Buffer.from('fake file content'), 'doc.pdf');
 
@@ -232,7 +236,7 @@ describe('Conversations API (integration)', () => {
       mockMessagesRepository.findOne.mockResolvedValue(message);
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post(`/conversations/${CONVERSATION_ID}/messages/1/attachments`)
         .attach('attachment', Buffer.from('fake file content'), 'doc.pdf');
 
@@ -245,7 +249,7 @@ describe('Conversations API (integration)', () => {
       const bodyWithoutAttachment = {};
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post(`/conversations/${CONVERSATION_ID}/messages/1/attachments`)
         .send(bodyWithoutAttachment);
 
@@ -261,7 +265,7 @@ describe('Conversations API (integration)', () => {
       mockConversationsRepository.find.mockResolvedValue([]);
 
       // Act
-      const response = await request(app.getHttpServer()).get('/conversations');
+      const response = await request(server).get('/conversations');
 
       // Assert
       expect(response.status).toBe(200);
@@ -294,7 +298,7 @@ describe('Conversations API (integration)', () => {
       });
 
       // Act
-      const response = await request(app.getHttpServer()).get('/conversations');
+      const response = await request(server).get('/conversations');
 
       // Assert
       const body = response.body as ConversationResponseDto[];
@@ -330,9 +334,7 @@ describe('Conversations API (integration)', () => {
       );
 
       // Act
-      const response = await request(app.getHttpServer()).get(
-        '/conversations/unread-count',
-      );
+      const response = await request(server).get('/conversations/unread-count');
 
       // Assert
       const body = response.body as UnreadCountResponseDto;
@@ -363,7 +365,7 @@ describe('Conversations API (integration)', () => {
       mockConversationsRepository.update.mockResolvedValue(undefined);
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post(`/conversations/${CONVERSATION_ID}/messages`)
         .send({ content: 'Hello' });
 
@@ -385,7 +387,7 @@ describe('Conversations API (integration)', () => {
       const bodyWithoutContentOrAttachment = {};
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post(`/conversations/${CONVERSATION_ID}/messages`)
         .send(bodyWithoutContentOrAttachment);
 
@@ -398,7 +400,7 @@ describe('Conversations API (integration)', () => {
       mockConversationsRepository.findOne.mockResolvedValue(null);
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post(`/conversations/${CONVERSATION_ID}/messages`)
         .send({ content: 'Hello' });
 
@@ -415,7 +417,7 @@ describe('Conversations API (integration)', () => {
       });
 
       // Act
-      const response = await request(app.getHttpServer())
+      const response = await request(server)
         .post(`/conversations/${CONVERSATION_ID}/messages`)
         .send({ content: 'Hello' });
 
@@ -444,7 +446,7 @@ describe('Conversations API (integration)', () => {
       mockMessagesRepository.find.mockResolvedValue(messages);
 
       // Act
-      const response = await request(app.getHttpServer()).get(
+      const response = await request(server).get(
         `/conversations/${CONVERSATION_ID}/messages`,
       );
 
@@ -467,7 +469,7 @@ describe('Conversations API (integration)', () => {
       mockConversationsRepository.findOne.mockResolvedValue(null);
 
       // Act
-      const response = await request(app.getHttpServer()).get(
+      const response = await request(server).get(
         `/conversations/${CONVERSATION_ID}/messages`,
       );
 
@@ -484,7 +486,7 @@ describe('Conversations API (integration)', () => {
       });
 
       // Act
-      const response = await request(app.getHttpServer()).get(
+      const response = await request(server).get(
         `/conversations/${CONVERSATION_ID}/messages`,
       );
 
@@ -507,7 +509,7 @@ describe('Conversations API (integration)', () => {
       mockFilesService.getPrivateFileSignedUrl.mockResolvedValue(SIGNED_URL);
 
       // Act
-      const response = await request(app.getHttpServer()).get(
+      const response = await request(server).get(
         `/conversations/${CONVERSATION_ID}/messages/1/attachments/${mockStoredFile.id}`,
       );
 
@@ -525,7 +527,7 @@ describe('Conversations API (integration)', () => {
       mockMessagesRepository.findOne.mockResolvedValue(null);
 
       // Act
-      const response = await request(app.getHttpServer()).get(
+      const response = await request(server).get(
         `/conversations/${CONVERSATION_ID}/messages/999/attachments/1`,
       );
 
@@ -548,7 +550,7 @@ describe('Conversations API (integration)', () => {
       mockMessagesRepository.findOne.mockResolvedValue(message);
 
       // Act
-      const response = await request(app.getHttpServer()).get(
+      const response = await request(server).get(
         `/conversations/${CONVERSATION_ID}/messages/1/attachments/${mockStoredFile.id}`,
       );
 
