@@ -86,6 +86,9 @@ Méthodes couvertes : `createConversation`, `sendMessage`, `sendAttachment`, `ge
 Cas couverts : cas nominaux, cas limites (liste vide, conversation existante, zéro non lus), cas d'erreur (403, 404), vérification que les données sensibles ne sont pas exposées (siret, vatNumber).
 
 Commande : `npm run test` depuis `backend/`
+Commande ciblée : `npx jest conversations.service`
+
+![Unit tests passing](docs/conversations-unit-tests.png)
 
 ## Tests d'intégration réalisés
 
@@ -96,6 +99,9 @@ Routes couvertes : toutes les routes du module conversations (POST, GET).
 Cas couverts : cas nominaux avec vérification de la structure JSON, cas d'erreur (400, 403, 404, 422), validation des DTOs.
 
 Commande : `npm run test` depuis `backend/`
+Commande ciblée : `npx jest conversations.integration`
+
+![Integration tests passing](docs/conversations-integration-tests.png)
 
 ## Test E2E réalisé
 
@@ -107,6 +113,9 @@ Parcours : page login => remplissage et envoi formulaire => page liste des fourn
 Le message contient un timestamp pour éviter les faux positifs liés à de précédents tests.
 
 Commande : `npm run test:e2e` depuis `frontend/`
+Commande ciblée : `npx playwright test conversation-journey`
+
+![E2E test passing](docs/conversation-journey-e2e-test.png)
 
 ## Pipeline CI/CD
 
