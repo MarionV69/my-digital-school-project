@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Field,
   FieldContent,
@@ -50,8 +50,9 @@ type CreateEstablishmentErrors = {
 };
 
 function CreateEstablishmentForm() {
+  const location = useLocation();
   const navigate = useNavigate();
-  const { refreshUser } = useAuth();
+  const { refreshUser, logout } = useAuth();
 
   const [formData, setFormData] = useState<CreateEstablishmentFormData>({
     type: null,
@@ -163,7 +164,9 @@ function CreateEstablishmentForm() {
       if (type === EstablishmentType.SUPPLIER) {
         navigate("/onboarding/supplier-profile");
       } else {
-        navigate("/onboarding/confirmation");
+        navigate("/onboarding/confirmation", {
+          state: location.state,
+        });
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -386,7 +389,11 @@ function CreateEstablishmentForm() {
       </form>
       <p className="mt-4 text-sm">
         Besoin de reprendre plus tard?{" "}
-        <Link to="/" className="text-primary-mid font-bold">
+        <Link
+          to="/"
+          onClick={() => logout()}
+          className="text-primary-mid font-bold"
+        >
           Quitter
         </Link>{" "}
         <span className="text-sm">

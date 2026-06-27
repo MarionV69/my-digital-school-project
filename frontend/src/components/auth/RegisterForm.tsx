@@ -1,5 +1,5 @@
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -32,6 +32,7 @@ type RegisterFormErrors = {
 
 function RegisterForm() {
   const { register } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -142,7 +143,9 @@ function RegisterForm() {
         acceptTerms,
       });
 
-      navigate("/onboarding/create-establishment");
+      navigate("/onboarding/create-establishment", {
+        state: location.state,
+      });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         setErrors({ email: "Cet email est déjà utilisé." });
@@ -349,6 +352,7 @@ function RegisterForm() {
       <p className="text-center text-sm mt-2">
         <Link
           to="/login"
+          state={location.state}
           className="font-medium text-primary-mid hover:primary"
         >
           Connexion
