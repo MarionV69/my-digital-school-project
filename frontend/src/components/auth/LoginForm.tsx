@@ -1,5 +1,5 @@
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -8,7 +8,7 @@ import { Eye, EyeOff, Mail } from "lucide-react";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { EstablishmentType } from "@/types/establishments.types";
+import { useRedirectAfterAuth } from "@/hooks/useRedirectAfterAuth";
 
 type LoginFormErrors = {
   email?: string;
@@ -18,7 +18,7 @@ type LoginFormErrors = {
 
 function LoginForm() {
   const { login } = useAuth();
-  const navigate = useNavigate();
+  const { redirectAfterAuth } = useRedirectAfterAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -80,14 +80,7 @@ function LoginForm() {
 
       toast.success(`Bienvenue ${user.firstName} !`);
 
-      // Redirect based on establishment
-      if (!user.establishmentId) {
-        navigate("/onboarding/create-establishment");
-      } else if (user.establishmentType === EstablishmentType.RESTAURANT) {
-        navigate("/");
-      } else {
-        navigate("/profile");
-      }
+      await redirectAfterAuth(user.establishmentType, user.establishmentId);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         setErrors({ general: "Email ou mot de passe incorrect." });

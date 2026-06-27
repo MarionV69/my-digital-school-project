@@ -1,17 +1,22 @@
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { EstablishmentType } from "@/types/establishments.types";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useRedirectAfterAuth } from "@/hooks/useRedirectAfterAuth";
 
 function ConfirmationPage() {
-  const navigate = useNavigate();
   const { user } = useAuth();
+  const { redirectAfterAuth } = useRedirectAfterAuth();
+  const [loading, setLoading] = useState(false);
 
-  const handleStart = () => {
-    if (user?.establishmentType === EstablishmentType.SUPPLIER) {
-      navigate("/profile");
-    } else {
-      navigate("/");
+  const handleStart = async () => {
+    setLoading(true);
+    try {
+      await redirectAfterAuth(
+        user?.establishmentType ?? null,
+        user?.establishmentId ?? null,
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,10 +42,11 @@ function ConfirmationPage() {
       {/* CTA */}
       <Button
         onClick={handleStart}
+        disabled={loading}
         size="sm"
         className="w-full max-w-sm bg-primary-foreground text-primary hover:bg-primary-foreground/90"
       >
-        Commencer
+        {loading ? "Chargement..." : "Commencer"}
       </Button>
     </main>
   );
