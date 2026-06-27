@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 
 function LegalPage() {
@@ -8,7 +7,7 @@ function LegalPage() {
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-12">
-      <Button onClick={() => navigate(-1)} className="mb-8">
+      <Button onClick={() => navigate(-1)} className="mb-8" size="lg">
         <ArrowLeft />
         Retour
       </Button>
@@ -18,17 +17,19 @@ function LegalPage() {
         Dernière mise à jour : juin 2026
       </p>
 
-      <section className="space-y-8">
+      <section className="space-y-6 text-sm text-muted-foreground">
         <div>
-          <h2 className="mb-3">Éditeur de la plateforme</h2>
+          <h2 className="text-xl font-semibold mb-1">
+            Éditeur de la plateforme
+          </h2>
           <p>
-            <strong>Le Bon Fournisseur</strong>
+            <strong className="text-foreground">Le Bon Fournisseur</strong>
           </p>
-          <p className="mt-2">
+          <p>
             Projet réalisé dans le cadre du module MyDigitalProject de
             MyDigitalSchool Lyon.
           </p>
-          <p className="mt-2">
+          <p>
             Contact : contact@lebonfournisseur.fr
             <br />
             SIRET : 123 456 789 00011
@@ -36,12 +37,14 @@ function LegalPage() {
         </div>
 
         <div>
-          <h2 className="mb-3">Responsable de publication</h2>
+          <h2 className="text-xl font-semibold mb-1">
+            Responsable de publication
+          </h2>
           <p>L'équipe projet Le Bon Fournisseur.</p>
         </div>
 
         <div>
-          <h2 className="mb-3">Hébergement</h2>
+          <h2 className="text-xl font-semibold mb-1">Hébergement</h2>
           <p>
             L'application est hébergée auprès de prestataires cloud utilisés
             pour le fonctionnement de la plateforme.
@@ -49,20 +52,24 @@ function LegalPage() {
         </div>
 
         <div>
-          <h2 className="mb-3">Propriété intellectuelle</h2>
+          <h2 className="text-xl font-semibold mb-1">
+            Propriété intellectuelle
+          </h2>
           <p>
             Les contenus, textes, illustrations, logos et éléments graphiques
             présents sur cette plateforme sont protégés par les règles relatives
             à la propriété intellectuelle.
           </p>
-          <p className="mt-2">
+          <p>
             Toute reproduction ou réutilisation sans autorisation préalable est
             interdite.
           </p>
         </div>
 
         <div>
-          <h2 className="mb-3">Limitation de responsabilité</h2>
+          <h2 className="text-xl font-semibold mb-1">
+            Limitation de responsabilité
+          </h2>
           <p>
             Cette plateforme est présentée dans le cadre d'un projet
             pédagogique. Malgré le soin apporté à son développement, aucune
@@ -72,7 +79,7 @@ function LegalPage() {
         </div>
 
         <div>
-          <h2 className="mb-3">Contact</h2>
+          <h2 className="text-xl font-semibold mb-1">Contact</h2>
           <p>
             Pour toute question relative à la plateforme :
             contact@lebonfournisseur.fr
@@ -80,7 +87,7 @@ function LegalPage() {
         </div>
       </section>
 
-      <Button onClick={() => navigate(-1)} className="mt-12">
+      <Button onClick={() => navigate(-1)} className="mt-12" size="lg">
         <ArrowLeft />
         Retour
       </Button>
