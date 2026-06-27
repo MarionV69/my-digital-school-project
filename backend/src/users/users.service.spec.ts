@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { ConfigService } from '@nestjs/config';
+import { Establishment } from '../establishments/entities/establishment.entity';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -13,6 +14,10 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: getRepositoryToken(User),
+          useValue: {},
+        },
+        {
+          provide: getRepositoryToken(Establishment),
           useValue: {},
         },
         {
