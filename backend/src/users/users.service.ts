@@ -13,11 +13,15 @@ import { ConfigService } from '@nestjs/config';
 import { FindOneOptions } from 'typeorm';
 import { ProfileWithEstablishmentTypeResponseDto } from './dto/profile-with-establishment-type-response.dto';
 import { ProfileResponseDto } from './dto/profile-response.dto';
+import { Establishment } from 'src/establishments/entities/establishment.entity';
+import { UserRole } from './enums/user-role.enum';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    @InjectRepository(Establishment)
+    private readonly establishmentsRepository: Repository<Establishment>,
     private readonly configService: ConfigService,
   ) {}
 
@@ -88,6 +92,11 @@ export class UsersService {
 
   async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
+
+    if (user.establishmentId && user.role === UserRole.OWNER) {
+      await this.establishmentsRepository.delete(user.establishmentId);
+    }
+
     await this.usersRepository.remove(user);
   }
 
