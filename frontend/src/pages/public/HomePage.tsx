@@ -9,7 +9,7 @@ import { useSuppliers } from "@/hooks/useSuppliers";
 import type { filtersType } from "@/types/filters.types";
 import { useState } from "react";
 
-const LIMIT = 9;
+const LIMIT = 10;
 
 function HomePage() {
   const [search, setSearch] = useState("");
